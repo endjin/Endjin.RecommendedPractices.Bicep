@@ -1,2 +1,3 @@
 # Endjin.RecommendedPractices.Bicep
-Our library of reusable Bicep modules
+
+This repository hosts our library of re-useable Bicep modules.
