@@ -40,7 +40,7 @@ Pointing to a remote Bicep module in an ACR is almost identical to referencing a
 
 **Modifications**
 
-For modifying a template that is in the ACR without publishing changes can be achieved by referencing a local copy of the template. Aliases help with simplifying the path for linking to modules. Could we use aliases to distinguish between local and remote registries to improve the dev workflow?
+Modifying a template that is in the ACR without publishing changes can be achieved by referencing a local copy of the template. Aliases help with simplifying the path for linking to modules. Could we use aliases to distinguish between local and remote registries to improve the dev workflow?
 
 ## Decision
 
@@ -59,7 +59,7 @@ Sharing public artefacts and hosting private artefacts will be similar as they b
 
 Adopting the Bicep tooling for `v0.5` may also provide automatic `README.md` generation and `diagram.svg` to visualise the Bicep module relationship graph.
 
-As the public Bicep registry has yet to be released, we still have to find a solution for sharing public modules. Ideally it would follow the OCI standard as it would make transitioning to the Bicep registry easier (whenever that happens). A potential candidate was GitHub packages. Unfortunately, after experimenting with the GitHub container registry, we discovered that non-Azure Container registries are [not supported](https://github.com/Azure/bicep/issues/4884).
+As the public Bicep registry has yet to be released, we still have to find a solution for sharing public modules. Ideally it would follow the OCI standard as it would make transitioning to the Bicep registry easier (whenever that happens). A potential candidate we considered was GitHub packages. Unfortunately, after experimenting with the GitHub container registry, we discovered that non-Azure container registries are [not supported](https://github.com/Azure/bicep/issues/4884).
 
 ### Further investigation
 
