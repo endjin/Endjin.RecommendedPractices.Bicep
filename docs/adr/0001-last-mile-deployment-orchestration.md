@@ -71,7 +71,6 @@ This represents a straight-forward usage of the Azure Resource Manager Deploymen
 1. **Aligned with ARM for the future** - there are plans for certain AAD function to added to ARM, this approach is likely to offer a simpler migration path to using such new features
 1. **Option to embed within ARM template** - subject to not exceeding the overall [4MB limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/best-practices#template-limits) for fully expanded ARM templates, this avoids additional artefact deployment considerations
 
-
 #### Disadvantages:
 
 1. **Scripts may be too big to embed** - this would require the scripts to be deployed to an accessible location prior to use, which adds complexity and friction to the dev inner-loop
