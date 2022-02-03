@@ -93,7 +93,7 @@ if ($MyInvocation.ScriptName -notlike '*Invoke-Build.ps1') {
 if (!($BuildModulePath)) {
     if (!(Get-Module -ListAvailable Endjin.RecommendedPractices.Build)) {
         Write-Information "Installing 'Endjin.RecommendedPractices.Build' module..."
-        Install-Module Endjin.RecommendedPractices.Build -RequiredVersion 0.1.0-beta0002 -AllowPrerelease -Scope CurrentUser -Force -Repository PSGallery
+        Install-Module Endjin.RecommendedPractices.Build -MinimumVersion 0.1.2 -Scope CurrentUser -Force -Repository PSGallery
     }
     $BuildModulePath = "Endjin.RecommendedPractices.Build"
 }
@@ -109,11 +109,12 @@ Import-Module $BuildModulePath -Force
 # Build process control options
 #
 $SkipVersion = $false
-$SkipBuild = $true
+$SkipBuild = $false
 $CleanBuild = $false
 $SkipTest = $false
 $SkipTestReport = $true
-$SkipPackage = $true
+$SkipPackage = $false
+$SkipPublish = $false
 
 # Advanced build settings
 $EnableGitVersionAdoVariableWorkaround = $false
@@ -121,12 +122,15 @@ $EnableGitVersionAdoVariableWorkaround = $false
 #
 # Build process configuration
 #
-$SolutionToBuild = "unused.sln"
-
+$SolutionToBuild = $false
+$BicepModulesDir = Join-Path $here "modules"
+$BicepOutputDir = Join-Path $here "_buildOutputs/ARM"
+$BicepRegistryFqdn = "biceptestreg.azurecr.io"
+$BicepModuleVersionTag = "0-jd"
+$PesterTestsDir = Join-Path $here "tests"
 
 # Synopsis: Build, Test and Package
 task . FullBuild
-
 
 # build extensibility tasks
 task PreBuild {}
@@ -143,4 +147,8 @@ task PostPackage {}
 #
 . $here/build.custom.tasks.ps1
 
-task Test ValidateBicepFiles
+
+
+
+# task CoreTest ValidateBicepFiles
+# task CorePackage PublishBicepModules
