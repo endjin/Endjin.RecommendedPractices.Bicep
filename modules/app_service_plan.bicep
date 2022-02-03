@@ -68,4 +68,5 @@ resource hosting_plan 'Microsoft.Web/serverfarms@2021-02-01' = if (!useExisting)
 }
 
 output id string = useExisting ? existing_hosting_plan.id : hosting_plan.id
-output app_service_plan object = useExisting ? existing_hosting_plan : hosting_plan
+
+output appServicePlanResource object = useExisting ? existing_hosting_plan : hosting_plan

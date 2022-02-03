@@ -38,5 +38,6 @@ resource app_insights 'Microsoft.Insights/components@2020-02-02' = {
 }
 
 output id string = useExisting ? existing_app_insights.id : app_insights.id
-output instrumentation_key string =  useExisting ? existing_app_insights.properties.InstrumentationKey : app_insights.properties.InstrumentationKey
-output app_insights_workspace object = useExisting ? existing_app_insights : app_insights
+output instrumentationKey string =  useExisting ? existing_app_insights.properties.InstrumentationKey : app_insights.properties.InstrumentationKey
+
+output appInsightsWorkspaceResource object = useExisting ? existing_app_insights : app_insights
