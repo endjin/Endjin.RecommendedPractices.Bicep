@@ -15,7 +15,7 @@ Bicep is a domain-specific language (DSL) that simplifies the deployment and man
 
 As we adopt Bicep to streamline resource provisioning, we want to define a way of re-using and sharing templates.
 
-The problem is that as of January 24th 2022, there is no standardized way of sharing Bicep modules as you would with source code packaged and distributed in a registry such as [npm](https://www.npmjs.com/) or [NuGet](https://www.nuget.org/). To consume a Bicep module remotely you would have to register your templates in a private Azure Container Registry.
+The problem is that as of February 3rd 2022, there is no standardized way of sharing Bicep modules as you would with source code packaged and distributed in a registry such as [npm](https://www.npmjs.com/) or [NuGet](https://www.nuget.org/). To consume a Bicep module remotely you would have to register your templates in a private Azure Container Registry.
 
 ### Experience using Azure Container Registry (ACR)
 
@@ -42,33 +42,38 @@ Pointing to a remote Bicep module in an ACR is almost identical to referencing a
 
 Modifying a template that is in the ACR without publishing changes can be achieved by referencing a local copy of the template. Aliases help with simplifying the path for linking to modules. Could we use aliases to distinguish between local and remote registries to improve the dev workflow?
 
-## Decision
-
-With the upcoming `v0.5` release of Bicep, we will be able to share modules using the native public Bicep registry. Therefore we have chosen to bootstrap off the Bicep tooling as much as possible and compliment our workflow where features have yet to be released.
+### GitHub and NuGet 
 
 We considered alternative options such as sharing Bicep templates in a public Git repository but found the problem of consuming remote artefacts; to do that we would have to store every artefact we want to refer to locally and use relative local paths to refer to them. 
 
 Another alternative we considered was packaging Bicep modules as NuGet packages like this [NuGet example](https://www.nuget.org/packages/devdeer.Templates.Bicep/1.1.2). An advantage over the previous Git-based solution is that we could sign and verify our packages. Unfortunately the overhead of referring to local artefacts remains the same. 
 
+### Public Access
 
-## Consequences
+We have a number of Bicep modules that we would like to share publicly and be able to consume with unauthenticated access. Currently, private registries only work with an ACR instance via authenticated connections. This means we're unable to use other container registries such as the GitHub Container Registry or the anonymous pull feature with ACR.
 
-The introduction of a public Bicep repository means that we can share Bicep modules without the overhead of requiring a local copy of the modules and referring to them with relative paths.
+The proposed Bicep registry will support public, anonymous access and a handful of [extra features](https://github.com/Azure/bicep/issues/5138) including:
+
+- automatic versioning.
+- automatic `README.md` generation.
+- automatic `diagram.svg` to visualise the Bicep module relationship graph.
 
 Sharing public artefacts and hosting private artefacts will be similar as they both use container registries. This unifies the developer experience of managing Bicep modules. The naming convention for modules registered under the public repository is also similar to a private Azure Container Registry path.
 
-Adopting the Bicep tooling for `v0.5` may also provide automatic `README.md` generation and `diagram.svg` to visualise the Bicep module relationship graph.
+## Decision
 
-As the public Bicep registry has yet to be released, we still have to find a solution for sharing public modules. Ideally it would follow the OCI standard as it would make transitioning to the Bicep registry easier (whenever that happens). A potential candidate we considered was GitHub packages. Unfortunately, after experimenting with the GitHub container registry, we discovered that non-Azure container registries are [not supported](https://github.com/Azure/bicep/issues/4884).
+With the upcoming `v0.5` release of Bicep, we will be able to share modules using the public Bicep registry. In the meantime, we will use private registries to share modules internally. If we need to share modules externally, the user should perform the following steps:
 
-### Further investigation
+- clone/fork the Git repository containing Bicep modules
+- use the scripts in the repository to set up their own private registry
+- use module aliasing to minimize effort when migrating to the public registry
 
-A collection of ideas to follow up on:
+The documentation as of now will live in the public GitHub repository.
 
-- [ ] The local workflow for creating or updating an existing Bicep template.
-- [ ] Metadata around each template file (template file preview)
-- [ ] Investigate local docker images
-    - [ ] Dev workflow: local registry, alias, publishing
-- [ ] Investigate [OCI Image](https://github.com/opencontainers/image-tools) tooling
-- [ ] Module alias for pointing to local file path
-- [x] Module referencing local files and try using the published version
+## Consequences
+
+- A further ADR will be required to define the local development workflow.
+- We will need a scripted process for provisioning a private ACR instance.
+- We will need an automated build to publish the modules to a private ACR instance.
+- A naming convention should be informative and will be defined in a separate ADR.
+- Existing [OCI image](https://github.com/opencontainers/image-tools) tooling maybe useful for inspecting the contents of an ACR instance.
