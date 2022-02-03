@@ -5,28 +5,24 @@
 # Synopsis: Lints the Bicep files and builds the ARM template
 task ValidateBicepFiles {
 
-    $filesToLint = gci -recurse -filter *.bicep -path ./modules
+    $failBuild = $false
+    $filesToValidate = gci -recurse -filter *.bicep -path ./modules
 
-    foreach ($bicepFile in $filesToLint) {
-        # Make Bicep treat warnings as errors without having to provide custom config files
-        $ErrorActionPreference = "Continue"
-        Invoke-Expression "az bicep build -f $bicepFile 2>''" -ErrorVariable bicepBuildLog
-        $ErrorActionPreference = "Stop"
-        $warningMessages = $bicepBuildLog | ? { $_.Exception.Message -imatch "\) : Warning " }
-        $warningMessages | % { Write-Build Red $_ }
+    foreach ($bicepFile in $filesToValidate) {
+        Write-Build Green "Building $bicepFile..."
+        & az bicep build -f $bicepFile
+        if ($LASTEXITCODE -ne 0)
+        {
+            $failBuild = $true
+        }
     }
 
-    # if ($LASTEXITCODE -ne 0 ) {
-    #     Write-Build Red $bicepBuildLog
-    #     throw "Bicep build error - checks preceeding log messages"
-    # }
-    # elseif ($warningMessages) {
-    #     Write-Build Yellow $bicepBuildLog
-    #     throw "Treating Bicep warnings as errors - checks preceeding log messages"
-    # }
-    # else {
-    #     Write-Build Green "Bicep files OK"
-    # }
+    if ($failBuild) {
+        throw "Bicep build error(s) - check preceeding log messages"
+    }
+    else {
+        Write-Build Green "Bicep files OK"
+    }
 }
 
 # Synopsis: Runs all the available Pester tests
