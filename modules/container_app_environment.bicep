@@ -56,7 +56,9 @@ resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExist
   kind: 'web'
   properties: {
     Application_Type: 'web'
+#disable-next-line BCP036
     Flow_Type: 'Redfield'
+#disable-next-line BCP036
     Request_Source: 'CustomDeployment'
   }
   tags: resourceTags
@@ -71,6 +73,7 @@ resource container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' =
   name: environmentName
   location: location
   properties: {
+#disable-next-line BCP037
     type: 'managed'
     internalLoadBalancerEnabled: false
     appLogsConfiguration: {
@@ -80,6 +83,7 @@ resource container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' =
         sharedKey: listKeys(log_analytics.id, log_analytics.apiVersion).primarySharedKey
       }
     }
+#disable-next-line BCP037
     containerAppsConfiguration: {
       daprAIInstrumentationKey: app_insights.properties.InstrumentationKey
     }
