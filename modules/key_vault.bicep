@@ -12,21 +12,26 @@ param diagnostics_storage_account_name string = ''
 param use_existing_storage_account bool = false
 param diagnostics_retention_days int = 30
 
+param useExisting bool = false
 param resource_tags object = {}
 
 targetScope = 'resourceGroup'
 
-resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (enable_diagnostics && use_existing_storage_account) {
+resource existing_key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = if (useExisting) {
+  name: name
+}
+
+resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (!useExisting && enable_diagnostics && use_existing_storage_account) {
   name: diagnostics_storage_account_name
 }
-module diagnostics_storage 'storage_account.bicep' = if (enable_diagnostics && !use_existing_storage_account) {
+module diagnostics_storage 'storage_account.bicep' = if (!useExisting && enable_diagnostics && !use_existing_storage_account) {
   name: 'kvDiagnosticsDeploy'
   params: {
     name: '${name}diag'
   }
 }
 
-resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = {
+resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExisting) {
   name: name
   location: location
   properties: {
@@ -62,5 +67,7 @@ resource keyvault_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-
   }
 }
 
-output id string = key_vault.id
-output name string = key_vault.name
+output id string = useExisting ? existing_key_vault.id : key_vault.id
+output name string = useExisting ? existing_key_vault.name : key_vault.name
+
+output keyVaultResource object =  useExisting ? existing_key_vault : key_vault

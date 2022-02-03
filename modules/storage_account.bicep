@@ -9,11 +9,16 @@ param saveAccessKeyToKeyVault bool = false
 param keyVaultResourceGroupName string = ''
 param keyVaultName string = ''
 param keyVaultSecretName string = ''
+param useExisting bool = false
 param resource_tags object = {}
 
 targetScope = 'resourceGroup'
 
-resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = {
+resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (useExisting) {
+  name: name
+}
+
+resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!useExisting) {
   name: name
   location: location
   sku: {
@@ -34,9 +39,11 @@ module storage_access_key_secret 'key_vault_secret.bicep' = if (saveAccessKeyToK
   params: {
     keyVaultName: keyVaultName
     secretName: keyVaultSecretName
-    contentValue: storage_account.listKeys().keys[0].value
+    contentValue: useExisting ? existing_storage_account.listKeys().keys[0].value : storage_account.listKeys().keys[0].value
   }
 }
 
-output id string = storage_account.id
-output name string = storage_account.name
+output id string = useExisting ? existing_storage_account.id : storage_account.id
+output name string = useExisting ? existing_storage_account.name : storage_account.name
+
+output storageAccountResource object = useExisting ? existing_storage_account : storage_account

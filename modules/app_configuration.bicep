@@ -11,13 +11,18 @@ param enablePublicNetworkAccess bool = true
   'Standard'
 ])
 param sku string = 'Standard'
-param tagValues object = {}
+param useExisting bool = false
+param resourceTags object = {}
 
 var publicNetworkAccess = enablePublicNetworkAccess ? 'Enabled' : 'Disabled'
 
 targetScope = 'resourceGroup'
 
-resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-06-01' = {
+resource existing_app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-06-01' existing = if (useExisting) {
+  name: name
+}
+
+resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-06-01' = if (!useExisting) {
   name: name
   location: location
   sku: {
@@ -26,8 +31,10 @@ resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-0
   properties: {
     publicNetworkAccess: publicNetworkAccess
   }
-  tags: tagValues
+  tags: resourceTags
 }
 
-output id string = app_config_store.id
-output name string = app_config_store.name
+output id string = useExisting ? existing_app_config_store.id : app_config_store.id
+output name string = useExisting ? existing_app_config_store.name : app_config_store.name
+
+output appConfigStoreResource object = useExisting ? existing_app_config_store : app_config_store

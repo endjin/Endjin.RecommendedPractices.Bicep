@@ -94,7 +94,8 @@ resource container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' =
 output id string = useExisting ? existing_container_app_environment.id : container_app_environment.id
 output name string = useExisting ? existing_container_app_environment.name : container_app_environment.name
 output appinsights_instrumentation_key string = useExisting ? existing_app_insights.properties.InstrumentationKey : app_insights.properties.InstrumentationKey
-output acr_id string = createContainerRegistry ? acr.outputs.id : ''
-output acr_username string = createContainerRegistry ? acr.outputs.name : ''
-output acr_login_server string = createContainerRegistry ? acr.outputs.login_server : ''
-output app_environment object = useExisting ? existing_container_app_environment : container_app_environment
+output acrId string = createContainerRegistry ? acr.outputs.id : ''
+output acrUsername string = createContainerRegistry ? acr.outputs.name : ''
+output acrLoginServer string = createContainerRegistry ? acr.outputs.loginServer : ''
+
+output appEnvironmentResource object = useExisting ? existing_container_app_environment : container_app_environment
