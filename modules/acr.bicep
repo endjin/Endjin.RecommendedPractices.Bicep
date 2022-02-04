@@ -1,11 +1,29 @@
+@description('The name of the container registry')
 param name string
+
+@description('The location of the container registry')
 param location string
+
+@description('SKU for the container registry')
+@allowed([
+  'Basic'
+  'Standard'
+  'Premium'
+])
 param sku string
+
+@description('When true, admin access via the ACR key is enabled; When false, access is via RBAC')
 param adminUserEnabled bool = false
+
+@description('When true, the details of an existing ACR will be returned; When false, the ACR is created/udpated')
 param useExisting bool = false
+
+@description('The resource tags applied to resources')
 param resourceTags object = {}
 
+
 targetScope = 'resourceGroup'
+
 
 resource existing_acr 'Microsoft.ContainerRegistry/registries@2021-09-01' existing = if (useExisting) {
   name: name
