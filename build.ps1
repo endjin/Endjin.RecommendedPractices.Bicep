@@ -125,8 +125,6 @@ $EnableGitVersionAdoVariableWorkaround = $false
 $SolutionToBuild = $false
 $BicepModulesDir = Join-Path $here "modules"
 $BicepOutputDir = Join-Path $here "_buildOutputs/ARM"
-$BicepRegistryFqdn = "biceptestreg.azurecr.io"
-$BicepModuleVersionTag = "0-jd"
 $PesterTestsDir = Join-Path $here "tests"
 
 # Synopsis: Build, Test and Package
@@ -147,8 +145,6 @@ task PostPackage {}
 #
 . $here/build.custom.tasks.ps1
 
-
-
-
-# task CoreTest ValidateBicepFiles
-# task CorePackage PublishBicepModules
+# Uncomment the following lines if you need to publish modules your local versions to a registry
+# $BicepRegistryFqdn = "myacr.azurecr.io"
+# $BicepModuleVersionTag = "localbuild"
