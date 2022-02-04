@@ -49,9 +49,8 @@ try {
             $acrPath = $bicepFile.FullName.Replace($BicepPath, "").Replace("\", "/").Replace(".bicep", "").ToLower()
 
             $artifactRef = "br:$($AcrName).azurecr.io/bicep/modules/$($acrPath):$($Tag)";
-            # TODO: what if we aren't on a windows machine?
             if (!$WhatIf) {
-                bicep.exe publish $bicepFile --target $artifactRef;
+                bicep publish $bicepFile --target $artifactRef;
             }
             Write-Output $artifactRef;
         }   
