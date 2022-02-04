@@ -1,7 +1,9 @@
 @description('The name of the app configuration store')
 param name string
+
 @description('The location of the app configuration store')
 param location string
+
 @description('When false, the app configuration store will be inaccessible via its public IP address')
 param enablePublicNetworkAccess bool = true
 
@@ -11,12 +13,19 @@ param enablePublicNetworkAccess bool = true
   'Standard'
 ])
 param sku string = 'Standard'
+
+@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
 param useExisting bool = false
+
+@description('The resource tags applied to resources')
 param resourceTags object = {}
+
 
 var publicNetworkAccess = enablePublicNetworkAccess ? 'Enabled' : 'Disabled'
 
+
 targetScope = 'resourceGroup'
+
 
 resource existing_app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-06-01' existing = if (useExisting) {
   name: name
