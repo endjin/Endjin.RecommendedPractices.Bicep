@@ -6,7 +6,8 @@
 #>
 
 param (
-    # Path to Bicep modules
+    # Overrides the default path to bicep modules, located at ../modules/
+    # NOTE: the path should be an absolute path AND end with a trailing slash
     [Parameter()]
     [string]
     $BicepPath,
@@ -29,6 +30,11 @@ param (
 
 $ErrorActionPreference = $ErrorAction ? $ErrorAction : 'Stop';
 $InformationPreference = $InformationAction ? $InformationAction : 'Continue';
+# Either specify an absolute path to override default path
+
+if (!$BicepPath) {
+    $BicepPath = Join-Path $PSScriptRoot "../modules/" | Resolve-Path 
+}
 
 
 try {
@@ -39,9 +45,10 @@ try {
     $treeDir = Get-ChildItem -Path $BicepPath -Filter "*.bicep" -Recurse;
     foreach ($bicepFile in $treeDir) {
         if (Test-Path $bicepFile) {
-            $acrPath = $bicepFile.FullName.Replace($BicepPath, "").Replace("\", "/").Replace(".bicep", "")
+            # Repository components must match `[a-z0-9]+([._-][a-z0-9]+)*`
+            $acrPath = $bicepFile.FullName.Replace($BicepPath, "").Replace("\", "/").Replace(".bicep", "").ToLower()
 
-            $artifactRef = "br:$($AcrName).azurecr.io/examples/$($acrPath):$($Tag)";
+            $artifactRef = "br:$($AcrName).azurecr.io/bicep/modules/$($acrPath):$($Tag)";
             # TODO: what if we aren't on a windows machine?
             if (!$WhatIf) {
                 bicep.exe publish $bicepFile --target $artifactRef;
