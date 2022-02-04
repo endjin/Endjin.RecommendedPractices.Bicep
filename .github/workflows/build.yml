@@ -46,4 +46,6 @@ jobs:
     - id: publish_test
       name: Publish Bicep Modules to Test Registry
       run: |
-        pwsh -c '$BicepRegistryFqdn="endjintestacr.azurecr.io"; ./build.ps1 -Task Publish'
+        pwsh -f ./build.ps1 -Task Publish
+      env:
+        BicepRegistryFqdn: endjintestacr.azurecr.io
