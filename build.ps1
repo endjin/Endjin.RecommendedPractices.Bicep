@@ -148,3 +148,11 @@ task PostPackage {}
 # Uncomment the following lines if you need to publish modules your local versions to a registry
 # $BicepRegistryFqdn = "myacr.azurecr.io"
 # $BicepModuleVersionTag = "localbuild"
+
+# Interim support for passing build configuration from the CI/CD server
+if (!$BicepRegistryFqdn) {
+    if ($env:BicepRegistryFqdn) {
+        $BicepRegistryFqdn = $env:BicepRegistryFqdn
+        Write-Information "BicepRegistryFqdn set from environment variable: $BicepRegistryFqdn"
+    }
+}
