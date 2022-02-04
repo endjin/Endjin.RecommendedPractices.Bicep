@@ -1,0 +1,49 @@
+name: build
+on:
+- push
+- workflow_dispatch
+
+jobs:
+  build:
+    # We currently have to run a Windows agent due to case-sensitive filesystem issues
+    # with a .NET culture-specific resources folder names
+    runs-on: windows-latest
+    name: Run Build
+    outputs:
+      semver: ${{ steps.run_build.outputs.SemVer }}
+      major: ${{ steps.run_build.outputs.Major }}
+      majorMinor: ${{ steps.run_build.outputs.Major }}.${{ steps.run_build.outputs.Minor }}
+      preReleaseTag: ${{ steps.run_build.outputs.PreReleaseTag }}
+    steps:
+    # Setup steps
+    - uses: actions/setup-dotnet@v1
+      if: ${{ github.actor != 'nektos/act' }}
+      name: Install .NET Core SDK 3.1.x
+      with:
+        dotnet-version: '3.1.x'
+    - uses: actions/setup-dotnet@v1
+      if: ${{ github.actor != 'nektos/act' }}
+      name: Install .NET Core SDK 5.0.x
+      with:
+        dotnet-version: '5.0.x'
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.5
+
+    # Build steps
+    - uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+    - id: run_build
+      name: Run Build
+      run: |
+        pwsh -f ./build.ps1
+
+    # Publish to test registry steps
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.ENDJIN_TEST_ACR_PUBLISH_CREDENTIALS }}
+    - id: publish_test
+      name: Publish Bicep Modules to Test Registry
+      run: |
+        pwsh -c '$BicepRegistryFqdn="endjintestacr.azurecr.io"; ./build.ps1 -Task Publish'
