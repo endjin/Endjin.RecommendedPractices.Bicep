@@ -36,7 +36,7 @@ param resourceTags object = {}
 
 
 // ContainerApp hosting environment
-module app_environment 'br:endjintestacr.azurecr.io/bicep/modules/container_app_environment:0.1.0-beta.01' = {
+module app_environment 'container_app_environment.bicep' = {
   name: 'containerAppEnv'
   params: {
     name: name
@@ -51,7 +51,7 @@ module app_environment 'br:endjintestacr.azurecr.io/bicep/modules/container_app_
   }
 }
 
-module kubeenv_app_config_key 'br:endjintestacr.azurecr.io/bicep/modules/set_app_configuration_keys:0.1.0-beta.01' = {
+module kubeenv_app_config_key 'set_app_configuration_keys.bicep' = {
   scope: resourceGroup(appConfigurationStoreSubscription, appConfigurationStoreResourceGroupName)
   name: 'kubeenvAppConfigKeyDeploy'
   params: {
@@ -66,7 +66,7 @@ module kubeenv_app_config_key 'br:endjintestacr.azurecr.io/bicep/modules/set_app
   }
 }
 
-module aikey_secret 'br:endjintestacr.azurecr.io/bicep/modules/key_vault_secret:0.1.0-beta.01' = {
+module aikey_secret 'key_vault_secret.bicep' = {
   name: 'aiKeySecretDeploy'
   params: {
     keyVaultName: keyVaultName

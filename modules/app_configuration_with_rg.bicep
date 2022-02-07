@@ -29,7 +29,7 @@ resource app_config_rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!us
   location: location
 }
 
-module app_config 'br:endjintestacr.azurecr.io/bicep/modules/app_configuration:0.1.0-beta.01' = {
+module app_config 'app_configuration.bicep' = {
   name: 'appConfigDeploy'
   scope: useExisting ? resourceGroup(resourceGroupName) : app_config_rg
   params: {
