@@ -49,7 +49,7 @@ param resourceTags object = {}
 targetScope = 'subscription'
 
 
-module non_app_environment_ai 'br:endjintestacr.azurecr.io/bicep/modules/app_insights:0.1.0-beta.01' = {
+module non_app_environment_ai 'app_insights.bicep' = {
   name: 'appInsights'
   scope: resourceGroup(subscriptionId, resourceGroupName)
   params:{
@@ -64,7 +64,7 @@ module non_app_environment_ai 'br:endjintestacr.azurecr.io/bicep/modules/app_ins
   }
 }
 
-module aikey_secret 'br:endjintestacr.azurecr.io/bicep/modules/key_vault_secret:0.1.0-beta.01' = {
+module aikey_secret 'key_vault_secret.bicep' = {
   name: 'aiKeySecretDeploy'
   scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName)
   params: {
