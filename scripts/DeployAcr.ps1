@@ -15,4 +15,4 @@ param (
 
 New-AzResourceGroup -Name $ResourceGroupName -Location $Location
 
-New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile ./acr.bicep -acrName $AcrName
+New-AzResourceGroupDeployment -ResourceGroupName $ResourceGroupName -TemplateFile ../modules/acr.bicep -acrName $AcrName
