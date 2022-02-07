@@ -1,19 +1,20 @@
 param name string
 param sku string = 'standard'
-param access_policies array = []
+param accessPolicies array = []
 param tenantId string
 param location string = resourceGroup().location
 param enabledForDeployment bool = false
 param enabledForDiskEncryption bool = false
 param enabledForTemplateDeployment bool = false
 
-param enable_diagnostics bool
-param diagnostics_storage_account_name string = ''
-param use_existing_storage_account bool = false
-param diagnostics_retention_days int = 30
+param enableDiagnostics bool
+// TODO: Support shipping diagnostics to log analytics
+param diagnosticsStorageNccountName string = ''
+param useExistingStorageAccount bool = false
+param diagnosticsRetentionDays int = 30
 
 param useExisting bool = false
-param resource_tags object = {}
+param resourceTags object = {}
 
 targetScope = 'resourceGroup'
 
@@ -21,10 +22,10 @@ resource existing_key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' exist
   name: name
 }
 
-resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (!useExisting && enable_diagnostics && use_existing_storage_account) {
-  name: diagnostics_storage_account_name
+resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (!useExisting && enableDiagnostics && useExistingStorageAccount) {
+  name: diagnosticsStorageNccountName
 }
-module diagnostics_storage 'storage_account.bicep' = if (!useExisting && enable_diagnostics && !use_existing_storage_account) {
+module diagnostics_storage 'storage_account.bicep' = if (!useExisting && enableDiagnostics && !useExistingStorageAccount) {
   name: 'kvDiagnosticsDeploy'
   params: {
     name: '${name}diag'
@@ -43,23 +44,23 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExis
     enabledForDiskEncryption: enabledForDiskEncryption
     enabledForTemplateDeployment: enabledForTemplateDeployment
     tenantId: tenantId
-    accessPolicies: access_policies
+    accessPolicies: accessPolicies
 
   }
-  tags: resource_tags
+  tags: resourceTags
 }
 
-resource keyvault_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (enable_diagnostics) {
+resource keyvault_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (enableDiagnostics) {
   scope: key_vault
   name: 'service'
   properties: {
-    storageAccountId: use_existing_storage_account ? existing_storage_account.id : diagnostics_storage.outputs.id
+    storageAccountId: useExistingStorageAccount ? existing_storage_account.id : diagnostics_storage.outputs.id
     logs: [
       {
         category: 'AuditEvent'
         enabled: true
         retentionPolicy: {
-          days: diagnostics_retention_days
+          days: diagnosticsRetentionDays
           enabled: true
         }
       }
