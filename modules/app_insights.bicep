@@ -1,5 +1,10 @@
+@description('The name of the app insights workspace')
 param name string
+
+@description('The location of the app insights workspace')
 param location string
+
+@description('The kind of application using the workspace')
 @allowed([
   'web'
   'ios'
@@ -9,6 +14,8 @@ param location string
   'phone'
 ])
 param kind string = 'web'
+
+@description('The type of application using the workspace')
 @allowed([
   'other'
   'web'
@@ -16,10 +23,16 @@ param kind string = 'web'
 param applicationType string = 'web'
 param flowType string = 'Redfield'
 param requestSource string = 'CustomDeployment'
+
+@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
 param useExisting bool = false
+
+@description('The resource tags applied to resources')
 param resourceTags object = {}
 
+
 targetScope = 'resourceGroup'
+
 
 resource existing_app_insights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: name
