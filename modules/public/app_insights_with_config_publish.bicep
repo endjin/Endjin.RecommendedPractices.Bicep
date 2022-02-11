@@ -43,12 +43,9 @@ param requestSource string = 'CustomDeployment'
 @description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
 param useExisting bool = false
 
-// @description('When true, the containing resource group will not be created; When false, the resource group is created/udpated')
-// param useExistingResourceGroup bool = useExisting
-
-
 @description('The resource tags applied to resources')
 param resourceTags object = {}
+
 
 targetScope = 'subscription'
 
@@ -59,8 +56,8 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!useExisting) 
 }
 
 module app_insights 'app_insights.bicep' = {
-  name: 'appInsights-${name}'
-  scope: useExisting ? resourceGroup(subscriptionId, resourceGroupName) : rg
+  name: 'appInsightsWithConfigPublish'
+  scope: resourceGroup(useExisting ? resourceGroupName : rg.name)
   params:{
     name: name
     applicationType: applicationType
