@@ -68,7 +68,7 @@ var accessPolicies = [
 
 
 module key_vault 'key_vault.bicep' = {
-  name: name
+  name: 'keyVault-${name}'
   params: {
     name: name
     enableDiagnostics: enableDiagnostics

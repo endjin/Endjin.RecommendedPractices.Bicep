@@ -35,6 +35,9 @@ param keyVaultName string
 param resourceTags object = {}
 
 
+targetScope = 'resourceGroup'
+
+
 // ContainerApp hosting environment
 module app_environment 'container_app_environment.bicep' = {
   name: 'containerAppEnv'

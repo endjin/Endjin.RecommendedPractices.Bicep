@@ -2,7 +2,7 @@
 param name string
 
 @description('The location of the app configuration store')
-param location string
+param location string = resourceGroup().location
 
 @description('When false, the app configuration store will be inaccessible via its public IP address')
 param enablePublicNetworkAccess bool = true

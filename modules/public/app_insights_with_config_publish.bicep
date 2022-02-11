@@ -1,11 +1,11 @@
 @description('The name of the app insights workspace')
 param name string
 
-@description('The resource group of the app insights workspace')
+@description('The resource group of the app insights workspace. When ')
 param resourceGroupName string
 
-@description('The subscription of the app insights workspace')
-param subscriptionId string
+@description('The subscription of the existing app insights workspace')
+param subscriptionId string = subscription().subscriptionId
 
 @description('The location of the app insights workspace')
 param location string
@@ -43,15 +43,24 @@ param requestSource string = 'CustomDeployment'
 @description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
 param useExisting bool = false
 
+// @description('When true, the containing resource group will not be created; When false, the resource group is created/udpated')
+// param useExistingResourceGroup bool = useExisting
+
+
 @description('The resource tags applied to resources')
 param resourceTags object = {}
 
 targetScope = 'subscription'
 
 
-module non_app_environment_ai 'app_insights.bicep' = {
-  name: 'appInsights'
-  scope: resourceGroup(subscriptionId, resourceGroupName)
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!useExisting) {
+  name: resourceGroupName
+  location: location
+}
+
+module app_insights 'app_insights.bicep' = {
+  name: 'appInsights-${name}'
+  scope: useExisting ? resourceGroup(subscriptionId, resourceGroupName) : rg
   params:{
     name: name
     applicationType: applicationType
@@ -65,17 +74,17 @@ module non_app_environment_ai 'app_insights.bicep' = {
 }
 
 module aikey_secret 'key_vault_secret.bicep' = {
-  name: 'aiKeySecretDeploy'
+  name: 'appInsightsKeySecret'
   scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName)
   params: {
     keyVaultName: keyVaultName
     secretName: 'AppInsightsInstrumentationKey'
-    contentValue: non_app_environment_ai.outputs.instrumentationKey
+    contentValue: app_insights.outputs.instrumentationKey
     contentType: 'text/plain'
   }
 }
 
-output id string = non_app_environment_ai.outputs.id
-output instrumentationKey string = non_app_environment_ai.outputs.instrumentationKey
+output id string = app_insights.outputs.id
+output instrumentationKey string = app_insights.outputs.instrumentationKey
 
-output appInsightsWorkspaceResource object = non_app_environment_ai.outputs.appInsightsWorkspaceResource
+output appInsightsWorkspaceResource object = app_insights.outputs.appInsightsWorkspaceResource

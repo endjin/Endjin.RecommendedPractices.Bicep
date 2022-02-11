@@ -14,8 +14,8 @@ param location string
 ])
 param sku string = 'Standard'
 
-@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
-param useExisting bool = false
+@description('When false, the app configuration store will be inaccessible via its public IP address')
+param enablePublicNetworkAccess bool = true
 
 @description('The resource tags applied to resources')
 param resourceTags object = {}
@@ -24,19 +24,20 @@ param resourceTags object = {}
 targetScope = 'subscription'
 
 
-resource app_config_rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!useExisting) {
+resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: resourceGroupName
   location: location
 }
 
-module app_config 'app_configuration.bicep' = {
-  name: 'appConfigDeploy'
-  scope: useExisting ? resourceGroup(resourceGroupName) : app_config_rg
+module app_config '_app_configuration.bicep' = {
+  name: '_appConfig-${name}'
+  scope: rg
   params: {
     name: name
     location: location
     sku: sku
-    useExisting: useExisting
+    enablePublicNetworkAccess: enablePublicNetworkAccess
+    useExisting: false
     resourceTags: resourceTags
   }
 }
