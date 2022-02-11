@@ -93,7 +93,7 @@ if ($MyInvocation.ScriptName -notlike '*Invoke-Build.ps1') {
 if (!($BuildModulePath)) {
     if (!(Get-Module -ListAvailable Endjin.RecommendedPractices.Build)) {
         Write-Information "Installing 'Endjin.RecommendedPractices.Build' module..."
-        Install-Module Endjin.RecommendedPractices.Build -MinimumVersion 0.1.2 -Scope CurrentUser -Force -Repository PSGallery
+        Install-Module Endjin.RecommendedPractices.Build -MinimumVersion 0.1.3 -Scope CurrentUser -Force -Repository PSGallery
     }
     $BuildModulePath = "Endjin.RecommendedPractices.Build"
 }
@@ -148,6 +148,7 @@ task PostPackage {}
 # Uncomment the following lines if you need to publish modules your local versions to a registry
 # $BicepRegistryFqdn = "myacr.azurecr.io"
 # $BicepModuleVersionTag = "localbuild"
+$BicepModulesToPublish = Get-ChildItem -Filter *.bicep -Path ./modules/public -Recurse
 
 # Interim support for passing build configuration from the CI/CD server
 if (!$BicepRegistryFqdn) {
