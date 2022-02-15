@@ -47,17 +47,11 @@ param useExisting bool = false
 param resourceTags object = {}
 
 
-targetScope = 'subscription'
+targetScope = 'resourceGroup'
 
-
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!useExisting) {
-  name: resourceGroupName
-  location: location
-}
 
 module app_insights 'app_insights.bicep' = {
   name: 'appInsightsWithConfigPublish'
-  scope: resourceGroup(useExisting ? resourceGroupName : rg.name)
   params:{
     name: name
     applicationType: applicationType
