@@ -33,6 +33,9 @@ param useExistingStorageAccount bool = false
 @description('Sets the retention policy for diagnostics settings data, in days')
 param diagnosticsRetentionDays int = 30
 
+@description('The location of the key vault')
+param location string = resourceGroup().location
+
 @description('The resource tags applied to resources')
 param resourceTags object = {}
 
@@ -81,6 +84,7 @@ module key_vault 'key_vault.bicep' = {
     enabledForTemplateDeployment: enabledForTemplateDeployment
     tenantId: tenantId
     useExisting: false
+    location: location
     resourceTags: resourceTags
   }
 }

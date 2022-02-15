@@ -34,11 +34,11 @@ param resourceTags object = {}
 targetScope = 'resourceGroup'
 
 
-resource existing_app_insights 'Microsoft.Insights/components@2020-02-02' existing = {
+resource existing_app_insights 'Microsoft.Insights/components@2020-02-02' existing = if (useExisting) {
   name: name
 }
 
-resource app_insights 'Microsoft.Insights/components@2020-02-02' = {
+resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExisting) {
   name: name
   location: location
   kind: kind
