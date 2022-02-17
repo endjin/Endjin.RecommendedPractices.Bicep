@@ -1,3 +1,7 @@
+// <copyright file="app_service_plan.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
 @description('The name of the app service plan')
 param name string
 

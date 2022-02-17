@@ -1,3 +1,7 @@
+// <copyright file="acr.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
 @description('The name of the container registry')
 param name string
 
