@@ -1,3 +1,7 @@
+// <copyright file="app_insights.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
 @description('The name of the app insights workspace')
 param name string
 

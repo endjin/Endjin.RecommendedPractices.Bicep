@@ -1,3 +1,7 @@
+// <copyright file="key_vault_secret.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
 @description('Enter the secret name.')
 param secretName string
 

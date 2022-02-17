@@ -1,3 +1,7 @@
+// <copyright file="container_app_environment_with_config_publish.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
 @description('The name of the container app hosting environment')
 param name string
 

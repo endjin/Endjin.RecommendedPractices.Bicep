@@ -1,11 +1,19 @@
+// <copyright file="set_app_configuration_keys.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
 @description('The app configuration instance where the keys will be stored')
 param appConfigStoreName string
+
 @description('Array of key/values to be written to the app configuration store, each with the structure {name: "<key-name>", value: "<key-value>"}')
 param entries array
+
 @description('When defined, all app configuration keys will have this labelled applied')
 param label string = ''
 
+
 targetScope = 'resourceGroup'
+
 
 resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-06-01' existing = {
   name: appConfigStoreName
