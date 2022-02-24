@@ -59,7 +59,8 @@ resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01'
 module diagnostics_storage 'storage_account.bicep' = if (!useExisting && enableDiagnostics && !useExistingStorageAccount) {
   name: 'kvDiagnosticsDeploy'
   params: {
-    name: '${name}diag'
+    name: name
+    location: location
   }
 }
 
