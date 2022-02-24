@@ -31,4 +31,4 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!useExisting) 
 output name string = name
 output id string = useExisting ?  existing_rg.id : rg.id
 
-output resourceGroupResource object = rg
+output resourceGroupResource object = useExisting ? existing_rg : rg
