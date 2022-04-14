@@ -32,9 +32,10 @@ This represents a continuation of the typical approach as outlined above.
 |    Component         |    Description    |
 | -------------------- | ----------------- |
 | deploy orchestration | a PowerShell-based framework used to execute the ARM deployment and any 'last mile' tasks |
-| deploy tools         | collection of PowerShell & CLI tooling that provides low-level deployment functionality (e.g. Azure PowerShell, Azure CLI, custom PowerShell modules) |
+| deploy tools         | collection of PowerShell & CLI tooling that provides re-usable low-level deployment functionality (e.g. Azure PowerShell, Azure CLI, custom PowerShell modules) |
 | app ARM definition   | a Bicep-based ARM template that configures all the Azure resources required by the application |
-| bicep modules        | collection of re-usable Bicep modules |
+| bicep modules        | collection of re-usable Bicep modules that implement standardised ways of deploying an Azure resource or set of resources |
+| service principals   | any credentials needed to perform different parts of the process |
 
 #### Advantages:
 
@@ -48,9 +49,10 @@ This represents a continuation of the typical approach as outlined above.
 1. **Barrier to entry** - for someone unfamiliar with the scripted framework, it becomes an additional hurdle of understanding that needs to be overcome
 1. **Maintenance** - code that supports the wider orchestration concerns detailed in the Context section must be maintained
 1. **Direct permissions to config/secrets** - the identity running the scripted framework will require direct permissions to query the required configuration and secrets stores
-1. **Deployment identity handling** - for processes that require certain tasks to be 
+1. **Deployment identity handling** - for processes that require certain tasks to be run under different identities (i.e. separation of security responsibilities), the orchestration framework will require direct access to those credentials as well as implementing the mechanism for arbitrarily switching identities
 
-### Azure Resource Manager Deployment Scripts
+
+### Azure Resource Manager Deployment Scripts (Embedded)
 
 This represents a straight-forward usage of the Azure Resource Manager Deployment Scripts feature.
 
@@ -59,29 +61,67 @@ This represents a straight-forward usage of the Azure Resource Manager Deploymen
 |    Component         |    Description    |
 | -------------------- | ----------------- |
 | app ARM definition   | a Bicep-based ARM template that configures all the Azure resources required by the application, using a composition of Bicep modules |
-| bicep modules        | collection of re-usable Bicep modules |
-| ARM deploy scripts   | collection ARM deployment scripts, each implementing a discrete piece of deployment functionality |
+| bicep modules        | collection of re-usable Bicep modules that implement standardised ways of deploying an Azure resource or set of resources |
+| ARM deploy scripts   | collection of ARM deployment scripts, each implementing a discrete piece of deployment functionality. Each being abstracted  a Bicep module|
 | managed identities   | allow ARM deployment scripts to be executed with the required permissions. For sensitive scenarios, these can be managed independently of the application deployment to promote the separation of privilege security principle |
+| service principal    | a single identity that has permissions to run the ARM deployment and permissions to use the relevant managed identities |
 
 #### Advantages:
 
 1. **Just an ARM template** - the whole process can be represented using native ARM functionality, which can make it easier for someone new to conceptually grok the deployment process - even though the process still involves custom scripting, the absence of a wider framework will tend to make this seem less complex.
 1. **Utilises existing ARM orchestration features** - no need to re-implement concepts that ARM already provide (e.g. dependencies, retry logic etc.)
 1. **Centralised log handling** - error handling and logging for the complete process is available via ARM/Azure Portal and de-coupled from how/where the process was originally started (e.g. developer workstation, CI/CD server)
-1. **Aligned with ARM for the future** - there are plans for certain AAD function to added to ARM, this approach is likely to offer a simpler migration path to using such new features
+1. **Aligned with ARM for the future** - there are plans for (additional functionality](https://github.com/Azure/bicep/issues/3565) (outside of ARM) to be made available via the Bicep templating language. Using ARM deployment scripts is likely to offer a much simpler migration path to using such new features (i.e. swapping out a custom ARM `deploymentScript` resource for a new native one)
 1. **Option to embed within ARM template** - subject to not exceeding the overall [4MB limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/best-practices#template-limits) for fully expanded ARM templates, this avoids additional artefact deployment considerations
+1. **Dev Inner Loop** - the script source code can be maintained as standalone scripts and only embedded into the Bicep template at the point they are used (or published to a Bicep Registry). This aligns well with current development best-practises by supporting allowing the developer to test scripts locally as well as using any existing test frameworks.
+1. **Supports re-use via Bicep modules** - encapsulating each ARM deployment script as Bicep a module that can published to a Bicep Registry, will allow the functionality to be shared and exposed via a clear interface defined by the module parameters
 
 
 #### Disadvantages:
 
 1. **Scripts may be too big to embed** - this would require the scripts to be deployed to an accessible location prior to use, which adds complexity and friction to the dev inner-loop
-1. **No defacto method for sharing deployment scripts** - a number of approaches could be adopted but no particularly developer-friendly recommendations.  The only ARM-native option appears to be the use of [TemplateSpecs](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/template-specs).
-1. **Currently unable to customise the container image used to execute the deployment scripts** - this means that any additional tools must be installed as part of the script, which makes them more complex, potentially more fragile and longer to run
+1. **Currently unable to customise the container image used to execute the deployment scripts** - this means that any additional tools (not available in the base images) must be installed as part of the script, which introduces more moving parts to the wrapper script itself and could make them longer to run
+1. **Difficult to re-use the scripts outside of ARM** - the scripts themselves, whilst not maintained as embedded into the Bicep template are still just a collection of 'loose' scripts that are difficult to make available to scenarios running outside of ARM
+
+
+### Azure Resource Manager Deployment Scripts (External)
+
+This represents a more scaleable usage of the Azure Resource Manager Deployment Scripts feature.
+
+![ARM deployment scripts architecture overview](../assets/arm-deploy-scripts-arch.png)
+
+|    Component         |    Description    |
+| -------------------- | ----------------- |
+| deploy tools         | collection of PowerShell & CLI tooling that provides re-usable low-level deployment functionality (e.g. Azure PowerShell, Azure CLI, custom PowerShell modules) |
+| app ARM definition   | a Bicep-based ARM template that configures all the Azure resources required by the application, using a composition of Bicep modules |
+| bicep modules        | collection of re-usable Bicep modules that implement standardised ways of deploying an Azure resource or set of resources |
+| ARM deploy scripts   | collection of ARM deployment scripts, designed as lightweight wrappers around the deployment functionality exposed by the externalised 'deploy tools'. Each being abstracted a Bicep module |
+| managed identities   | allow ARM deployment scripts to be executed with the required permissions. For sensitive scenarios, these can be managed independently of the application deployment to promote the separation of privilege security principle |
+| service principal    | a single identity that has permissions to run the ARM deployment and permissions to use the relevant managed identities |
+
+#### Advantages:
+
+1. **Just an ARM template** - the whole process can be represented using native ARM functionality, which can make it easier for someone new to conceptually grok the deployment process - even though the process still involves custom scripting, the absence of a wider framework will tend to make this seem less complex.
+1. **Utilises existing ARM orchestration features** - no need to re-implement concepts that ARM already provide (e.g. dependencies, retry logic etc.)
+1. **Centralised log handling** - error handling and logging for the complete process is available via ARM/Azure Portal and de-coupled from how/where the process was originally started (e.g. developer workstation, CI/CD server)
+1. **Aligned with ARM for the future** - there are plans for [additional functionality](https://github.com/Azure/bicep/issues/3565) (outside of ARM) to be made available via the Bicep templating language. Using ARM deployment scripts is likely to offer a much simpler migration path to using such new features (i.e. swapping out a custom ARM `deploymentScript` resource for a new native one)
+1. **Option to embed within ARM template** - subject to not exceeding the overall [4MB limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/best-practices#template-limits) for fully expanded ARM templates, this avoids additional artefact deployment considerations
+1. **Dev Inner Loop**
+    * the wrapper scripts source code can be maintained as standalone scripts and only embedded into the Bicep template at the point they are used (or published to a Bicep Registry). This aligns well with current development best-practises by supporting allowing the developer to test scripts locally as well as using any existing test frameworks.
+    * the deploy tools can be packaged as a standalone module(s) and developed using typical development practises
+1. **Supports re-use via Bicep modules** - encapsulating each ARM deployment script as Bicep a module that can published to a Bicep Registry, will allow the functionality to be shared and exposed via a clear interface defined by the module parameters
+1. **Avoids any issues exceeding the [4MB limit](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/best-practices#template-limits)** - in this scenario, the ARM deployment scripts are simple wrappers around externalised functionality so they will be considerably smaller
+
+#### Disadvantages:
+
+1. **Currently unable to customise the container image used to execute the deployment scripts** - this means that any additional tools (not available in the base images) must be installed as part of the script, which introduces more moving parts to the wrapper script itself and could make them longer to run
+1. **Changes to the 'deploy tools' require a release event** - Since the 'deploy tools' are now completely abstracted, any changes to them will require a release event in order for those changes to be available to the consuming ARM deployment script. This could add some friction when needing to make a quick/small change.
+
 
 
 ## Decision
 
-Use ARM deployment scripts to orchestrate the 'last mile' deployment tasks.
+Use ARM deployment scripts with externalised deploy tools to orchestrate the 'last mile' deployment tasks.
 
 
 ## Consequences
@@ -89,11 +129,11 @@ Use ARM deployment scripts to orchestrate the 'last mile' deployment tasks.
 ### Positive
 * High-level deployment process is easy to 'grok' as it is just an ARM deployment
 * Custom scripting is concealed, yet accessible to those who are interested
-* Bicep modules can be utilised to component-ise ARM deployment scripts
-* Smooth migration path for adopting any future 'last mile' tasks that get added as native ARM features
-* Support for running ARM deployment scripts in the context of managed identities simplifies options for separation of privilege within a single deployment
+* Bicep modules can be utilised to build strong encapsulation around the ARM deployment scripts
+* Smooth migration path for adopting any future 'last mile' tasks that get added as part of the [Bicep Extensibility plans](https://github.com/Azure/bicep/issues/3565)
+* Support for running ARM deployment scripts in the context of managed identities simplifies options for separation of privileges within a single deployment
 
 ### Negative
-* The above managed identities will need to be managed
-* A carefully designed approach is needed to optimise the dev inner-loop when developing ARM deployment scripts (this approach is defined in a separate ADR)
-* No script debugging is possible during an actual deployment
+* The above managed identities will need to be setup & maintained (e.g. RBAC), but this is still less onerous than the equivalent of managing service principals and their credentials
+* A carefully designed approach is needed to optimise the dev inner-loop when developing ARM deployment scripts
+* No script debugging is possible inside a running ARM deployment script, though of course the underlying scripts can be debugged locally
