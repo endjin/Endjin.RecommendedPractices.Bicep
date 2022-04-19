@@ -135,7 +135,7 @@ task . FullBuild
 task PreBuild {}
 task PostBuild {}
 task PreTest {}
-task PostTest {}
+task PostTest validateBicepModules
 task PreTestReport {}
 task PostTestReport {}
 task PrePackage {}
@@ -149,7 +149,7 @@ task PostPackage {}
 # Uncomment the following lines if you need to publish modules your local versions to a registry
 # $BicepRegistryFqdn = "myacr.azurecr.io"
 # $BicepModuleVersionTag = "localbuild"
-$BicepModulesToPublish = Get-ChildItem -Filter *.bicep -Path ./modules/public -Recurse
+# $BicepModulesToPublish = Get-ChildItem -Filter *.bicep -Path ./modules/ -Recurse
 
 # Interim support for passing build configuration from the CI/CD server
 if (!$BicepRegistryFqdn) {
