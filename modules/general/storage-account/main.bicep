@@ -71,7 +71,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!u
 // which we can't currently get from a module.  This is why we don't follow the
 // same pattern as other templates where this additional functionality would be in
 // a separate template from the main storage account definition
-module storage_access_key_secret 'key_vault_secret.bicep' = if (saveAccessKeyToKeyVault) {
+module storage_access_key_secret '../key-vault-secret/main.bicep' = if (saveAccessKeyToKeyVault) {
   name: 'storageSecretDeploy'
   scope: resourceGroup(keyVaultSubscriptionName, keyVaultResourceGroupName) 
   params: {

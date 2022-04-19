@@ -56,7 +56,7 @@ resource existing_key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' exist
 resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (!useExisting && enableDiagnostics && useExistingStorageAccount) {
   name: diagnosticsStorageAccountName
 }
-module diagnostics_storage 'storage_account.bicep' = if (!useExisting && enableDiagnostics && !useExistingStorageAccount) {
+module diagnostics_storage '../storage-account/main.bicep' = if (!useExisting && enableDiagnostics && !useExistingStorageAccount) {
   name: 'kvDiagnosticsDeploy'
   params: {
     name: name

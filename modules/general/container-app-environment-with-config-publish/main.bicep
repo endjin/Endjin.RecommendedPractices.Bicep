@@ -43,7 +43,7 @@ targetScope = 'resourceGroup'
 
 
 // ContainerApp hosting environment
-module app_environment 'container_app_environment.bicep' = {
+module app_environment '../container-app-environment/main.bicep' = {
   name: 'containerAppEnv'
   params: {
     name: name
@@ -58,7 +58,7 @@ module app_environment 'container_app_environment.bicep' = {
   }
 }
 
-module kubeenv_app_config_key 'set_app_configuration_keys.bicep' = {
+module kubeenv_app_config_key '../set-app-configuration-keys/main.bicep' = {
   scope: resourceGroup(appConfigurationStoreSubscription, appConfigurationStoreResourceGroupName)
   name: 'kubeenvAppConfigKeyDeploy'
   params: {
@@ -73,7 +73,7 @@ module kubeenv_app_config_key 'set_app_configuration_keys.bicep' = {
   }
 }
 
-module aikey_secret 'key_vault_secret.bicep' = {
+module aikey_secret '../key-vault-secret/main.bicep' = {
   name: 'aiKeySecretDeploy'
   params: {
     keyVaultName: keyVaultName

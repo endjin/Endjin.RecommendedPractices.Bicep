@@ -54,7 +54,7 @@ param resourceTags object = {}
 targetScope = 'resourceGroup'
 
 
-module app_insights 'app_insights.bicep' = {
+module app_insights '../app-insights/main.bicep' = {
   name: 'appInsightsWithConfigPublish'
   params:{
     name: name
@@ -68,7 +68,7 @@ module app_insights 'app_insights.bicep' = {
   }
 }
 
-module aikey_secret 'key_vault_secret.bicep' = {
+module aikey_secret '../key-vault-secret/main.bicep' = {
   name: 'appInsightsKeySecret'
   scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName)
   params: {

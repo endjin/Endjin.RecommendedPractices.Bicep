@@ -48,7 +48,7 @@ param resourceTags object = {}
 targetScope = 'resourceGroup'
 
 
-module acr 'acr.bicep' = if (createContainerRegistry) {
+module acr '../acr/main.bicep' = if (createContainerRegistry) {
   name: 'appEnvAcrDeploy'
   params: {
     name: containerRegistryName

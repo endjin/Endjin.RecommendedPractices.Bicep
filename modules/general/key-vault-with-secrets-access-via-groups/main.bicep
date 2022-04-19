@@ -74,7 +74,7 @@ var accessPolicies = [
 ]
 
 
-module key_vault 'key_vault.bicep' = {
+module key_vault '../key-vault/main.bicep' = {
   name: 'keyVault-${name}'
   params: {
     name: name
