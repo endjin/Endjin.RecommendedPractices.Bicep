@@ -81,7 +81,7 @@ This represents a straight-forward usage of the Azure Resource Manager Deploymen
 
 1. **Scripts may be too big to embed** - this would require the scripts to be deployed to an accessible location prior to use, which adds complexity and friction to the dev inner-loop
 1. **Currently unable to customise the container image used to execute the deployment scripts** - this means that any additional tools (not available in the base images) must be installed as part of the script, which introduces more moving parts to the wrapper script itself and could make them longer to run
-1. **Difficult to re-use the scripts outside of ARM** - the scripts themselves, whilst not maintained as embedded into the Bicep template are still just a collection of 'loose' scripts that are difficult to make available to scenarios running outside of ARM
+1. **Difficult to re-use the scripts outside of Bicep/ARM** - whilst the scripts are not authored as embedded strings within the Bicep templates (i.e. they are embedded as part of the build process), they are still just a collection of 'loose' scripts that are difficult to make available to scenarios running outside of Bicep/ARM
 
 
 ### Azure Resource Manager Deployment Scripts (External)
