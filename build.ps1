@@ -137,7 +137,7 @@ task . FullBuild
 task PreBuild {}
 task PostBuild {}
 task PreTest {}
-task PostTest validateBicepModules
+task PostTest {}
 task PreTestReport {}
 task PostTestReport {}
 task PrePackage {}
