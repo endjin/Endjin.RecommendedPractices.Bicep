@@ -93,7 +93,10 @@ module key_vault '../key-vault/main.bicep' = {
   }
 }
 
+@description('The objectId of the key vault')
 output id string = key_vault.outputs.id
+@description('The name of the key vault')
 output name string = key_vault.outputs.name
 
+@description('An object representing the key vault resource')
 output keyVaultResource object =  key_vault.outputs.keyVaultResource

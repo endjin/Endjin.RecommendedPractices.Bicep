@@ -62,7 +62,10 @@ param (
     [switch] $Clean,
 
     [Parameter()]
-    [string] $BuildModulePath
+    [string] $BuildModulePath,
+
+    [Parameter()]
+    [version] $BuildModuleVersion = "0.1.4"
 )
 
 $ErrorActionPreference = $ErrorActionPreference ? $ErrorActionPreference : 'Stop'
@@ -90,18 +93,17 @@ if ($MyInvocation.ScriptName -notlike '*Invoke-Build.ps1') {
 #endregion
 
 # Import shared tasks and initialise build framework
-[version]$buildModuleVersion = "0.1.4"
 if (!($BuildModulePath)) {
-    if (!(Get-Module -ListAvailable Endjin.RecommendedPractices.Build | ? { $_.Version -eq $buildModuleVersion })) {
+    if (!(Get-Module -ListAvailable Endjin.RecommendedPractices.Build | ? { $_.Version -eq $BuildModuleVersion })) {
         Write-Information "Installing 'Endjin.RecommendedPractices.Build' module..."
-        Install-Module Endjin.RecommendedPractices.Build -RequiredVersion $buildModuleVersion -Scope CurrentUser -Force -Repository PSGallery
+        Install-Module Endjin.RecommendedPractices.Build -RequiredVersion $BuildModuleVersion -Scope CurrentUser -Force -Repository PSGallery
     }
     $BuildModulePath = "Endjin.RecommendedPractices.Build"
 }
 else {
     Write-Information "BuildModulePath: $BuildModulePath"
 }
-Import-Module $BuildModulePath -RequiredVersion $buildModuleVersion -Force
+Import-Module $BuildModulePath -RequiredVersion $BuildModuleVersion -Force
 
 # Load the build process & tasks
 . Endjin.RecommendedPractices.Build.tasks
