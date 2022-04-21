@@ -25,8 +25,6 @@ param kind string = 'web'
   'web'
 ])
 param applicationType string = 'web'
-param flowType string = 'Redfield'
-param requestSource string = 'CustomDeployment'
 
 @description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
 param useExisting bool = false
@@ -42,19 +40,23 @@ resource existing_app_insights 'Microsoft.Insights/components@2020-02-02' existi
   name: name
 }
 
+// TODO: Create LogAnalytics-linked workspace
+
 resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExisting) {
   name: name
   location: location
   kind: kind
   properties: {
     Application_Type: applicationType
-    Flow_Type: flowType
-    Request_Source: requestSource
   }
   tags: resourceTags
 }
 
-output id string = useExisting ? existing_app_insights.id : app_insights.id
-output instrumentationKey string =  useExisting ? existing_app_insights.properties.InstrumentationKey : app_insights.properties.InstrumentationKey
 
+@description('The resource ID of the app insights workspace')
+output id string = useExisting ? existing_app_insights.id : app_insights.id
+@description('The name of the app insights workspace')
+output name string =  useExisting ? existing_app_insights.name : app_insights.name
+
+@description('An object representing the app insights workspace resource')
 output appInsightsWorkspaceResource object = useExisting ? existing_app_insights : app_insights

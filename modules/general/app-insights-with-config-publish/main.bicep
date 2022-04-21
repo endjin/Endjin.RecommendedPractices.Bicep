@@ -5,9 +5,6 @@
 @description('The name of the app insights workspace')
 param name string
 
-@description('The resource group of the app insights workspace. When ')
-param resourceGroupName string
-
 @description('The subscription of the existing app insights workspace')
 param subscriptionId string = subscription().subscriptionId
 
@@ -18,7 +15,7 @@ param location string
 param keyVaultName string
 
 @description('The resource group of the key vault where the instrumentation key will be stored')
-param keyVaultResourceGroupName string = resourceGroupName
+param keyVaultResourceGroupName string
 
 @description('The subscription of the key vault where the instrumentation key will be stored')
 param keyVaultSubscriptionId string = subscriptionId
@@ -41,9 +38,6 @@ param kind string = 'web'
 ])
 param applicationType string = 'web'
 
-param flowType string = 'Redfield'
-param requestSource string = 'CustomDeployment'
-
 @description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
 param useExisting bool = false
 
@@ -59,9 +53,7 @@ module app_insights '../app-insights/main.bicep' = {
   params:{
     name: name
     applicationType: applicationType
-    flowType: flowType
     kind: kind
-    requestSource: requestSource
     useExisting: useExisting
     location: location
     resourceTags: resourceTags
@@ -74,12 +66,15 @@ module aikey_secret '../key-vault-secret/main.bicep' = {
   params: {
     keyVaultName: keyVaultName
     secretName: 'AppInsightsInstrumentationKey'
-    contentValue: app_insights.outputs.instrumentationKey
+    contentValue: app_insights.outputs.appInsightsWorkspaceResource.properties.InstrumentationKey
     contentType: 'text/plain'
   }
 }
 
+@description('The resource ID of the app insights workspace')
 output id string = app_insights.outputs.id
-output instrumentationKey string = app_insights.outputs.instrumentationKey
+@description('The name of the app insights workspace')
+output name string = app_insights.outputs.name
 
+@description('An object representing the app insights workspace resource')
 output appInsightsWorkspaceResource object = app_insights.outputs.appInsightsWorkspaceResource

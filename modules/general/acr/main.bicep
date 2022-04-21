@@ -45,7 +45,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' = if (!useExist
   tags: resourceTags
 }
 
-@description('The objectId of the container registry')
+@description('The resource ID of the container registry')
 output id string = useExisting ? existing_acr.id : acr.id
 @description('The name of the container registry')
 output name string = useExisting ? existing_acr.name : acr.name

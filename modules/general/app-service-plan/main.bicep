@@ -14,34 +14,19 @@ param skuTier string
 @description('The location of the app service plan')
 param location string
 
-@description('')
+@description('The target number of workers')
 param targetWorkerCount int = 0
 
-@description('')
+@description('The target size of the workers')
 param targetWorkerSizeId int = 0
 
-@description('')
+@description('When true, elastic scale is enabled')
 param elasticScaleEnabled bool = false
 
-@description('')
+@description('The maximum number of elastic workers')
 param maximumElasticWorkerCount int = 1
 
-@description('')
-param hyperV bool = false
-
-@description('')
-param isSpot bool = false
-
-@description('')
-param isXenon bool = false
-
-@description('')
-param perSiteScaling bool = false
-
-@description('')
-param reserved bool = false
-
-@description('')
+@description('When true, the app service will have zone redundancy')
 param zoneRedundant bool = false
 
 @description('The resource tags applied to resources')
@@ -69,40 +54,24 @@ resource hosting_plan 'Microsoft.Web/serverfarms@2021-02-01' = if (!useExisting)
   name: name
   location: location
   sku: {
-    // capacity: int
-    // family: 'string'
     name: skuName
-    // size: 'string'
     tier: skuTier
   }
   kind: 'string'
   properties: {
     elasticScaleEnabled: elasticScaleEnabled
-    hyperV: hyperV
-    isSpot: isSpot
-    isXenon: isXenon
     maximumElasticWorkerCount: maximumElasticWorkerCount
-    perSiteScaling: perSiteScaling
-    reserved: reserved
     targetWorkerCount: targetWorkerCount
     targetWorkerSizeId: targetWorkerSizeId
     zoneRedundant: zoneRedundant
-    // freeOfferExpirationTime: 'string'
-    // hostingEnvironmentProfile: {
-    //   id: 'string'
-    // }
-    // hostingEnvironmentProfile: { 
-    //   id: 'string'
-    // }
-    // kubeEnvironmentProfile: {
-    //   id: 'string'
-    // }
-    // spotExpirationTime: 'string'
-    // workerTierName: 'string'
   }
   tags: resourceTags
 }
 
+@description('The resource ID of the app service plan')
 output id string = useExisting ? existing_hosting_plan.id : hosting_plan.id
+@description('The name of the app service plan')
+output nmae string = useExisting ? existing_hosting_plan.name : hosting_plan.name
 
+@description('An object representing the app configuration store resource')
 output appServicePlanResource object = useExisting ? existing_hosting_plan : hosting_plan

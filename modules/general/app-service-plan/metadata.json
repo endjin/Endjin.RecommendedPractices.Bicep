@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema#",
-  "name": "",
-  "description": "",
-  "owner": ""
+  "name": "App Service Plan",
+  "description": "Deploys an App Service Plan",
+  "owner": "endjin"
 }

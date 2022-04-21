@@ -6,7 +6,7 @@
 param name string
 
 @description('The location of the app configuration store')
-param location string = resourceGroup().location
+param location string
 
 @description('When false, the app configuration store will be inaccessible via its public IP address')
 param enablePublicNetworkAccess bool = true
@@ -47,7 +47,10 @@ resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-0
   tags: resourceTags
 }
 
+@description('The resource ID of the app configuration store')
 output id string = useExisting ? existing_app_config_store.id : app_config_store.id
+@description('The name of the app configuration store')
 output name string = useExisting ? existing_app_config_store.name : app_config_store.name
 
+@description('An object representing the app configuration store resource')
 output appConfigStoreResource object = useExisting ? existing_app_config_store : app_config_store
