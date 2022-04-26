@@ -1,13 +1,11 @@
-/*
-Write deployment tests in this file. Any module that references the main
-module file is a deployment test. Make sure at least one test is added.
-*/
+param prefix string = uniqueString(resourceGroup().id)
+param location string = resourceGroup().location
 
 module acr '../main.bicep' = {
-  name: 'fake-acr-deploy'
+  name: 'acrDeploy'
   params: {
-    location: 'northeurope'
-    name: 'fake-acr'
+    location: location
+    name: '${prefix}acr'
     sku: 'Basic'
   }
 }

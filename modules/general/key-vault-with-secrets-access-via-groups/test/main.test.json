@@ -5,14 +5,24 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "9664840102684423081"
+      "templateHash": "9676398305524754475"
+    }
+  },
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
     }
   },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
-      "name": "fake-kv-deploy",
+      "name": "keyVaultDeploy",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -23,7 +33,7 @@
             "value": false
           },
           "name": {
-            "value": "fake-kv"
+            "value": "[format('{0}kv', parameters('prefix'))]"
           },
           "secretsContributorsGroupObjectId": {
             "value": "00000000-0000-0000-0000-000000000000"
@@ -35,7 +45,7 @@
             "value": "00000000-0000-0000-0000-000000000000"
           },
           "location": {
-            "value": "northeurope"
+            "value": "[parameters('location')]"
           }
         },
         "template": {
@@ -45,7 +55,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "13523950231592562477"
+              "templateHash": "5915824571582486429"
             }
           },
           "parameters": {
@@ -61,10 +71,29 @@
                 "description": "The AzureAD objectId for the group to be granted \"get\" access to secrets"
               }
             },
+            "secretsReadersPermissions": {
+              "type": "array",
+              "defaultValue": [
+                "get"
+              ],
+              "metadata": {
+                "description": "The list of secret permissions granted to the \"reader\" group"
+              }
+            },
             "secretsContributorsGroupObjectId": {
               "type": "string",
               "metadata": {
                 "description": "The AzureAD objectId for the group to be granted \"get\" & \"set\" access to secrets"
+              }
+            },
+            "secretsContributorsPermissions": {
+              "type": "array",
+              "defaultValue": [
+                "get",
+                "set"
+              ],
+              "metadata": {
+                "description": "The list of secret permissions granted to the \"contributors\" group"
               }
             },
             "tenantId": {
@@ -137,8 +166,8 @@
             }
           },
           "variables": {
-            "readerAccessPolicy": "[if(not(empty(parameters('secretsReadersGroupObjectId'))), createObject('objectId', parameters('secretsReadersGroupObjectId'), 'tenantId', parameters('tenantId'), 'permissions', createObject('secrets', createArray('get'))), createObject())]",
-            "contributorAccessPolicy": "[if(not(empty(parameters('secretsContributorsGroupObjectId'))), createObject('objectId', parameters('secretsContributorsGroupObjectId'), 'tenantId', parameters('tenantId'), 'permissions', createObject('secrets', createArray('get', 'set'))), createObject())]",
+            "readerAccessPolicy": "[if(not(empty(parameters('secretsReadersGroupObjectId'))), createObject('objectId', parameters('secretsReadersGroupObjectId'), 'tenantId', parameters('tenantId'), 'permissions', createObject('secrets', parameters('secretsReadersPermissions'))), createObject())]",
+            "contributorAccessPolicy": "[if(not(empty(parameters('secretsContributorsGroupObjectId'))), createObject('objectId', parameters('secretsContributorsGroupObjectId'), 'tenantId', parameters('tenantId'), 'permissions', createObject('secrets', parameters('secretsContributorsPermissions'))), createObject())]",
             "accessPolicies": [
               "[variables('readerAccessPolicy')]",
               "[variables('contributorAccessPolicy')]"
@@ -202,7 +231,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.5.6.12127",
-                      "templateHash": "6877868070060791837"
+                      "templateHash": "10497057293161078654"
                     }
                   },
                   "parameters": {
@@ -234,7 +263,6 @@
                     },
                     "location": {
                       "type": "string",
-                      "defaultValue": "[resourceGroup().location]",
                       "metadata": {
                         "description": "The location of the key vault"
                       }
@@ -371,7 +399,7 @@
                             "_generator": {
                               "name": "bicep",
                               "version": "0.5.6.12127",
-                              "templateHash": "2695193318561950104"
+                              "templateHash": "10900605198089388780"
                             }
                           },
                           "parameters": {
@@ -521,7 +549,7 @@
                                     "_generator": {
                                       "name": "bicep",
                                       "version": "0.5.6.12127",
-                                      "templateHash": "11149370804059083622"
+                                      "templateHash": "4053446927271603000"
                                     }
                                   },
                                   "parameters": {
@@ -574,7 +602,10 @@
                                   "outputs": {
                                     "secretUriWithVersion": {
                                       "type": "string",
-                                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
+                                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                                      "metadata": {
+                                        "description": "The key vault URI linking to the new/udpated secret"
+                                      }
                                     }
                                   }
                                 }
@@ -587,15 +618,24 @@
                           "outputs": {
                             "id": {
                               "type": "string",
-                              "value": "[if(parameters('useExisting'), resourceId('Microsoft.Storage/storageAccounts', parameters('name')), resourceId('Microsoft.Storage/storageAccounts', parameters('name')))]"
+                              "value": "[if(parameters('useExisting'), resourceId('Microsoft.Storage/storageAccounts', parameters('name')), resourceId('Microsoft.Storage/storageAccounts', parameters('name')))]",
+                              "metadata": {
+                                "description": "The resource ID of the storage account"
+                              }
                             },
                             "name": {
                               "type": "string",
-                              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
+                              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+                              "metadata": {
+                                "description": "The name of the storage account"
+                              }
                             },
                             "storageAccountResource": {
                               "type": "object",
-                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]"
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]",
+                              "metadata": {
+                                "description": "An object representing the storage account resource"
+                              }
                             }
                           }
                         }
@@ -605,15 +645,24 @@
                   "outputs": {
                     "id": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), resourceId('Microsoft.KeyVault/vaults', parameters('name')), resourceId('Microsoft.KeyVault/vaults', parameters('name')))]"
+                      "value": "[if(parameters('useExisting'), resourceId('Microsoft.KeyVault/vaults', parameters('name')), resourceId('Microsoft.KeyVault/vaults', parameters('name')))]",
+                      "metadata": {
+                        "description": "The resource ID of the key vault"
+                      }
                     },
                     "name": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
+                      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+                      "metadata": {
+                        "description": "The name of the key vault"
+                      }
                     },
                     "keyVaultResource": {
                       "type": "object",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2021-06-01-preview', 'full'), reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2021-06-01-preview', 'full'))]"
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2021-06-01-preview', 'full'), reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2021-06-01-preview', 'full'))]",
+                      "metadata": {
+                        "description": "An object representing the key vault resource"
+                      }
                     }
                   }
                 }

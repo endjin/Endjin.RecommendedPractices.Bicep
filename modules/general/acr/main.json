@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "15216896366502301186"
+      "templateHash": "3703373710053007627"
     }
   },
   "parameters": {
@@ -75,7 +75,7 @@
       "type": "string",
       "value": "[if(parameters('useExisting'), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')))]",
       "metadata": {
-        "description": "The objectId of the container registry"
+        "description": "The resource ID of the container registry"
       }
     },
     "name": {

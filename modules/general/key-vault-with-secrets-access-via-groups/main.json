@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "13691781896326940267"
+      "templateHash": "5915824571582486429"
     }
   },
   "parameters": {
@@ -181,7 +181,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "9028382947723589439"
+              "templateHash": "10497057293161078654"
             }
           },
           "parameters": {
@@ -349,7 +349,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.5.6.12127",
-                      "templateHash": "9631678655871697021"
+                      "templateHash": "10900605198089388780"
                     }
                   },
                   "parameters": {
@@ -568,15 +568,24 @@
                   "outputs": {
                     "id": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), resourceId('Microsoft.Storage/storageAccounts', parameters('name')), resourceId('Microsoft.Storage/storageAccounts', parameters('name')))]"
+                      "value": "[if(parameters('useExisting'), resourceId('Microsoft.Storage/storageAccounts', parameters('name')), resourceId('Microsoft.Storage/storageAccounts', parameters('name')))]",
+                      "metadata": {
+                        "description": "The resource ID of the storage account"
+                      }
                     },
                     "name": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
+                      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+                      "metadata": {
+                        "description": "The name of the storage account"
+                      }
                     },
                     "storageAccountResource": {
                       "type": "object",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]"
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]",
+                      "metadata": {
+                        "description": "An object representing the storage account resource"
+                      }
                     }
                   }
                 }

@@ -17,7 +17,7 @@ Azure Application Insights
 
 | Name                         | Type   | Description                                                |
 | :--------------------------- | :----: | :--------------------------------------------------------- |
-| id                           | string | The objectId of the app insights workspace                 |
+| id                           | string | The resource ID of the app insights workspace              |
 | name                         | string | The name of the app insights workspace                     |
 | appInsightsWorkspaceResource | object | An object representing the app insights workspace resource |
 

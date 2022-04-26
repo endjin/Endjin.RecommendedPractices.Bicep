@@ -5,8 +5,406 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "1955613549866019244"
+      "templateHash": "10330695728311947471"
     }
   },
-  "resources": []
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-11-01-preview",
+      "name": "[format('{0}kv', parameters('prefix'))]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "tenantId": "[tenant().tenantId]"
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appInsights",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[format('{0}kv', parameters('prefix'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[format('{0}ai', parameters('prefix'))]"
+          },
+          "keyVaultResourceGroupName": {
+            "value": "[resourceGroup().name]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.5.6.12127",
+              "templateHash": "11966974136808201496"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the app insights workspace"
+              }
+            },
+            "subscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription of the existing app insights workspace"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the app insights workspace"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "The key vault name where the instrumentation key will be stored"
+              }
+            },
+            "keyVaultResourceGroupName": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource group of the key vault where the instrumentation key will be stored"
+              }
+            },
+            "keyVaultSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[parameters('subscriptionId')]",
+              "metadata": {
+                "description": "The subscription of the key vault where the instrumentation key will be stored"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": "web",
+              "allowedValues": [
+                "web",
+                "ios",
+                "other",
+                "store",
+                "java",
+                "phone"
+              ],
+              "metadata": {
+                "description": "The kind of application using the workspace"
+              }
+            },
+            "applicationType": {
+              "type": "string",
+              "defaultValue": "web",
+              "allowedValues": [
+                "other",
+                "web"
+              ],
+              "metadata": {
+                "description": "The type of application using the workspace"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "appInsightsWithConfigPublish",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "applicationType": {
+                    "value": "[parameters('applicationType')]"
+                  },
+                  "kind": {
+                    "value": "[parameters('kind')]"
+                  },
+                  "useExisting": {
+                    "value": "[parameters('useExisting')]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "resourceTags": {
+                    "value": "[parameters('resourceTags')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.5.6.12127",
+                      "templateHash": "14974416617156605279"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the app insights workspace"
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The location of the app insights workspace"
+                      }
+                    },
+                    "kind": {
+                      "type": "string",
+                      "defaultValue": "web",
+                      "allowedValues": [
+                        "web",
+                        "ios",
+                        "other",
+                        "store",
+                        "java",
+                        "phone"
+                      ],
+                      "metadata": {
+                        "description": "The kind of application using the workspace"
+                      }
+                    },
+                    "applicationType": {
+                      "type": "string",
+                      "defaultValue": "web",
+                      "allowedValues": [
+                        "other",
+                        "web"
+                      ],
+                      "metadata": {
+                        "description": "The type of application using the workspace"
+                      }
+                    },
+                    "useExisting": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated"
+                      }
+                    },
+                    "resourceTags": {
+                      "type": "object",
+                      "defaultValue": {},
+                      "metadata": {
+                        "description": "The resource tags applied to resources"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.Insights/components",
+                      "apiVersion": "2020-02-02",
+                      "name": "[parameters('name')]",
+                      "location": "[parameters('location')]",
+                      "kind": "[parameters('kind')]",
+                      "properties": {
+                        "Application_Type": "[parameters('applicationType')]"
+                      },
+                      "tags": "[parameters('resourceTags')]"
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), resourceId('Microsoft.Insights/components', parameters('name')), resourceId('Microsoft.Insights/components', parameters('name')))]",
+                      "metadata": {
+                        "description": "The resource ID of the app insights workspace"
+                      }
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+                      "metadata": {
+                        "description": "The name of the app insights workspace"
+                      }
+                    },
+                    "appInsightsWorkspaceResource": {
+                      "type": "object",
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'))]",
+                      "metadata": {
+                        "description": "An object representing the app insights workspace resource"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "appInsightsKeySecret",
+              "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+              "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "secretName": {
+                    "value": "AppInsightsInstrumentationKey"
+                  },
+                  "contentValue": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.appInsightsWorkspaceResource.value.properties.InstrumentationKey]"
+                  },
+                  "contentType": {
+                    "value": "text/plain"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.5.6.12127",
+                      "templateHash": "4053446927271603000"
+                    }
+                  },
+                  "parameters": {
+                    "secretName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Enter the secret name."
+                      }
+                    },
+                    "contentType": {
+                      "type": "string",
+                      "defaultValue": "text/plain",
+                      "metadata": {
+                        "description": "Type of the secret"
+                      }
+                    },
+                    "contentValue": {
+                      "type": "secureString",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "Value of the secret"
+                      }
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Name of the vault"
+                      }
+                    },
+                    "useExisting": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, a pre-existing secret will be returned"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2021-06-01-preview",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                      "properties": {
+                        "contentType": "[parameters('contentType')]",
+                        "value": "[parameters('contentValue')]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "secretUriWithVersion": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                      "metadata": {
+                        "description": "The key vault URI linking to the new/udpated secret"
+                      }
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.id.value]",
+              "metadata": {
+                "description": "The resource ID of the app insights workspace"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.name.value]",
+              "metadata": {
+                "description": "The name of the app insights workspace"
+              }
+            },
+            "appInsightsWorkspaceResource": {
+              "type": "object",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.appInsightsWorkspaceResource.value]",
+              "metadata": {
+                "description": "An object representing the app insights workspace resource"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', format('{0}kv', parameters('prefix')))]"
+      ]
+    }
+  ]
 }

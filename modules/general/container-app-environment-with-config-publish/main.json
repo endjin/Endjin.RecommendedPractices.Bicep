@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "10037093504847304487"
+      "templateHash": "7352989657827612311"
     }
   },
   "parameters": {
@@ -583,7 +583,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "11149370804059083622"
+              "templateHash": "4053446927271603000"
             }
           },
           "parameters": {
@@ -636,7 +636,10 @@
           "outputs": {
             "secretUriWithVersion": {
               "type": "string",
-              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+              "metadata": {
+                "description": "The key vault URI linking to the new/udpated secret"
+              }
             }
           }
         }

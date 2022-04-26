@@ -1,6 +1,6 @@
 # Container App Environment
 
-Container App Environment
+Deploys a Container App hosting environment
 
 ## Parameters
 

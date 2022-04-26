@@ -17,7 +17,7 @@ Azure Container Registry
 
 | Name        | Type   | Description                                            |
 | :---------- | :----: | :----------------------------------------------------- |
-| id          | string | The objectId of the container registry                 |
+| id          | string | The resource ID of the container registry              |
 | name        | string | The name of the container registry                     |
 | loginServer | string | The admin username of the container registry           |
 | acrResource | object | An object representing the container registry resource |

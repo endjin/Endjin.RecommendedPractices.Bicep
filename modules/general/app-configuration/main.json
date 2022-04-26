@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "18012530226057258857"
+      "templateHash": "17225415429312809162"
     }
   },
   "parameters": {
@@ -17,7 +17,6 @@
     },
     "location": {
       "type": "string",
-      "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "The location of the app configuration store"
       }
@@ -79,7 +78,7 @@
       "type": "string",
       "value": "[if(parameters('useExisting'), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')))]",
       "metadata": {
-        "description": "The objectId of the app configuration store"
+        "description": "The resource ID of the app configuration store"
       }
     },
     "name": {
