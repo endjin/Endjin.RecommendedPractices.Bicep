@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema#",
-  "name": "",
-  "description": "",
-  "owner": ""
+  "name": "Resource Group",
+  "description": "Deploys a resource group or gets a reference to an existing one - useful for deferred evaluation of target resource group details",
+  "owner": "endjin"
 }

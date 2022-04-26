@@ -125,14 +125,21 @@ resource container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' =
 }
 
 // ContainerApp hosting environment outputs
+@description('The resource ID of the container app environment')
 output id string = useExisting ? existing_container_app_environment.id : container_app_environment.id
+@description('The name of the container app environment')
 output name string = useExisting ? existing_container_app_environment.name : container_app_environment.name
+@description('An object representing the container app environment resource')
 output appEnvironmentResource object = useExisting ? existing_container_app_environment : container_app_environment
 
 // Monitoring resource outputs
+@description('The app insights workspace instrumentation key')
 output appinsights_instrumentation_key string = useExisting ? existing_app_insights.properties.InstrumentationKey : app_insights.properties.InstrumentationKey
 
 // ACR outputs
+@description('The resource ID of the container registry')
 output acrId string = createContainerRegistry ? acr.outputs.id : ''
+@description('The admin username for the container registry')
 output acrUsername string = createContainerRegistry ? acr.outputs.name : ''
+@description('The login server for the container registry')
 output acrLoginServer string = createContainerRegistry ? acr.outputs.loginServer : ''

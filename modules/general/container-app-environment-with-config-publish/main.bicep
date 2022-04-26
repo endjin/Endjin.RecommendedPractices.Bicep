@@ -83,11 +83,19 @@ module aikey_secret '../key-vault-secret/main.bicep' = {
   }
 }
 
-output id string = app_environment.outputs.id
-output name string = app_environment.name
-output acrId string = createContainerRegistry ? app_environment.outputs.acrId : ''
-output acrUsername string = createContainerRegistry ? app_environment.outputs.acrUsername : ''
-output acrLoginServer string = createContainerRegistry ? app_environment.outputs.acrLoginServer : ''
 
+// ContainerApp hosting environment outputs
+@description('The resource ID of the container app environment')
+output id string = app_environment.outputs.id
+@description('The name of the container app environment')
+output name string = app_environment.name
+@description('An object representing the container app environment resource')
 output appEnvironmentResource object = app_environment.outputs.appEnvironmentResource
 
+// ACR outputs
+@description('The resource ID of the container registry')
+output acrId string = createContainerRegistry ? app_environment.outputs.acrId : ''
+@description('The admin username for the container registry')
+output acrUsername string = createContainerRegistry ? app_environment.outputs.acrUsername : ''
+@description('The login server for the container registry')
+output acrLoginServer string = createContainerRegistry ? app_environment.outputs.acrLoginServer : ''

@@ -1,16 +1,24 @@
-/*
-Write deployment tests in this file. Any module that references the main
-module file is a deployment test. Make sure at least one test is added.
-*/
-
+param prefix string = uniqueString(resourceGroup().id)
 param location string = resourceGroup().location
+
+resource key_vault 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
+  name: '${prefix}kv'
+  location: location
+  properties: {
+    sku: {
+      family: 'A'
+      name: 'standard'
+    }
+    tenantId: tenant().tenantId
+  }
+}
 
 module appInsights '../main.bicep' = {
   name: 'appInsights'
   params: {
-    keyVaultName: 'foo-kv'
+    keyVaultName: key_vault.name
     location: location
-    name: 'foo'
+    name: '${prefix}ai'
     keyVaultResourceGroupName: resourceGroup().name
   }
 }

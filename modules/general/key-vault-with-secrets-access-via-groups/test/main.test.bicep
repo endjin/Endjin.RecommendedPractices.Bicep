@@ -1,17 +1,16 @@
-/*
-Write deployment tests in this file. Any module that references the main
-module file is a deployment test. Make sure at least one test is added.
-*/
+param prefix string = uniqueString(resourceGroup().id)
+param location string = resourceGroup().location
 
-module keyvault '../main.bicep' = {
-  name: 'fake-kv-deploy'
+// TODO: Create temporary groups?
+
+module keyvault_no_groups '../main.bicep' = {
+  name: 'keyVaultDeploy'
   params: {
     enableDiagnostics: false
-    name: 'fake-kv'
+    name: '${prefix}kv'
     secretsContributorsGroupObjectId: '00000000-0000-0000-0000-000000000000'
     secretsReadersGroupObjectId: '00000000-0000-0000-0000-000000000000'
     tenantId: '00000000-0000-0000-0000-000000000000'
-#disable-next-line no-hardcoded-location
-    location: 'northeurope'
+    location: location
   }
 }

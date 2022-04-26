@@ -28,7 +28,10 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = if (!useExisting) 
   tags: resourceTags
 }
 
-output name string = name
+@description('The resource ID of the resource group')
 output id string = useExisting ?  existing_rg.id : rg.id
+@description('The name of the resource group')
+output name string = name
 
+@description('An object representing the resource group resource')
 output resourceGroupResource object = useExisting ? existing_rg : rg

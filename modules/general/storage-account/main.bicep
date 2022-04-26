@@ -82,7 +82,10 @@ module storage_access_key_secret '../key-vault-secret/main.bicep' = if (saveAcce
 }
 
 
+@description('The resource ID of the storage account')
 output id string = useExisting ? existing_storage_account.id : storage_account.id
+@description('The name of the storage account')
 output name string = useExisting ? existing_storage_account.name : storage_account.name
 
+@description('An object representing the storage account resource')
 output storageAccountResource object = useExisting ? existing_storage_account : storage_account

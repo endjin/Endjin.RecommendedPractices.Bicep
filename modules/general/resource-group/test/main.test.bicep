@@ -1,4 +1,12 @@
-/*
-Write deployment tests in this file. Any module that references the main
-module file is a deployment test. Make sure at least one test is added.
-*/
+param prefix string = uniqueString(subscription().id, 'bicep-rg-test')
+param location string = 'northeurope'
+
+targetScope = 'subscription'
+
+module rg '../main.bicep' = {
+  name: 'rgDeploy'
+  params: {
+    location: location
+    name: '${prefix}-rg'
+  }
+}

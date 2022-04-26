@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema#",
-  "name": "",
-  "description": "",
-  "owner": ""
+  "name": "Container App Environment with published configuration",
+  "description": "Deploys a ContainerApp hosting environment and publishes related configuration to App Configuration and Key Vault",
+  "owner": "endjin"
 }

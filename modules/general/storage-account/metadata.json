@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema#",
-  "name": "",
-  "description": "",
-  "owner": ""
+  "name": "Storage Account",
+  "description": "Deploys a storage account or returns a reference to an existing one",
+  "owner": "endjin"
 }

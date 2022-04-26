@@ -9,8 +9,18 @@ param name string
 @description('The AzureAD objectId for the group to be granted "get" access to secrets')
 param secretsReadersGroupObjectId string
 
+@description('The list of secret permissions granted to the "reader" group')
+param secretsReadersPermissions array = [
+  'get'
+]
 @description('The AzureAD objectId for the group to be granted "get" & "set" access to secrets')
 param secretsContributorsGroupObjectId string
+
+@description('The list of secret permissions granted to the "contributors" group')
+param secretsContributorsPermissions array = [
+  'get'
+  'set'
+]
 
 @description('The Azure tenantId of the key vault')
 param tenantId string
@@ -51,9 +61,7 @@ var readerAccessPolicy = (!empty(secretsReadersGroupObjectId)) ? {
   objectId: secretsReadersGroupObjectId
   tenantId: tenantId
   permissions: {
-    secrets: [
-      'get'
-    ]
+    secrets: secretsReadersPermissions
   }
 } : {}
 
@@ -61,10 +69,7 @@ var contributorAccessPolicy = (!empty(secretsContributorsGroupObjectId)) ? {
   objectId: secretsContributorsGroupObjectId
   tenantId: tenantId
   permissions: {
-    secrets: [
-      'get'
-      'set'
-    ]
+    secrets: secretsContributorsPermissions
   }
 } : {}
 

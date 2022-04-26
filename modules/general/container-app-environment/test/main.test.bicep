@@ -1,4 +1,12 @@
-/*
-Write deployment tests in this file. Any module that references the main
-module file is a deployment test. Make sure at least one test is added.
-*/
+param prefix string = 'brmtest'
+param location string = resourceGroup().location
+
+module appenv '../main.bicep' = {
+  name: 'appEnvDeploy'
+  params: {
+    appInsightsName: '${prefix}ai'
+    location: location
+    logAnalyticsName: '${prefix}la'
+    name: '${prefix}containerappenv'
+  }
+}

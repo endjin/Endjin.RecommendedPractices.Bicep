@@ -15,7 +15,7 @@ param accessPolicies array = []
 param tenantId string
 
 @description('The location of the key vault')
-param location string = resourceGroup().location
+param location string
 
 @description('When true, the key vault will be accessible by deployments')
 param enabledForDeployment bool = false
@@ -101,7 +101,10 @@ resource keyvault_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-
 }
 
 
+@description('The resource ID of the key vault')
 output id string = useExisting ? existing_key_vault.id : key_vault.id
+@description('The name of the key vault')
 output name string = useExisting ? existing_key_vault.name : key_vault.name
 
+@description('An object representing the key vault resource')
 output keyVaultResource object =  useExisting ? existing_key_vault : key_vault
