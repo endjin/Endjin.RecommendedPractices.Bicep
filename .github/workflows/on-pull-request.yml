@@ -51,12 +51,12 @@ jobs:
 
       - name: Install packages
         run: npm ci
-        working-directory: ./github
+        working-directory: ./.github
 
       - name: Lint
         run: npm run lint
-        working-directory: ./github
+        working-directory: ./.github
 
       - name: Check formatting
         run: npm run prettier:check
-        working-directory: ./github
+        working-directory: ./.github
