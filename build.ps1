@@ -30,6 +30,10 @@
     The path to import the Endjin.RecommendedPractices.Build module from. This is useful when
     testing pre-release versions of the Endjin.RecommendedPractices.Build that are not yet
     available in the PowerShell Gallery.
+.PARAMETER BuildModuleVersion
+    The version of the Endjin.RecommendedPractices.Build module to import. This is useful when
+    testing pre-release versions of the Endjin.RecommendedPractices.Build that are not yet
+    available in the PowerShell Gallery.
 #>
 [CmdletBinding()]
 param (
