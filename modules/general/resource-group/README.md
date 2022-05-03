@@ -8,7 +8,7 @@ Deploys a resource group or gets a reference to an existing one - useful for def
 | :------------- | :------: | :------: | :----------------------------------------------------------------------------------------------------------------------- |
 | `name`         | `string` | Yes      | The name of the resource group                                                                                           |
 | `location`     | `string` | Yes      | The location of the resource group                                                                                       |
-| `useExisting`  | `bool`   | No       | When true, the details of an existing resource group will be returned; When false, the resource group is created/udpated |
+| `useExisting`  | `bool`   | No       | When true, the details of an existing resource group will be returned; When false, the resource group is created/updated |
 | `resourceTags` | `object` | No       | The resource tags applied to resources                                                                                   |
 
 ## Outputs

@@ -18,7 +18,7 @@ param enablePublicNetworkAccess bool = true
 ])
 param sku string = 'Standard'
 
-@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
+@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')

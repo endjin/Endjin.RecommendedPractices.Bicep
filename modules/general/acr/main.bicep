@@ -19,7 +19,7 @@ param sku string
 @description('When true, admin access via the ACR key is enabled; When false, access is via RBAC')
 param adminUserEnabled bool = false
 
-@description('When true, the details of an existing ACR will be returned; When false, the ACR is created/udpated')
+@description('When true, the details of an existing ACR will be returned; When false, the ACR is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')

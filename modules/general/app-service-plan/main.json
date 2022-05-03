@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "1371695098238276226"
+      "templateHash": "2427927527091462566"
     }
   },
   "parameters": {
@@ -79,7 +79,7 @@
       "type": "bool",
       "defaultValue": false,
       "metadata": {
-        "description": "When true, the details of an existing app service plan will be returned; When false, the app service plan is created/udpated"
+        "description": "When true, the details of an existing app service plan will be returned; When false, the app service plan is created/updated"
       }
     },
     "existingPlanResourceGroupName": {

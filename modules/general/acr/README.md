@@ -10,7 +10,7 @@ Azure Container Registry
 | `location`         | `string` | Yes      | The location of the container registry                                                             |
 | `sku`              | `string` | Yes      | SKU for the container registry                                                                     |
 | `adminUserEnabled` | `bool`   | No       | When true, admin access via the ACR key is enabled; When false, access is via RBAC                 |
-| `useExisting`      | `bool`   | No       | When true, the details of an existing ACR will be returned; When false, the ACR is created/udpated |
+| `useExisting`      | `bool`   | No       | When true, the details of an existing ACR will be returned; When false, the ACR is created/updated |
 | `resourceTags`     | `object` | No       | The resource tags applied to resources                                                             |
 
 ## Outputs

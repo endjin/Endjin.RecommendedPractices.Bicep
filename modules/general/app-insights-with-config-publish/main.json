@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "11966974136808201496"
+      "templateHash": "5232201383435320586"
     }
   },
   "parameters": {
@@ -77,7 +77,7 @@
       "type": "bool",
       "defaultValue": false,
       "metadata": {
-        "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated"
+        "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
       }
     },
     "resourceTags": {
@@ -125,7 +125,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "14974416617156605279"
+              "templateHash": "9014693274478260773"
             }
           },
           "parameters": {
@@ -171,7 +171,7 @@
               "type": "bool",
               "defaultValue": false,
               "metadata": {
-                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated"
+                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
               }
             },
             "resourceTags": {
@@ -254,7 +254,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "4053446927271603000"
+              "templateHash": "10734801103080561578"
             }
           },
           "parameters": {
@@ -309,7 +309,7 @@
               "type": "string",
               "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
               "metadata": {
-                "description": "The key vault URI linking to the new/udpated secret"
+                "description": "The key vault URI linking to the new/updated secret"
               }
             }
           }

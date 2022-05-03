@@ -14,7 +14,7 @@ Deploys an AppInsights workspace and publishes the instrumentation key to a Key 
 | `keyVaultSubscriptionId`    | `string` | No       | The subscription of the key vault where the instrumentation key will be stored                                                             |
 | `kind`                      | `string` | No       | The kind of application using the workspace                                                                                                |
 | `applicationType`           | `string` | No       | The type of application using the workspace                                                                                                |
-| `useExisting`               | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated |
+| `useExisting`               | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated |
 | `resourceTags`              | `object` | No       | The resource tags applied to resources                                                                                                     |
 
 ## Outputs

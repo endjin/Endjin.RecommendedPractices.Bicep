@@ -39,7 +39,7 @@ param useExistingStorageAccount bool = false
 @description('Sets the retention policy for diagnostics settings data, in days')
 param diagnosticsRetentionDays int = 30
 
-@description('When true, the details of an existing key vault will be returned; When false, the key vault is created/udpated')
+@description('When true, the details of an existing key vault will be returned; When false, the key vault is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')

@@ -134,7 +134,7 @@
               "type": "bool",
               "defaultValue": false,
               "metadata": {
-                "description": "When true, the details of an existing storage account will be returned; When false, the storage account is created/udpated"
+                "description": "When true, the details of an existing storage account will be returned; When false, the storage account is created/updated"
               }
             },
             "resource_tags": {
@@ -248,7 +248,7 @@
                       "type": "string",
                       "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
                       "metadata": {
-                        "description": "The key vault URI linking to the new/udpated secret"
+                        "description": "The key vault URI linking to the new/updated secret"
                       }
                     }
                   }

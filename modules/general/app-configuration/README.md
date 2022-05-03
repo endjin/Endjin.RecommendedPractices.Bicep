@@ -10,7 +10,7 @@ Azure App Configuration
 | `location`                  | `string` | Yes      | The location of the app configuration store                                                                                                |
 | `enablePublicNetworkAccess` | `bool`   | No       | When false, the app configuration store will be inaccessible via its public IP address                                                     |
 | `sku`                       | `string` | No       | SKU for the app configuration store                                                                                                        |
-| `useExisting`               | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated |
+| `useExisting`               | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated |
 | `resourceTags`              | `object` | No       | The resource tags applied to resources                                                                                                     |
 
 ## Outputs

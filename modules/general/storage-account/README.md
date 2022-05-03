@@ -18,7 +18,7 @@ Deploys a storage account or returns a reference to an existing one
 | `keyVaultResourceGroupName` | `string` | No       | The resource group containing the key vault used to store the access key                                                   |
 | `keyVaultSubscriptionName`  | `string` | No       | The subscription containing the key vault used to store the access key                                                     |
 | `keyVaultSecretName`        | `string` | No       | The key vault secret name used to store the access key                                                                     |
-| `useExisting`               | `bool`   | No       | When true, the details of an existing storage account will be returned; When false, the storage account is created/udpated |
+| `useExisting`               | `bool`   | No       | When true, the details of an existing storage account will be returned; When false, the storage account is created/updated |
 | `resource_tags`             | `object` | No       | The resource tags applied to resources                                                                                     |
 
 ## Outputs

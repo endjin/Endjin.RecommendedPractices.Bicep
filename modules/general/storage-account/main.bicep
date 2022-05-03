@@ -38,7 +38,7 @@ param keyVaultSubscriptionName string = subscription().subscriptionId
 @description('The key vault secret name used to store the access key')
 param keyVaultSecretName string = ''
 
-@description('When true, the details of an existing storage account will be returned; When false, the storage account is created/udpated')
+@description('When true, the details of an existing storage account will be returned; When false, the storage account is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')

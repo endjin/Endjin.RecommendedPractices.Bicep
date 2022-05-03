@@ -8,7 +8,7 @@ param name string
 @description('The location of the resource group')
 param location string
 
-@description('When true, the details of an existing resource group will be returned; When false, the resource group is created/udpated')
+@description('When true, the details of an existing resource group will be returned; When false, the resource group is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')

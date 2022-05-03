@@ -16,7 +16,7 @@ Deploys an App Service Plan
 | `maximumElasticWorkerCount`          | `int`    | No       | The maximum number of elastic workers                                                                                        |
 | `zoneRedundant`                      | `bool`   | No       | When true, the app service will have zone redundancy                                                                         |
 | `resourceTags`                       | `object` | No       | The resource tags applied to resources                                                                                       |
-| `useExisting`                        | `bool`   | No       | When true, the details of an existing app service plan will be returned; When false, the app service plan is created/udpated |
+| `useExisting`                        | `bool`   | No       | When true, the details of an existing app service plan will be returned; When false, the app service plan is created/updated |
 | `existingPlanResourceGroupName`      | `string` | No       | The resource group in which the existing app service plan resides                                                            |
 | `existingPlanResourceSubscriptionId` | `string` | No       | The subscription in which the existing app service plan resides                                                              |
 

@@ -10,7 +10,7 @@ Azure Application Insights
 | `location`        | `string` | Yes      | The location of the app insights workspace                                                                                                 |
 | `kind`            | `string` | No       | The kind of application using the workspace                                                                                                |
 | `applicationType` | `string` | No       | The type of application using the workspace                                                                                                |
-| `useExisting`     | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated |
+| `useExisting`     | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated |
 | `resourceTags`    | `object` | No       | The resource tags applied to resources                                                                                                     |
 
 ## Outputs

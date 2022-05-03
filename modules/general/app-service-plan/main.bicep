@@ -32,7 +32,7 @@ param zoneRedundant bool = false
 @description('The resource tags applied to resources')
 param resourceTags object = {}
 
-@description('When true, the details of an existing app service plan will be returned; When false, the app service plan is created/udpated')
+@description('When true, the details of an existing app service plan will be returned; When false, the app service plan is created/updated')
 param useExisting bool = false
 
 @description('The resource group in which the existing app service plan resides')

@@ -18,7 +18,7 @@ Deploys a key vault with optional diagnostics written to blob storage
 | `diagnosticsStorageAccountName` | `string` | No       | The storage account name to be used for key vault diagnostic settings                                                      |
 | `useExistingStorageAccount`     | `bool`   | No       | When true, an existing storage account be used for diagnotics settings; When false, the storage account is created/updated |
 | `diagnosticsRetentionDays`      | `int`    | No       | Sets the retention policy for diagnostics settings data, in days                                                           |
-| `useExisting`                   | `bool`   | No       | When true, the details of an existing key vault will be returned; When false, the key vault is created/udpated             |
+| `useExisting`                   | `bool`   | No       | When true, the details of an existing key vault will be returned; When false, the key vault is created/updated             |
 | `resourceTags`                  | `object` | No       | The resource tags applied to resources                                                                                     |
 
 ## Outputs

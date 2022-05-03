@@ -64,7 +64,7 @@
               "type": "bool",
               "defaultValue": false,
               "metadata": {
-                "description": "When true, the details of an existing resource group will be returned; When false, the resource group is created/udpated"
+                "description": "When true, the details of an existing resource group will be returned; When false, the resource group is created/updated"
               }
             },
             "resourceTags": {

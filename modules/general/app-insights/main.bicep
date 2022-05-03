@@ -26,7 +26,7 @@ param kind string = 'web'
 ])
 param applicationType string = 'web'
 
-@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated')
+@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')

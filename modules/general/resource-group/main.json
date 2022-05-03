@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "11056374522374398772"
+      "templateHash": "11337565288396832646"
     }
   },
   "parameters": {
@@ -25,7 +25,7 @@
       "type": "bool",
       "defaultValue": false,
       "metadata": {
-        "description": "When true, the details of an existing resource group will be returned; When false, the resource group is created/udpated"
+        "description": "When true, the details of an existing resource group will be returned; When false, the resource group is created/updated"
       }
     },
     "resourceTags": {

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "7352989657827612311"
+      "templateHash": "7798377859220878022"
     }
   },
   "parameters": {
@@ -129,7 +129,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "7195422498119788265"
+              "templateHash": "8237317646962971374"
             }
           },
           "parameters": {
@@ -322,7 +322,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.5.6.12127",
-                      "templateHash": "3703373710053007627"
+                      "templateHash": "5365686849212121999"
                     }
                   },
                   "parameters": {
@@ -360,7 +360,7 @@
                       "type": "bool",
                       "defaultValue": false,
                       "metadata": {
-                        "description": "When true, the details of an existing ACR will be returned; When false, the ACR is created/udpated"
+                        "description": "When true, the details of an existing ACR will be returned; When false, the ACR is created/updated"
                       }
                     },
                     "resourceTags": {
@@ -583,7 +583,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "4053446927271603000"
+              "templateHash": "10734801103080561578"
             }
           },
           "parameters": {
@@ -638,7 +638,7 @@
               "type": "string",
               "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
               "metadata": {
-                "description": "The key vault URI linking to the new/udpated secret"
+                "description": "The key vault URI linking to the new/updated secret"
               }
             }
           }

@@ -16,7 +16,7 @@ Adds or updates a Key Vault secret
 
 | Name                 | Type   | Description                                         |
 | :------------------- | :----: | :-------------------------------------------------- |
-| secretUriWithVersion | string | The key vault URI linking to the new/udpated secret |
+| secretUriWithVersion | string | The key vault URI linking to the new/updated secret |
 
 ## Examples
 

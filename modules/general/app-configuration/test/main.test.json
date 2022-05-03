@@ -81,7 +81,7 @@
               "type": "bool",
               "defaultValue": false,
               "metadata": {
-                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/udpated"
+                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
               }
             },
             "resourceTags": {

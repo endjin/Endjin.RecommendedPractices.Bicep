@@ -84,7 +84,7 @@
               "type": "bool",
               "defaultValue": false,
               "metadata": {
-                "description": "When true, the details of an existing ACR will be returned; When false, the ACR is created/udpated"
+                "description": "When true, the details of an existing ACR will be returned; When false, the ACR is created/updated"
               }
             },
             "resourceTags": {

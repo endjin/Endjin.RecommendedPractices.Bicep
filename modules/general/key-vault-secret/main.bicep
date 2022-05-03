@@ -40,5 +40,5 @@ resource secret 'Microsoft.KeyVault/vaults/secrets@2021-06-01-preview' = if (!us
   }
 }
 
-@description('The key vault URI linking to the new/udpated secret')
+@description('The key vault URI linking to the new/updated secret')
 output secretUriWithVersion string = useExisting ? existing_secret.properties.secretUriWithVersion : secret.properties.secretUriWithVersion
