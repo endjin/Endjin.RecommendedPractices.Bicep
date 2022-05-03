@@ -71,7 +71,7 @@ resource hosting_plan 'Microsoft.Web/serverfarms@2021-02-01' = if (!useExisting)
 @description('The resource ID of the app service plan')
 output id string = useExisting ? existing_hosting_plan.id : hosting_plan.id
 @description('The name of the app service plan')
-output nmae string = useExisting ? existing_hosting_plan.name : hosting_plan.name
+output name string = useExisting ? existing_hosting_plan.name : hosting_plan.name
 
 @description('An object representing the app configuration store resource')
 output appServicePlanResource object = useExisting ? existing_hosting_plan : hosting_plan

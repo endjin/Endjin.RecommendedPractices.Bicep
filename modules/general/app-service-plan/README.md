@@ -25,7 +25,7 @@ Deploys an App Service Plan
 | Name                   | Type   | Description                                                 |
 | :--------------------- | :----: | :---------------------------------------------------------- |
 | id                     | string | The resource ID of the app service plan                     |
-| nmae                   | string | The name of the app service plan                            |
+| name                   | string | The name of the app service plan                            |
 | appServicePlanResource | object | An object representing the app configuration store resource |
 
 ## Examples

@@ -171,7 +171,7 @@
                 "description": "The resource ID of the app service plan"
               }
             },
-            "nmae": {
+            "name": {
               "type": "string",
               "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
               "metadata": {
