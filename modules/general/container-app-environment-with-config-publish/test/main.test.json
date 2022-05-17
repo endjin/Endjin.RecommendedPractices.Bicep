@@ -1,0 +1,765 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.5.6.12127",
+      "templateHash": "336926992985775032"
+    }
+  },
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appEnvDeploy",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[format('{0}conappenv', parameters('prefix'))]"
+          },
+          "appConfigurationLabel": {
+            "value": "biceptest"
+          },
+          "appConfigurationStoreName": {
+            "value": "[format('{0}appconfig', parameters('prefix'))]"
+          },
+          "appConfigurationStoreResourceGroupName": {
+            "value": "[resourceGroup().name]"
+          },
+          "appConfigurationStoreSubscription": {
+            "value": "[subscription().subscriptionId]"
+          },
+          "containerRegistryName": {
+            "value": "[format('{0}acr', parameters('prefix'))]"
+          },
+          "containerRegistrySku": {
+            "value": "Standard"
+          },
+          "createContainerRegistry": {
+            "value": true
+          },
+          "keyVaultName": {
+            "value": "[format('{0}kv', parameters('prefix'))]"
+          },
+          "useExisting": {
+            "value": false
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.5.6.12127",
+              "templateHash": "7352989657827612311"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the container app hosting environment"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the container app hosting environment"
+              }
+            },
+            "createContainerRegistry": {
+              "type": "bool",
+              "metadata": {
+                "description": "When true, an Azure Container Registry will be provisioned"
+              }
+            },
+            "containerRegistryName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the container registry"
+              }
+            },
+            "containerRegistrySku": {
+              "type": "string",
+              "metadata": {
+                "description": "The SKU for the container registry"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "metadata": {
+                "description": "When true, the details of an existing container app hosting environment will be returned; When false, the container app hosting environment will be created/updated"
+              }
+            },
+            "appConfigurationStoreName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the app configuration store where the config will be published"
+              }
+            },
+            "appConfigurationStoreResourceGroupName": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource group for the app configuration store where the config will be published"
+              }
+            },
+            "appConfigurationStoreSubscription": {
+              "type": "string",
+              "metadata": {
+                "description": "The subscription for the app configuration store where the config will be published"
+              }
+            },
+            "appConfigurationLabel": {
+              "type": "string",
+              "metadata": {
+                "description": "The app configuration label to apply to the published config"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the key vault where the app insights instrumentation key will be published"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "containerAppEnv",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "name": {
+                    "value": "[parameters('name')]"
+                  },
+                  "appInsightsName": {
+                    "value": "[format('{0}ai', parameters('name'))]"
+                  },
+                  "logAnalyticsName": {
+                    "value": "[format('{0}la', parameters('name'))]"
+                  },
+                  "location": {
+                    "value": "[parameters('location')]"
+                  },
+                  "createContainerRegistry": {
+                    "value": "[parameters('createContainerRegistry')]"
+                  },
+                  "containerRegistryName": {
+                    "value": "[parameters('containerRegistryName')]"
+                  },
+                  "containerRegistrySku": {
+                    "value": "[parameters('containerRegistrySku')]"
+                  },
+                  "useExisting": {
+                    "value": "[parameters('useExisting')]"
+                  },
+                  "resourceTags": {
+                    "value": "[parameters('resourceTags')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.5.6.12127",
+                      "templateHash": "7195422498119788265"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the container app hosting environment"
+                      }
+                    },
+                    "location": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The location of the container app hosting environment"
+                      }
+                    },
+                    "logAnalyticsName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the log analytics workspace used by the container app hosting environment"
+                      }
+                    },
+                    "appInsightsName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the app insights workspace used by Dapr-enabled container apps running in the hosting environment"
+                      }
+                    },
+                    "useExisting": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, the details of an existing container app hosting environment will be returned; When false, the container app hosting environment will be created/updated"
+                      }
+                    },
+                    "existingAppEnvironmentResourceGroupName": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().name]",
+                      "metadata": {
+                        "description": "The resource group in which the existing container app hosting environment resides"
+                      }
+                    },
+                    "existingAppEnvironmentSubscriptionId": {
+                      "type": "string",
+                      "defaultValue": "[subscription().subscriptionId]",
+                      "metadata": {
+                        "description": "The subscription in which the existing container app hosting environment resides"
+                      }
+                    },
+                    "existingAppInsightsResourceGroupName": {
+                      "type": "string",
+                      "defaultValue": "[parameters('existingAppEnvironmentResourceGroupName')]",
+                      "metadata": {
+                        "description": "The resource group in which the existing app insights workspace resides"
+                      }
+                    },
+                    "existingAppInsightsSubscriptionId": {
+                      "type": "string",
+                      "defaultValue": "[parameters('existingAppEnvironmentSubscriptionId')]",
+                      "metadata": {
+                        "description": "The subscription in which the existing app insights workspace resides"
+                      }
+                    },
+                    "createContainerRegistry": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, an Azure Container Registry will be provisioned"
+                      }
+                    },
+                    "containerRegistryName": {
+                      "type": "string",
+                      "defaultValue": "[format('{0}acr', parameters('name'))]",
+                      "metadata": {
+                        "description": "The name of the container registry"
+                      }
+                    },
+                    "containerRegistrySku": {
+                      "type": "string",
+                      "defaultValue": "Standard",
+                      "metadata": {
+                        "description": "The SKU for the container registry"
+                      }
+                    },
+                    "enableContainerRegistryAdminUser": {
+                      "type": "bool",
+                      "defaultValue": true,
+                      "metadata": {
+                        "description": "When true, admin access via the ACR key is enabled; When false, access is via RBAC"
+                      }
+                    },
+                    "resourceTags": {
+                      "type": "object",
+                      "defaultValue": {},
+                      "metadata": {
+                        "description": "The resource tags applied to resources"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.OperationalInsights/workspaces",
+                      "apiVersion": "2021-06-01",
+                      "name": "[parameters('logAnalyticsName')]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "sku": {
+                          "name": "PerGB2018"
+                        },
+                        "retentionInDays": 30,
+                        "features": {
+                          "searchVersion": 1,
+                          "legacy": 0,
+                          "enableLogAccessUsingOnlyResourcePermissions": true
+                        }
+                      },
+                      "tags": "[parameters('resourceTags')]"
+                    },
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.Insights/components",
+                      "apiVersion": "2020-02-02",
+                      "name": "[parameters('appInsightsName')]",
+                      "location": "[parameters('location')]",
+                      "kind": "web",
+                      "properties": {
+                        "Application_Type": "web",
+                        "Flow_Type": "Redfield",
+                        "Request_Source": "CustomDeployment"
+                      },
+                      "tags": "[parameters('resourceTags')]"
+                    },
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.Web/kubeEnvironments",
+                      "apiVersion": "2021-02-01",
+                      "name": "[parameters('name')]",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "type": "managed",
+                        "internalLoadBalancerEnabled": false,
+                        "appLogsConfiguration": {
+                          "destination": "log-analytics",
+                          "logAnalyticsConfiguration": {
+                            "customerId": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2021-06-01').customerId]",
+                            "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2021-06-01').primarySharedKey]"
+                          }
+                        },
+                        "containerAppsConfiguration": {
+                          "daprAIInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]"
+                        }
+                      },
+                      "tags": "[parameters('resourceTags')]",
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]",
+                        "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
+                      ]
+                    },
+                    {
+                      "condition": "[parameters('createContainerRegistry')]",
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "appEnvAcrDeploy",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "name": {
+                            "value": "[parameters('containerRegistryName')]"
+                          },
+                          "location": {
+                            "value": "[parameters('location')]"
+                          },
+                          "sku": {
+                            "value": "[parameters('containerRegistrySku')]"
+                          },
+                          "adminUserEnabled": {
+                            "value": "[parameters('enableContainerRegistryAdminUser')]"
+                          },
+                          "resourceTags": {
+                            "value": "[parameters('resourceTags')]"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.5.6.12127",
+                              "templateHash": "3703373710053007627"
+                            }
+                          },
+                          "parameters": {
+                            "name": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "The name of the container registry"
+                              }
+                            },
+                            "location": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "The location of the container registry"
+                              }
+                            },
+                            "sku": {
+                              "type": "string",
+                              "allowedValues": [
+                                "Basic",
+                                "Standard",
+                                "Premium"
+                              ],
+                              "metadata": {
+                                "description": "SKU for the container registry"
+                              }
+                            },
+                            "adminUserEnabled": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, admin access via the ACR key is enabled; When false, access is via RBAC"
+                              }
+                            },
+                            "useExisting": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, the details of an existing ACR will be returned; When false, the ACR is created/updated"
+                              }
+                            },
+                            "resourceTags": {
+                              "type": "object",
+                              "defaultValue": {},
+                              "metadata": {
+                                "description": "The resource tags applied to resources"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "condition": "[not(parameters('useExisting'))]",
+                              "type": "Microsoft.ContainerRegistry/registries",
+                              "apiVersion": "2021-09-01",
+                              "name": "[parameters('name')]",
+                              "location": "[parameters('location')]",
+                              "sku": {
+                                "name": "[parameters('sku')]"
+                              },
+                              "properties": {
+                                "adminUserEnabled": "[parameters('adminUserEnabled')]"
+                              },
+                              "tags": "[parameters('resourceTags')]"
+                            }
+                          ],
+                          "outputs": {
+                            "id": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')))]",
+                              "metadata": {
+                                "description": "The resource ID of the container registry"
+                              }
+                            },
+                            "name": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+                              "metadata": {
+                                "description": "The name of the container registry"
+                              }
+                            },
+                            "loginServer": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer, reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer)]",
+                              "metadata": {
+                                "description": "The admin username of the container registry"
+                              }
+                            },
+                            "acrResource": {
+                              "type": "object",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'))]",
+                              "metadata": {
+                                "description": "An object representing the container registry resource"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "id": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.Web/kubeEnvironments', parameters('name')), resourceId('Microsoft.Web/kubeEnvironments', parameters('name')))]",
+                      "metadata": {
+                        "description": "The resource ID of the container app environment"
+                      }
+                    },
+                    "name": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+                      "metadata": {
+                        "description": "The name of the container app environment"
+                      }
+                    },
+                    "appEnvironmentResource": {
+                      "type": "object",
+                      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.Web/kubeEnvironments', parameters('name')), '2021-02-01', 'full'), reference(resourceId('Microsoft.Web/kubeEnvironments', parameters('name')), '2021-02-01', 'full'))]",
+                      "metadata": {
+                        "description": "An object representing the container app environment resource"
+                      }
+                    },
+                    "appinsights_instrumentation_key": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppInsightsSubscriptionId'), parameters('existingAppInsightsResourceGroupName')), 'Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey, reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey)]",
+                      "metadata": {
+                        "description": "The app insights workspace instrumentation key"
+                      }
+                    },
+                    "acrId": {
+                      "type": "string",
+                      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2020-10-01').outputs.id.value, '')]",
+                      "metadata": {
+                        "description": "The resource ID of the container registry"
+                      }
+                    },
+                    "acrUsername": {
+                      "type": "string",
+                      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2020-10-01').outputs.name.value, '')]",
+                      "metadata": {
+                        "description": "The admin username for the container registry"
+                      }
+                    },
+                    "acrLoginServer": {
+                      "type": "string",
+                      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2020-10-01').outputs.loginServer.value, '')]",
+                      "metadata": {
+                        "description": "The login server for the container registry"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "kubeenvAppConfigKeyDeploy",
+              "subscriptionId": "[parameters('appConfigurationStoreSubscription')]",
+              "resourceGroup": "[parameters('appConfigurationStoreResourceGroupName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "appConfigStoreName": {
+                    "value": "[parameters('appConfigurationStoreName')]"
+                  },
+                  "label": {
+                    "value": "[parameters('appConfigurationLabel')]"
+                  },
+                  "entries": {
+                    "value": [
+                      {
+                        "name": "ContainerAppEnvironmentResourceId",
+                        "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.id.value]"
+                      }
+                    ]
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.5.6.12127",
+                      "templateHash": "5121138359087455465"
+                    }
+                  },
+                  "parameters": {
+                    "appConfigStoreName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The app configuration instance where the keys will be stored"
+                      }
+                    },
+                    "entries": {
+                      "type": "array",
+                      "metadata": {
+                        "description": "Array of key/values to be written to the app configuration store, each with the structure {name: \"<key-name>\", value: \"<key-value>\"}"
+                      }
+                    },
+                    "label": {
+                      "type": "string",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "When defined, all app configuration keys will have this labelled applied"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "copy": {
+                        "name": "app_config_entry",
+                        "count": "[length(parameters('entries'))]"
+                      },
+                      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+                      "apiVersion": "2021-03-01-preview",
+                      "name": "[format('{0}/{1}', parameters('appConfigStoreName'), if(empty(parameters('label')), parameters('entries')[copyIndex()].name, format('{0}${1}', parameters('entries')[copyIndex()].name, parameters('label'))))]",
+                      "properties": {
+                        "value": "[parameters('entries')[copyIndex()].value]"
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'containerAppEnv')]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "aiKeySecretDeploy",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "secretName": {
+                    "value": "AppInsightsInstrumentationKey"
+                  },
+                  "contentValue": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.appinsights_instrumentation_key.value]"
+                  },
+                  "contentType": {
+                    "value": "text/plain"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.5.6.12127",
+                      "templateHash": "4053446927271603000"
+                    }
+                  },
+                  "parameters": {
+                    "secretName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Enter the secret name."
+                      }
+                    },
+                    "contentType": {
+                      "type": "string",
+                      "defaultValue": "text/plain",
+                      "metadata": {
+                        "description": "Type of the secret"
+                      }
+                    },
+                    "contentValue": {
+                      "type": "secureString",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "Value of the secret"
+                      }
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Name of the vault"
+                      }
+                    },
+                    "useExisting": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, a pre-existing secret will be returned"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2021-06-01-preview",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                      "properties": {
+                        "contentType": "[parameters('contentType')]",
+                        "value": "[parameters('contentValue')]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "secretUriWithVersion": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                      "metadata": {
+                        "description": "The key vault URI linking to the new/updated secret"
+                      }
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'containerAppEnv')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.id.value]",
+              "metadata": {
+                "description": "The resource ID of the container app environment"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "containerAppEnv",
+              "metadata": {
+                "description": "The name of the container app environment"
+              }
+            },
+            "appEnvironmentResource": {
+              "type": "object",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.appEnvironmentResource.value]",
+              "metadata": {
+                "description": "An object representing the container app environment resource"
+              }
+            },
+            "acrId": {
+              "type": "string",
+              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.acrId.value, '')]",
+              "metadata": {
+                "description": "The resource ID of the container registry"
+              }
+            },
+            "acrUsername": {
+              "type": "string",
+              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.acrUsername.value, '')]",
+              "metadata": {
+                "description": "The admin username for the container registry"
+              }
+            },
+            "acrLoginServer": {
+              "type": "string",
+              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.acrLoginServer.value, '')]",
+              "metadata": {
+                "description": "The login server for the container registry"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

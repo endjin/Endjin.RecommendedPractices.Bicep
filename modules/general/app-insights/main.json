@@ -1,0 +1,102 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.5.6.12127",
+      "templateHash": "9014693274478260773"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the app insights workspace"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the app insights workspace"
+      }
+    },
+    "kind": {
+      "type": "string",
+      "defaultValue": "web",
+      "allowedValues": [
+        "web",
+        "ios",
+        "other",
+        "store",
+        "java",
+        "phone"
+      ],
+      "metadata": {
+        "description": "The kind of application using the workspace"
+      }
+    },
+    "applicationType": {
+      "type": "string",
+      "defaultValue": "web",
+      "allowedValues": [
+        "other",
+        "web"
+      ],
+      "metadata": {
+        "description": "The type of application using the workspace"
+      }
+    },
+    "useExisting": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
+      }
+    },
+    "resourceTags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The resource tags applied to resources"
+      }
+    }
+  },
+  "resources": [
+    {
+      "condition": "[not(parameters('useExisting'))]",
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "kind": "[parameters('kind')]",
+      "properties": {
+        "Application_Type": "[parameters('applicationType')]"
+      },
+      "tags": "[parameters('resourceTags')]"
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.Insights/components', parameters('name')), resourceId('Microsoft.Insights/components', parameters('name')))]",
+      "metadata": {
+        "description": "The resource ID of the app insights workspace"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+      "metadata": {
+        "description": "The name of the app insights workspace"
+      }
+    },
+    "appInsightsWorkspaceResource": {
+      "type": "object",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'))]",
+      "metadata": {
+        "description": "An object representing the app insights workspace resource"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema#",
+  "name": "Key Vault with group-based access policy",
+  "description": "Deploys a Key Vault with a secrets access policy managed via group membership",
+  "owner": "endjin"
+}

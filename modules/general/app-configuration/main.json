@@ -1,0 +1,99 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1124.51302",
+      "templateHash": "9069165300096673929"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the app configuration store"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the app configuration store"
+      }
+    },
+    "enablePublicNetworkAccess": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "When false, the app configuration store will be inaccessible via its public IP address"
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "allowedValues": [
+        "Free",
+        "Standard"
+      ],
+      "metadata": {
+        "description": "SKU for the app configuration store"
+      }
+    },
+    "useExisting": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
+      }
+    },
+    "resourceTags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The resource tags applied to resources"
+      }
+    }
+  },
+  "variables": {
+    "publicNetworkAccess": "[if(parameters('enablePublicNetworkAccess'), 'Enabled', 'Disabled')]"
+  },
+  "resources": [
+    {
+      "condition": "[not(parameters('useExisting'))]",
+      "type": "Microsoft.AppConfiguration/configurationStores",
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "properties": {
+        "publicNetworkAccess": "[variables('publicNetworkAccess')]"
+      },
+      "tags": "[parameters('resourceTags')]"
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')))]",
+      "metadata": {
+        "description": "The resource ID of the app configuration store"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+      "metadata": {
+        "description": "The name of the app configuration store"
+      }
+    },
+    "appConfigStoreResource": {
+      "type": "object",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01', 'full'), reference(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01', 'full'))]",
+      "metadata": {
+        "description": "An object representing the app configuration store resource"
+      }
+    }
+  }
+}
