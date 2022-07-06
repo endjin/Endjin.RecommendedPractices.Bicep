@@ -2,6 +2,10 @@
 
 Deploys a Key Vault with a secrets access policy managed via group membership
 
+## Description
+
+{{ Add detailed description for the module. }}
+
 ## Parameters
 
 | Name                               | Type     | Required | Description                                                                                                                |

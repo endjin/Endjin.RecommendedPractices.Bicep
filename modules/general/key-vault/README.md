@@ -1,6 +1,10 @@
 # Key Vault with optional diagnostics settings
 
-Deploys a key vault with optional diagnostics written to blob storage
+Deploys a key vault with optional diagnostics written to blob storage.
+
+## Description
+
+Deploys a key vault with optional diagnostics written to blob storage.
 
 ## Parameters
 

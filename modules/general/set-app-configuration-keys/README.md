@@ -2,6 +2,10 @@
 
 Adds or updates an App Configuration key
 
+## Description
+
+{{ Add detailed description for the module. }}
+
 ## Parameters
 
 | Name                 | Type     | Required | Description                                                                                                                          |

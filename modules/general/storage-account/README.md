@@ -1,6 +1,10 @@
 # Storage Account
 
-Deploys a storage account or returns a reference to an existing one
+Deploys a storage account or returns a reference to an existing one.
+
+## Description
+
+Deploys a storage account or returns a reference to an existing one - typically only used where scoping constraints prevent direct use of the raw resource.
 
 ## Parameters
 

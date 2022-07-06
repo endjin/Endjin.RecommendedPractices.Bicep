@@ -2,6 +2,10 @@
 
 Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault
 
+## Description
+
+{{ Add detailed description for the module. }}
+
 ## Parameters
 
 | Name                        | Type     | Required | Description                                                                                                                                |

@@ -2,6 +2,10 @@
 
 Deploys a Container App hosting environment
 
+## Description
+
+{{ Add detailed description for the module. }}
+
 ## Parameters
 
 | Name                                      | Type     | Required | Description                                                                                                                                                         |

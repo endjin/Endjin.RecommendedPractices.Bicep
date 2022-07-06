@@ -2,6 +2,10 @@
 
 Adds or updates a Key Vault secret
 
+## Description
+
+{{ Add detailed description for the module. }}
+
 ## Parameters
 
 | Name           | Type           | Required | Description                                       |

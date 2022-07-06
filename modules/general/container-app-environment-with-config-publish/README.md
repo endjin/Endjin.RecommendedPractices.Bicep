@@ -2,6 +2,10 @@
 
 Deploys a ContainerApp hosting environment and publishes related configuration to App Configuration and Key Vault
 
+## Description
+
+{{ Add detailed description for the module. }}
+
 ## Parameters
 
 | Name                                     | Type     | Required | Description                                                                                                                                                         |

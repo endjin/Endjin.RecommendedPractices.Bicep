@@ -1,6 +1,10 @@
 # Resource Group
 
-Deploys a resource group or gets a reference to an existing one - useful for deferred evaluation of target resource group details
+Deploys a resource group or gets a reference to an existing one.
+
+## Description
+
+Deploys a resource group or gets a reference to an existing one - useful for deferred evaluation of target resource group details.
 
 ## Parameters
 
