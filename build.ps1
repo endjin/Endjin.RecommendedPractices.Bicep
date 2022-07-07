@@ -39,7 +39,7 @@ param (
     [string] $BuildModulePath,
 
     [Parameter()]
-    [version] $BuildModuleVersion = "0.2.0"
+    [version] $BuildModuleVersion = "0.2.1"
 )
 
 $ErrorActionPreference = $ErrorActionPreference ? $ErrorActionPreference : 'Stop'
@@ -99,9 +99,10 @@ $SkipPublish = $false
 #
 # Build process configuration
 #
+$RequiredBicepCliVersion = "0.8.9"                 # ensures the build uses a consistent version of the Bicep tooling
 $BicepModulesDir = Join-Path $SourcesDir "modules" # sets location of folder containing the Bicep modules
-$BaseBranch = "origin/main"                        # sets the branch used to compare which Bicep modules have changed
-$BicepRegistryFqdn = "endjintestacr.azurecr.io"    # the FQDN of the Azure Container Registry hosting the Bicep registry
+$BaseBranch = "origin/main"                        # sets the branch used to compare which Bicep modules have changed for local builds
+$BicepRegistryFqdn = "endjintestacr.azurecr.io"    # the ACR used when publishing modules from local builds
 $RegistryPath = "bicep"                            # sets the base path in the registry where Bicep modules will be published
 $OverwriteTag = $false                             # when true, existing git tags for a given module will be updated
 $AlwaysTag = $false                                # when true, overrides default behaviour of only tagging stable version numbers
