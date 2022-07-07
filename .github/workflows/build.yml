@@ -1,10 +1,15 @@
 name: build
 on:
+  pull_request:
   push:
     branches:
     - main
-    - feature/*
   workflow_dispatch:
+    inputs:
+      force_publish:
+        default: 'false'
+        required: true
+        description: When true, modules will be published regardless of the normal branch constraints
 
 jobs:
   build:
@@ -28,30 +33,31 @@ jobs:
       with:
         fetch-depth: 0
     
-    - id: azlogin_test
-      name: Azure Login (TEST)
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.ENDJIN_TEST_ACR_PUBLISH_CREDENTIALS }}
-    - id: run_build
-      name: Build & Publish Bicep Modules to Test Registry
-      run: |
-        pwsh -f ./build.ps1 -Task FullBuildAndPublish
-
-    # Final Publish steps
-    - id: azlogin_prod
-      name: Azure Login (PROD)
-      if: ${{ github.ref == 'refs/heads/main' }}
+    - id: azlogin
+      name: Azure Login
+      if: ${{ (github.ref == 'refs/heads/main') || (github.event.inputs.force_publish == 'true') }}
       uses: azure/login@v1
       with:
         creds: ${{ secrets.ENDJIN_PROD_ACR_PUBLISH_CREDENTIALS }}
-    - id: publish_to_prod
-      name: Publish Bicep Modules to Prod Registry
-      if: ${{ github.ref == 'refs/heads/main' }}
+    
+    - id: run_build
+      name: Run Build
       run: |
-        pwsh -f ./build.ps1 -Task PublishBicepModules
+        Write-Host "Building ref: $($env:GITHUB_REF)"
+        Write-Host "PublicRelease: $($env:PublicRelease)"
+
+        # when building 'main' the base branch needs to be the previous commit
+        if ($env:GITHUB_REF -eq "refs/heads/main") {
+          Write-Host "Overriding 'BaseBranch' build variable for this build of 'main'"
+          $env:BUILDVAR_BaseBranch = "HEAD~1"
+        }
+
+        # set whether we are publishing modules or just validating them
+        $entrypointTask = $env:FORCE_PUBLISH -eq "true" ? "FullBuildAndPublish" : "FullBuild"
+        pwsh -f ./build.ps1 -Task $entrypointTask
       env:
         BUILDVAR_BicepRegistryFqdn: endjin.azurecr.io
-        BUILDVAR_BaseBranch: 'HEAD~1'
-        PublicRelease: true
+        FORCE_PUBLISH: ${{ github.event.inputs.force_publish }}
+        # only builds of 'main' produce stable version numbers
+        PublicRelease: ${{ (github.ref == 'refs/heads/main') }}
 
