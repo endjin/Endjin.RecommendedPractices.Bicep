@@ -59,7 +59,8 @@ jobs:
 
         # set whether we are publishing modules or just validating them
         $entrypointTask = $env:FORCE_PUBLISH -eq "true" ? "FullBuildAndPublish" : "FullBuild"
-        pwsh -f ./build.ps1 -Task $entrypointTask
+        & ./build.ps1 -Task $entrypointTask
+      shell: pwsh
       env:
         BUILDVAR_BicepRegistryFqdn: endjin.azurecr.io
         FORCE_PUBLISH: ${{ github.event.inputs.force_publish }}
