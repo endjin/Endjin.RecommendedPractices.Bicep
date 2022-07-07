@@ -1,13 +1,14 @@
 name: build
 on:
-- push
-- workflow_dispatch
+  push:
+    branches:
+    - main
+    - feature/*
+  workflow_dispatch:
 
 jobs:
   build:
-    # We currently have to run a Windows agent due to case-sensitive filesystem issues
-    # with a .NET culture-specific resources folder names
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     name: Run Build
     outputs:
       semver: ${{ steps.run_build.outputs.SemVer }}
@@ -18,34 +19,39 @@ jobs:
     # Setup steps
     - uses: actions/setup-dotnet@v1
       if: ${{ github.actor != 'nektos/act' }}
-      name: Install .NET Core SDK 3.1.x
+      name: Install .NET Core SDK 6.0.x
       with:
-        dotnet-version: '3.1.x'
-    - uses: actions/setup-dotnet@v1
-      if: ${{ github.actor != 'nektos/act' }}
-      name: Install .NET Core SDK 5.0.x
-      with:
-        dotnet-version: '5.0.x'
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.5
+        dotnet-version: '6.0.x'
 
     # Build steps
     - uses: actions/checkout@v2
       with:
-          fetch-depth: 0
-    - id: run_build
-      name: Run Build
-      run: |
-        pwsh -f ./build.ps1
-
-    # Publish to test registry steps
-    - name: Azure Login
+        fetch-depth: 0
+    
+    - id: azlogin_test
+      name: Azure Login (TEST)
       uses: azure/login@v1
       with:
         creds: ${{ secrets.ENDJIN_TEST_ACR_PUBLISH_CREDENTIALS }}
-    - id: publish_test
-      name: Publish Bicep Modules to Test Registry
+    - id: run_build
+      name: Build & Publish Bicep Modules to Test Registry
       run: |
-        pwsh -f ./build.ps1 -Task Publish
+        pwsh -f ./build.ps1 -Task FullBuildAndPublish
+
+    # Final Publish steps
+    - id: azlogin_prod
+      name: Azure Login (PROD)
+      if: ${{ github.ref == 'refs/heads/main' }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.ENDJIN_PROD_ACR_PUBLISH_CREDENTIALS }}
+    - id: publish_to_prod
+      name: Publish Bicep Modules to Prod Registry
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+        pwsh -f ./build.ps1 -Task PublishBicepModules
       env:
-        BicepRegistryFqdn: endjintestacr.azurecr.io
+        BUILDVAR_BicepRegistryFqdn: endjin.azurecr.io
+        BUILDVAR_BaseBranch: 'HEAD~1'
+        PublicRelease: true
+
