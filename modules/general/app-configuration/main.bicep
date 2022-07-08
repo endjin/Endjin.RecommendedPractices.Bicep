@@ -1,4 +1,4 @@
-// <copyright file="app_configuration.bicep" company="Endjin Limited">
+// <copyright file="app-configuration.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -25,9 +25,6 @@ param useExisting bool = false
 param resourceTags object = {}
 
 
-var publicNetworkAccess = enablePublicNetworkAccess ? 'Enabled' : 'Disabled'
-
-
 targetScope = 'resourceGroup'
 
 
@@ -35,6 +32,7 @@ resource existing_app_config_store 'Microsoft.AppConfiguration/configurationStor
   name: name
 }
 
+var publicNetworkAccess = enablePublicNetworkAccess ? 'Enabled' : 'Disabled'
 resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-06-01' = if (!useExisting) {
   name: name
   location: location
@@ -47,10 +45,12 @@ resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-0
   tags: resourceTags
 }
 
+// Template outputs
 @description('The resource ID of the app configuration store')
 output id string = useExisting ? existing_app_config_store.id : app_config_store.id
 @description('The name of the app configuration store')
 output name string = useExisting ? existing_app_config_store.name : app_config_store.name
 
+// Returns the full AppConfig Store resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app configuration store resource')
 output appConfigStoreResource object = useExisting ? existing_app_config_store : app_config_store

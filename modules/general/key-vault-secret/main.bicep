@@ -1,4 +1,4 @@
-// <copyright file="key_vault_secret.bicep" company="Endjin Limited">
+// <copyright file="key-vault-secret.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -40,5 +40,6 @@ resource secret 'Microsoft.KeyVault/vaults/secrets@2021-06-01-preview' = if (!us
   }
 }
 
+// Template outputs
 @description('The key vault URI linking to the new/updated secret')
 output secretUriWithVersion string = useExisting ? existing_secret.properties.secretUriWithVersion : secret.properties.secretUriWithVersion

@@ -1,4 +1,4 @@
-// <copyright file="app_insights.bicep" company="Endjin Limited">
+// <copyright file="app-insights.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -52,11 +52,12 @@ resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExist
   tags: resourceTags
 }
 
-
+// Template outputs
 @description('The resource ID of the app insights workspace')
 output id string = useExisting ? existing_app_insights.id : app_insights.id
 @description('The name of the app insights workspace')
 output name string =  useExisting ? existing_app_insights.name : app_insights.name
 
+// Returns the full AppInsights Workspace resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app insights workspace resource')
 output appInsightsWorkspaceResource object = useExisting ? existing_app_insights : app_insights

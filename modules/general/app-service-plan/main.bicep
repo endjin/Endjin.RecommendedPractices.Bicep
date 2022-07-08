@@ -1,4 +1,4 @@
-// <copyright file="app_service_plan.bicep" company="Endjin Limited">
+// <copyright file="app-service-plan.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -68,10 +68,12 @@ resource hosting_plan 'Microsoft.Web/serverfarms@2021-02-01' = if (!useExisting)
   tags: resourceTags
 }
 
+// Template outputs
 @description('The resource ID of the app service plan')
 output id string = useExisting ? existing_hosting_plan.id : hosting_plan.id
 @description('The name of the app service plan')
 output name string = useExisting ? existing_hosting_plan.name : hosting_plan.name
 
+// Returns the full App Service Plan resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app configuration store resource')
 output appServicePlanResource object = useExisting ? existing_hosting_plan : hosting_plan

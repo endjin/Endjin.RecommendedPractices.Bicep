@@ -1,4 +1,4 @@
-// <copyright file="app_insights_with_config_publish.bicep" company="Endjin Limited">
+// <copyright file="app-insights-with-config-publish.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -71,10 +71,12 @@ module aikey_secret '../key-vault-secret/main.bicep' = {
   }
 }
 
+// Template outputs
 @description('The resource ID of the app insights workspace')
 output id string = app_insights.outputs.id
 @description('The name of the app insights workspace')
 output name string = app_insights.outputs.name
 
+// Returns the full AppInsights wWrkspace resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app insights workspace resource')
 output appInsightsWorkspaceResource object = app_insights.outputs.appInsightsWorkspaceResource

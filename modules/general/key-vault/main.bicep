@@ -1,4 +1,4 @@
-// <copyright file="key_vault.bicep" company="Endjin Limited">
+// <copyright file="key-vault.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -100,11 +100,12 @@ resource keyvault_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-
   }
 }
 
-
+// Template outputs
 @description('The resource ID of the key vault')
 output id string = useExisting ? existing_key_vault.id : key_vault.id
 @description('The name of the key vault')
 output name string = useExisting ? existing_key_vault.name : key_vault.name
 
+// Returns the full Key Vault resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the key vault resource')
 output keyVaultResource object =  useExisting ? existing_key_vault : key_vault

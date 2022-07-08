@@ -1,5 +1,5 @@
 
-// <copyright file="key_vault_with_secrets_access_via_groups.bicep" company="Endjin Limited">
+// <copyright file="key-vault-with-secrets-access-via-groups.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -57,6 +57,7 @@ param resourceTags object = {}
 targetScope = 'resourceGroup'
 
 
+// Create an access policy entry to grant 'secrets reader' permissions
 var readerAccessPolicy = (!empty(secretsReadersGroupObjectId)) ? {
   objectId: secretsReadersGroupObjectId
   tenantId: tenantId
@@ -64,7 +65,7 @@ var readerAccessPolicy = (!empty(secretsReadersGroupObjectId)) ? {
     secrets: secretsReadersPermissions
   }
 } : {}
-
+// Create an access policy entry to grant 'secrets contributor' permissions
 var contributorAccessPolicy = (!empty(secretsContributorsGroupObjectId)) ? {
   objectId: secretsContributorsGroupObjectId
   tenantId: tenantId
@@ -72,7 +73,7 @@ var contributorAccessPolicy = (!empty(secretsContributorsGroupObjectId)) ? {
     secrets: secretsContributorsPermissions
   }
 } : {}
-
+// Create the final access policy definition that will be passed to the Key Vault resource definition
 var accessPolicies = [
   readerAccessPolicy
   contributorAccessPolicy
@@ -98,10 +99,12 @@ module key_vault '../key-vault/main.bicep' = {
   }
 }
 
+// Template outputs
 @description('The objectId of the key vault')
 output id string = key_vault.outputs.id
 @description('The name of the key vault')
 output name string = key_vault.outputs.name
 
+// Returns the full Key Vault resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the key vault resource')
 output keyVaultResource object =  key_vault.outputs.keyVaultResource

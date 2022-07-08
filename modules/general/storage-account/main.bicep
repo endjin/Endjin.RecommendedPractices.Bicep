@@ -1,4 +1,4 @@
-// <copyright file="storage_account.bicep" company="Endjin Limited">
+// <copyright file="storage-account.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -81,11 +81,12 @@ module storage_access_key_secret '../key-vault-secret/main.bicep' = if (saveAcce
   }
 }
 
-
+// Template outputs
 @description('The resource ID of the storage account')
 output id string = useExisting ? existing_storage_account.id : storage_account.id
 @description('The name of the storage account')
 output name string = useExisting ? existing_storage_account.name : storage_account.name
 
+// Returns the full Storage Account resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the storage account resource')
 output storageAccountResource object = useExisting ? existing_storage_account : storage_account

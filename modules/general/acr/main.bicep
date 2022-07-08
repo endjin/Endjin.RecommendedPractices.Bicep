@@ -45,6 +45,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-09-01' = if (!useExist
   tags: resourceTags
 }
 
+// Template outputs
 @description('The resource ID of the container registry')
 output id string = useExisting ? existing_acr.id : acr.id
 @description('The name of the container registry')
@@ -52,5 +53,6 @@ output name string = useExisting ? existing_acr.name : acr.name
 @description('The admin username of the container registry')
 output loginServer string = useExisting ? existing_acr.properties.loginServer : acr.properties.loginServer
 
+// Returns the full ACR resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the container registry resource')
 output acrResource object = useExisting ? existing_acr : acr
