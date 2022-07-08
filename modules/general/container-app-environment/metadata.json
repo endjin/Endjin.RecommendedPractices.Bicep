@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
+  "name": "Container App Environment",
+  "summary": "Deploys a Container App hosting environment",
+  "owner": "endjin"
+}

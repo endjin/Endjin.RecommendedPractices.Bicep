@@ -1,0 +1,103 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "4037631040111082705"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the container registry"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the container registry"
+      }
+    },
+    "sku": {
+      "type": "string",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "metadata": {
+        "description": "SKU for the container registry"
+      }
+    },
+    "adminUserEnabled": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, admin access via the ACR key is enabled; When false, access is via RBAC"
+      }
+    },
+    "useExisting": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the details of an existing ACR will be returned; When false, the ACR is created/updated"
+      }
+    },
+    "resourceTags": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The resource tags applied to resources"
+      }
+    }
+  },
+  "resources": [
+    {
+      "condition": "[not(parameters('useExisting'))]",
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2021-09-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[parameters('sku')]"
+      },
+      "properties": {
+        "adminUserEnabled": "[parameters('adminUserEnabled')]"
+      },
+      "tags": "[parameters('resourceTags')]"
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')))]",
+      "metadata": {
+        "description": "The resource ID of the container registry"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+      "metadata": {
+        "description": "The name of the container registry"
+      }
+    },
+    "loginServer": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer, reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer)]",
+      "metadata": {
+        "description": "The admin username of the container registry"
+      }
+    },
+    "acrResource": {
+      "type": "object",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'))]",
+      "metadata": {
+        "description": "An object representing the container registry resource"
+      }
+    }
+  }
+}

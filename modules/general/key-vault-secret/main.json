@@ -1,0 +1,67 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "12015994460177070841"
+    }
+  },
+  "parameters": {
+    "secretName": {
+      "type": "string",
+      "metadata": {
+        "description": "Enter the secret name."
+      }
+    },
+    "contentType": {
+      "type": "string",
+      "defaultValue": "text/plain",
+      "metadata": {
+        "description": "Type of the secret"
+      }
+    },
+    "contentValue": {
+      "type": "secureString",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Value of the secret"
+      }
+    },
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the vault"
+      }
+    },
+    "useExisting": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, a pre-existing secret will be returned"
+      }
+    }
+  },
+  "resources": [
+    {
+      "condition": "[not(parameters('useExisting'))]",
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+      "properties": {
+        "contentType": "[parameters('contentType')]",
+        "value": "[parameters('contentValue')]"
+      }
+    }
+  ],
+  "outputs": {
+    "secretUriWithVersion": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+      "metadata": {
+        "description": "The key vault URI linking to the new/updated secret"
+      }
+    }
+  }
+}

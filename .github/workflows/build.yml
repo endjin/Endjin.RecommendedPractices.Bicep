@@ -1,0 +1,69 @@
+name: build
+on:
+  pull_request:
+    types: [
+      opened,
+      synchronize,
+      reopened
+    ]
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+    inputs:
+      force_publish:
+        default: 'false'
+        required: true
+        description: When true, modules will be published regardless of the normal branch constraints
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Run Build
+    outputs:
+      semver: ${{ steps.run_build.outputs.SemVer }}
+      major: ${{ steps.run_build.outputs.Major }}
+      majorMinor: ${{ steps.run_build.outputs.Major }}.${{ steps.run_build.outputs.Minor }}
+      preReleaseTag: ${{ steps.run_build.outputs.PreReleaseTag }}
+    steps:
+    # Setup steps
+    - uses: actions/setup-dotnet@v1
+      if: ${{ github.actor != 'nektos/act' }}
+      name: Install .NET Core SDK 6.0.x
+      with:
+        dotnet-version: '6.0.x'
+
+    # Build steps
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    
+    - id: azlogin
+      name: Azure Login
+      if: ${{ (github.ref == 'refs/heads/main') || (github.event.inputs.force_publish == 'true') }}
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.ENDJIN_PROD_ACR_PUBLISH_CREDENTIALS }}
+    
+    - id: run_build
+      name: Run Build
+      run: |
+        Write-Host "Building ref: $($env:GITHUB_REF)"
+        Write-Host "PublicRelease: $($env:PublicRelease)"
+
+        # when building 'main' the base branch needs to be the previous commit
+        if ($env:GITHUB_REF -eq "refs/heads/main") {
+          Write-Host "Overriding 'BaseBranch' build variable for this build of 'main'"
+          $env:BUILDVAR_BaseBranch = "HEAD~1"
+        }
+
+        # set whether we are publishing modules or just validating them
+        $entrypointTask = $env:PublicRelease -eq "true" -or $env:FORCE_PUBLISH -eq "true" ? "FullBuildAndPublish" : "FullBuild"
+        & ./build.ps1 -Task $entrypointTask
+      shell: pwsh
+      env:
+        BUILDVAR_BicepRegistryFqdn: endjin.azurecr.io
+        FORCE_PUBLISH: ${{ github.event.inputs.force_publish }}
+        # only builds of 'main' produce stable version numbers
+        PublicRelease: ${{ (github.ref == 'refs/heads/main') }}
+

@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
+  "name": "Application Insights with published configuration",
+  "summary": "Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault",
+  "owner": "endjin"
+}

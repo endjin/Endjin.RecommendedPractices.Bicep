@@ -1,0 +1,115 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.5.6.12127",
+      "templateHash": "10433643319707806377"
+    }
+  },
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(subscription().id, 'bicep-rg-test')]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "northeurope"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "rgDeploy",
+      "location": "[deployment().location]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[format('{0}-rg', parameters('prefix'))]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.5.6.12127",
+              "templateHash": "11056374522374398772"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the resource group"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the resource group"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing resource group will be returned; When false, the resource group is created/updated"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.Resources/resourceGroups",
+              "apiVersion": "2021-04-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('resourceTags')]"
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')))]",
+              "metadata": {
+                "description": "The resource ID of the resource group"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[parameters('name')]",
+              "metadata": {
+                "description": "The name of the resource group"
+              }
+            },
+            "resourceGroupResource": {
+              "type": "object",
+              "value": "[if(parameters('useExisting'), reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2021-04-01', 'full'), reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2021-04-01', 'full'))]",
+              "metadata": {
+                "description": "An object representing the resource group resource"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
