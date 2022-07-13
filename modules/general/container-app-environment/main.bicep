@@ -97,18 +97,15 @@ resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExist
 }
 
 
-resource existing_container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' existing = if (useExisting) {
+resource existing_container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01' existing = if (useExisting) {
   name: name
   scope: resourceGroup(existingAppEnvironmentSubscriptionId, existingAppEnvironmentResourceGroupName)
 }
 
-resource container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' =  if (!useExisting) {
+resource container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01' =  if (!useExisting) {
   name: name
   location: location
   properties: {
-    #disable-next-line BCP037
-    type: 'managed'
-    internalLoadBalancerEnabled: false
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -116,10 +113,7 @@ resource container_app_environment 'Microsoft.Web/kubeEnvironments@2021-02-01' =
         sharedKey: listKeys(log_analytics.id, log_analytics.apiVersion).primarySharedKey
       }
     }
-    #disable-next-line BCP037
-    containerAppsConfiguration: {
-      daprAIInstrumentationKey: app_insights.properties.InstrumentationKey
-    }
+    daprAIInstrumentationKey: app_insights.properties.InstrumentationKey
   }
   tags: resourceTags
 }

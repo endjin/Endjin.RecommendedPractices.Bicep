@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "9582994583667220622"
+      "templateHash": "12579798819656665354"
     }
   },
   "parameters": {
@@ -140,13 +140,11 @@
     },
     {
       "condition": "[not(parameters('useExisting'))]",
-      "type": "Microsoft.Web/kubeEnvironments",
-      "apiVersion": "2021-02-01",
+      "type": "Microsoft.App/managedEnvironments",
+      "apiVersion": "2022-03-01",
       "name": "[parameters('name')]",
       "location": "[parameters('location')]",
       "properties": {
-        "type": "managed",
-        "internalLoadBalancerEnabled": false,
         "appLogsConfiguration": {
           "destination": "log-analytics",
           "logAnalyticsConfiguration": {
@@ -154,9 +152,7 @@
             "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2021-06-01').primarySharedKey]"
           }
         },
-        "containerAppsConfiguration": {
-          "daprAIInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]"
-        }
+        "daprAIInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]"
       },
       "tags": "[parameters('resourceTags')]",
       "dependsOn": [
@@ -300,7 +296,7 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.Web/kubeEnvironments', parameters('name')), resourceId('Microsoft.Web/kubeEnvironments', parameters('name')))]",
+      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), resourceId('Microsoft.App/managedEnvironments', parameters('name')))]",
       "metadata": {
         "description": "The resource ID of the container app environment"
       }
@@ -314,7 +310,7 @@
     },
     "appEnvironmentResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.Web/kubeEnvironments', parameters('name')), '2021-02-01', 'full'), reference(resourceId('Microsoft.Web/kubeEnvironments', parameters('name')), '2021-02-01', 'full'))]",
+      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'))]",
       "metadata": {
         "description": "An object representing the container app environment resource"
       }
