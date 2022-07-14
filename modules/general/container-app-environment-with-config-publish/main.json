@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "8378042926298769880"
+      "templateHash": "2779587358404354333"
     }
   },
   "parameters": {
@@ -129,7 +129,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.8.9.13224",
-              "templateHash": "12579798819656665354"
+              "templateHash": "12715598029514532686"
             }
           },
           "parameters": {
@@ -258,9 +258,13 @@
               "properties": {
                 "Application_Type": "web",
                 "Flow_Type": "Redfield",
-                "Request_Source": "CustomDeployment"
+                "Request_Source": "CustomDeployment",
+                "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
               },
-              "tags": "[parameters('resourceTags')]"
+              "tags": "[parameters('resourceTags')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName'))]"
+              ]
             },
             {
               "condition": "[not(parameters('useExisting'))]",
@@ -276,7 +280,8 @@
                     "sharedKey": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsName')), '2021-06-01').primarySharedKey]"
                   }
                 },
-                "daprAIInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]"
+                "daprAIInstrumentationKey": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey]",
+                "daprAIConnectionString": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').ConnectionString]"
               },
               "tags": "[parameters('resourceTags')]",
               "dependsOn": [
