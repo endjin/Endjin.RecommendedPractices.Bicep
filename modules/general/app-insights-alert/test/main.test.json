@@ -1,0 +1,284 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "16624974368118882082"
+    }
+  },
+  "variables": {
+    "location": "uksouth"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appInsights",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "appInsights"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "12614728658115318884"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the app insights workspace"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the app insights workspace"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": "web",
+              "allowedValues": [
+                "web",
+                "ios",
+                "other",
+                "store",
+                "java",
+                "phone"
+              ],
+              "metadata": {
+                "description": "The kind of application using the workspace"
+              }
+            },
+            "applicationType": {
+              "type": "string",
+              "defaultValue": "web",
+              "allowedValues": [
+                "other",
+                "web"
+              ],
+              "metadata": {
+                "description": "The type of application using the workspace"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.Insights/components",
+              "apiVersion": "2020-02-02",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "kind": "[parameters('kind')]",
+              "properties": {
+                "Application_Type": "[parameters('applicationType')]"
+              },
+              "tags": "[parameters('resourceTags')]"
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), resourceId('Microsoft.Insights/components', parameters('name')), resourceId('Microsoft.Insights/components', parameters('name')))]",
+              "metadata": {
+                "description": "The resource ID of the app insights workspace"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+              "metadata": {
+                "description": "The name of the app insights workspace"
+              }
+            },
+            "appInsightsWorkspaceResource": {
+              "type": "object",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'))]",
+              "metadata": {
+                "description": "An object representing the app insights workspace resource"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appInsightsAlert",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "alertName": {
+            "value": "testalert"
+          },
+          "timeAggregation": {
+            "value": "Count"
+          },
+          "appInsightsResourceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsights')).outputs.id.value]"
+          },
+          "query": {
+            "value": "requests\n| where resultCode == 500\n| count"
+          },
+          "operator": {
+            "value": "GreaterThan"
+          },
+          "threshold": {
+            "value": 0
+          },
+          "evaluationFrequency": {
+            "value": "PT5M"
+          },
+          "alertLocation": {
+            "value": "[variables('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "8431080825453950860"
+            }
+          },
+          "parameters": {
+            "alertLocation": {
+              "type": "string",
+              "metadata": {
+                "description": "The Azure location for the App Insights Alert resource."
+              }
+            },
+            "alertName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the App Insights Alert resource."
+              }
+            },
+            "appInsightsResourceId": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource ID of the App Insights instance to apply to the alert to."
+              }
+            },
+            "query": {
+              "type": "string",
+              "metadata": {
+                "description": "KQL query for the alert."
+              }
+            },
+            "operator": {
+              "type": "string",
+              "allowedValues": [
+                "Equals",
+                "GreaterThan",
+                "GreaterThanOrEqual",
+                "LessThan",
+                "LessThanOrEqual"
+              ],
+              "metadata": {
+                "description": "The criteria operator for the alert."
+              }
+            },
+            "timeAggregation": {
+              "type": "string",
+              "allowedValues": [
+                "Average",
+                "Count",
+                "Maximum",
+                "Minimum",
+                "Total"
+              ],
+              "metadata": {
+                "description": "The aggregation for the alert"
+              }
+            },
+            "threshold": {
+              "type": "int",
+              "metadata": {
+                "description": "The criteria threshold value that activates the alert."
+              }
+            },
+            "evaluationFrequency": {
+              "type": "string",
+              "metadata": {
+                "description": "How often the scheduled query rule is evaluated represented in ISO 8601 duration format"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Insights/scheduledQueryRules",
+              "apiVersion": "2021-02-01-preview",
+              "name": "[parameters('alertName')]",
+              "location": "[parameters('alertLocation')]",
+              "properties": {
+                "displayName": "[parameters('alertName')]",
+                "severity": 1,
+                "enabled": true,
+                "evaluationFrequency": "[parameters('evaluationFrequency')]",
+                "scopes": [
+                  "[parameters('appInsightsResourceId')]"
+                ],
+                "windowSize": "PT5M",
+                "criteria": {
+                  "allOf": [
+                    {
+                      "query": "[parameters('query')]",
+                      "timeAggregation": "[parameters('timeAggregation')]",
+                      "operator": "[parameters('operator')]",
+                      "threshold": "[parameters('threshold')]",
+                      "failingPeriods": {
+                        "numberOfEvaluationPeriods": 1,
+                        "minFailingPeriodsToAlert": 1
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appInsights')]"
+      ]
+    }
+  ]
+}

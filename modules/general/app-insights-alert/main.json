@@ -1,0 +1,107 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "8431080825453950860"
+    }
+  },
+  "parameters": {
+    "alertLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "The Azure location for the App Insights Alert resource."
+      }
+    },
+    "alertName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the App Insights Alert resource."
+      }
+    },
+    "appInsightsResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource ID of the App Insights instance to apply to the alert to."
+      }
+    },
+    "query": {
+      "type": "string",
+      "metadata": {
+        "description": "KQL query for the alert."
+      }
+    },
+    "operator": {
+      "type": "string",
+      "allowedValues": [
+        "Equals",
+        "GreaterThan",
+        "GreaterThanOrEqual",
+        "LessThan",
+        "LessThanOrEqual"
+      ],
+      "metadata": {
+        "description": "The criteria operator for the alert."
+      }
+    },
+    "timeAggregation": {
+      "type": "string",
+      "allowedValues": [
+        "Average",
+        "Count",
+        "Maximum",
+        "Minimum",
+        "Total"
+      ],
+      "metadata": {
+        "description": "The aggregation for the alert"
+      }
+    },
+    "threshold": {
+      "type": "int",
+      "metadata": {
+        "description": "The criteria threshold value that activates the alert."
+      }
+    },
+    "evaluationFrequency": {
+      "type": "string",
+      "metadata": {
+        "description": "How often the scheduled query rule is evaluated represented in ISO 8601 duration format"
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/scheduledQueryRules",
+      "apiVersion": "2021-02-01-preview",
+      "name": "[parameters('alertName')]",
+      "location": "[parameters('alertLocation')]",
+      "properties": {
+        "displayName": "[parameters('alertName')]",
+        "severity": 1,
+        "enabled": true,
+        "evaluationFrequency": "[parameters('evaluationFrequency')]",
+        "scopes": [
+          "[parameters('appInsightsResourceId')]"
+        ],
+        "windowSize": "PT5M",
+        "criteria": {
+          "allOf": [
+            {
+              "query": "[parameters('query')]",
+              "timeAggregation": "[parameters('timeAggregation')]",
+              "operator": "[parameters('operator')]",
+              "threshold": "[parameters('threshold')]",
+              "failingPeriods": {
+                "numberOfEvaluationPeriods": 1,
+                "minFailingPeriodsToAlert": 1
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
