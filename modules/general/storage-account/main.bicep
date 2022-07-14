@@ -26,6 +26,9 @@ param accessTier string = 'Hot'
 @description('When true, the primary storage access key will be written to the specified key vault')
 param saveAccessKeyToKeyVault bool = false
 
+@description('When true, the default connection string using the primary storage access key will be written to the specified key vault')
+param saveConnectionStringToKeyVault bool = false
+
 @description('The name of the key vault used to store the access key')
 param keyVaultName string = ''
 
@@ -36,7 +39,10 @@ param keyVaultResourceGroupName string = resourceGroup().name
 param keyVaultSubscriptionName string = subscription().subscriptionId
 
 @description('The key vault secret name used to store the access key')
-param keyVaultSecretName string = ''
+param keyVaultAccessKeySecretName string = ''
+
+@description('The key vault secret name used to store the connection string')
+param keyVaultConnectionStringSecretName string = ''
 
 @description('When true, the details of an existing storage account will be returned; When false, the storage account is created/updated')
 param useExisting bool = false
@@ -72,12 +78,22 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!u
 // same pattern as other templates where this additional functionality would be in
 // a separate template from the main storage account definition
 module storage_access_key_secret '../key-vault-secret/main.bicep' = if (saveAccessKeyToKeyVault) {
-  name: 'storageSecretDeploy'
+  name: 'storageAccessKeySecretDeploy${name}'
   scope: resourceGroup(keyVaultSubscriptionName, keyVaultResourceGroupName) 
   params: {
     keyVaultName: keyVaultName
-    secretName: keyVaultSecretName
+    secretName: keyVaultAccessKeySecretName
     contentValue: useExisting ? existing_storage_account.listKeys().keys[0].value : storage_account.listKeys().keys[0].value
+  }
+}
+
+module storage_connection_string_secret '../key-vault-secret/main.bicep' = if (saveConnectionStringToKeyVault) {
+  name: 'storageConnectionStringSecretDeploy${name}'
+  scope: resourceGroup(keyVaultSubscriptionName, keyVaultResourceGroupName) 
+  params: {
+    keyVaultName: keyVaultName
+    secretName: keyVaultConnectionStringSecretName
+    contentValue: 'DefaultEndpointsProtocol=https;AccountName=${name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${useExisting ? existing_storage_account.listKeys().keys[0].value : storage_account.listKeys().keys[0].value}'
   }
 }
 
