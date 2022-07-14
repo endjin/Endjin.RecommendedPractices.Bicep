@@ -7,6 +7,7 @@ An opinionated set of application insights alerts for monitoring the health of a
 This module defines the set of Application Insights alerts that we consider good practice for monitoring the health of a web app running in production.
 
 The alerts deployed are:
+
 - `any-500-errors`: Alerts if any requests respond with a 500 Internal Server Error
 
 ## Parameters
