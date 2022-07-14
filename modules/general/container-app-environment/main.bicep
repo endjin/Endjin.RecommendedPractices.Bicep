@@ -92,6 +92,7 @@ resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExist
     Flow_Type: 'Redfield'
     #disable-next-line BCP036
     Request_Source: 'CustomDeployment'
+    WorkspaceResourceId: log_analytics.id
   }
   tags: resourceTags
 }
@@ -114,6 +115,7 @@ resource container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01
       }
     }
     daprAIInstrumentationKey: app_insights.properties.InstrumentationKey
+    daprAIConnectionString: app_insights.properties.ConnectionString
   }
   tags: resourceTags
 }
