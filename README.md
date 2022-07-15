@@ -64,4 +64,4 @@ The build can be run locally by executing the `build.ps1` script.
 1. The `README.md` will be partially auto-generated based on the `main.bicep` and `metadata.json` files.
     - Fill in the `Description` and `Examples` sections of the README manually.
 1. Commit the changes and push up the branch.
-1. Open an pull request with the changes.
+1. Open a pull request with the changes.
