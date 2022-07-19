@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "661968598800425058"
+      "templateHash": "13765888981210691206"
     }
   },
   "parameters": {
@@ -104,6 +104,9 @@
       }
     }
   },
+  "variables": {
+    "_diagnosticsStorageAccountName": "[if(empty(parameters('diagnosticsStorageAccountName')), parameters('name'), parameters('diagnosticsStorageAccountName'))]"
+  },
   "resources": [
     {
       "condition": "[not(parameters('useExisting'))]",
@@ -160,7 +163,7 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "[parameters('name')]"
+            "value": "[variables('_diagnosticsStorageAccountName')]"
           },
           "location": {
             "value": "[parameters('location')]"
