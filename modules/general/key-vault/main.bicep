@@ -48,6 +48,7 @@ param resourceTags object = {}
 
 targetScope = 'resourceGroup'
 
+var _diagnosticsStorageAccountName = empty(diagnosticsStorageAccountName) ? name : diagnosticsStorageAccountName
 
 resource existing_key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = if (useExisting) {
   name: name
@@ -59,7 +60,7 @@ resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01'
 module diagnostics_storage '../storage-account/main.bicep' = if (!useExisting && enableDiagnostics && !useExistingStorageAccount) {
   name: 'kvDiagnosticsDeploy'
   params: {
-    name: name
+    name: _diagnosticsStorageAccountName
     location: location
   }
 }

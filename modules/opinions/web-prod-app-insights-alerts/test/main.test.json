@@ -1,0 +1,236 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1124.51302",
+      "templateHash": "15099280502301142715"
+    }
+  },
+  "variables": {
+    "location": "uksouth"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appInsights",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "appInsights"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1124.51302",
+              "templateHash": "5356893522856717438"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the app insights workspace"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the app insights workspace"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": "web",
+              "allowedValues": [
+                "web",
+                "ios",
+                "other",
+                "store",
+                "java",
+                "phone"
+              ],
+              "metadata": {
+                "description": "The kind of application using the workspace"
+              }
+            },
+            "applicationType": {
+              "type": "string",
+              "defaultValue": "web",
+              "allowedValues": [
+                "other",
+                "web"
+              ],
+              "metadata": {
+                "description": "The type of application using the workspace"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.Insights/components",
+              "apiVersion": "2020-02-02",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "kind": "[parameters('kind')]",
+              "properties": {
+                "Application_Type": "[parameters('applicationType')]"
+              },
+              "tags": "[parameters('resourceTags')]"
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), resourceId('Microsoft.Insights/components', parameters('name')), resourceId('Microsoft.Insights/components', parameters('name')))]",
+              "metadata": {
+                "description": "The resource ID of the app insights workspace"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+              "metadata": {
+                "description": "The name of the app insights workspace"
+              }
+            },
+            "appInsightsWorkspaceResource": {
+              "type": "object",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'))]",
+              "metadata": {
+                "description": "An object representing the app insights workspace resource"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appInsightsAlert",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "appInsightsResourceId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsights'), '2020-10-01').outputs.id.value]"
+          },
+          "alertLocation": {
+            "value": "[variables('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1124.51302",
+              "templateHash": "5039020162592429709"
+            }
+          },
+          "parameters": {
+            "alertLocation": {
+              "type": "string",
+              "metadata": {
+                "description": "The Azure location for the App Insights Alert resources."
+              }
+            },
+            "appInsightsResourceId": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource ID of the App Insights instance to apply to the alerts to."
+              }
+            }
+          },
+          "variables": {
+            "alerts": [
+              {
+                "alertName": "any-500-errors",
+                "timeAggregation": "Count",
+                "query": "requests\n| where resultCode == 500\n| count",
+                "operator": "GreaterThan",
+                "threshold": 0,
+                "evaluationFrequency": "PT5M",
+                "severity": 1,
+                "windowSize": "PT5M",
+                "numberOfEvaluationPeriods": 1,
+                "minFailingPeriodsToAlert": 1
+              }
+            ]
+          },
+          "resources": [
+            {
+              "copy": {
+                "name": "alert",
+                "count": "[length(variables('alerts'))]"
+              },
+              "type": "Microsoft.Insights/scheduledQueryRules",
+              "apiVersion": "2021-02-01-preview",
+              "name": "[variables('alerts')[copyIndex()].alertName]",
+              "location": "[parameters('alertLocation')]",
+              "properties": {
+                "displayName": "[variables('alerts')[copyIndex()].alertName]",
+                "severity": "[variables('alerts')[copyIndex()].severity]",
+                "enabled": true,
+                "evaluationFrequency": "[variables('alerts')[copyIndex()].evaluationFrequency]",
+                "scopes": [
+                  "[parameters('appInsightsResourceId')]"
+                ],
+                "windowSize": "[variables('alerts')[copyIndex()].windowSize]",
+                "criteria": {
+                  "allOf": [
+                    {
+                      "query": "[variables('alerts')[copyIndex()].query]",
+                      "timeAggregation": "[variables('alerts')[copyIndex()].timeAggregation]",
+                      "operator": "[variables('alerts')[copyIndex()].operator]",
+                      "threshold": "[variables('alerts')[copyIndex()].threshold]",
+                      "failingPeriods": {
+                        "numberOfEvaluationPeriods": "[variables('alerts')[copyIndex()].numberOfEvaluationPeriods]",
+                        "minFailingPeriodsToAlert": "[variables('alerts')[copyIndex()].minFailingPeriodsToAlert]"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appInsights')]"
+      ]
+    }
+  ]
+}
