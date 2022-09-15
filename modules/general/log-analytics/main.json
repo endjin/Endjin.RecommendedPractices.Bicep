@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "13349904025015796016"
+      "templateHash": "4659859060864874271"
     }
   },
   "parameters": {
@@ -34,25 +34,44 @@
       }
     },
     "enableLogAccessUsingOnlyResourcePermisions": {
-      "type": "bool"
+      "type": "bool",
+      "metadata": {
+        "description": "When true, the log analytics workspace will only be accessible by using resource permissions"
+      }
     },
     "publicNetworkAccessForIngestion": {
       "type": "string",
       "allowedValues": [
         "Enabled",
         "Disabled"
-      ]
+      ],
+      "metadata": {
+        "description": "Indicates whether the public network access for ingestion is enabled or disabled"
+      }
     },
     "publicNetworkAccessForQuery": {
       "type": "string",
       "allowedValues": [
         "Enabled",
         "Disabled"
-      ]
+      ],
+      "metadata": {
+        "description": "Indicates whether the public network access for query is enabled or disabled"
+      }
     },
     "tagValues": {
       "type": "object",
-      "defaultValue": {}
+      "defaultValue": {},
+      "metadata": {
+        "description": "The tag values of the log analytics workspace"
+      }
+    },
+    "useExisting": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the details of an existing log analytics workspace will be returned; When false, the log analytics workspace is created/updated"
+      }
     }
   },
   "resources": [
@@ -78,9 +97,26 @@
     }
   ],
   "outputs": {
-    "workspaceResourceId": {
+    "workspaceResource": {
+      "type": "object",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'))]",
+      "metadata": {
+        "description": "An object representing the log analytics workspace"
+      }
+    },
+    "name": {
       "type": "string",
-      "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+      "metadata": {
+        "description": "The workspace resource name"
+      }
+    },
+    "id": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')))]",
+      "metadata": {
+        "description": "The workspace resource ID"
+      }
     }
   }
 }
