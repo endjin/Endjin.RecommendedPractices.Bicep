@@ -1,0 +1,86 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "13349904025015796016"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the log analytics workspace"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the log analytics workspace"
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "metadata": {
+        "description": "The SKU of the log analytics workspace"
+      }
+    },
+    "dailyQuotaGb": {
+      "type": "int",
+      "metadata": {
+        "description": "The daily ingestion quota (in GB) of the log analytics workspace - use \"-1\" for no limit"
+      }
+    },
+    "enableLogAccessUsingOnlyResourcePermisions": {
+      "type": "bool"
+    },
+    "publicNetworkAccessForIngestion": {
+      "type": "string",
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ]
+    },
+    "publicNetworkAccessForQuery": {
+      "type": "string",
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ]
+    },
+    "tagValues": {
+      "type": "object",
+      "defaultValue": {}
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2020-10-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "name": "[parameters('skuName')]"
+        },
+        "features": {
+          "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermisions')]"
+        },
+        "workspaceCapping": {
+          "dailyQuotaGb": "[parameters('dailyQuotaGb')]"
+        },
+        "publicNetworkAccessForIngestion": "[parameters('publicNetworkAccessForIngestion')]",
+        "publicNetworkAccessForQuery": "[parameters('publicNetworkAccessForQuery')]"
+      },
+      "tags": "[parameters('tagValues')]"
+    }
+  ],
+  "outputs": {
+    "workspaceResourceId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+    }
+  }
+}
