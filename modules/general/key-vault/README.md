@@ -4,7 +4,14 @@ Deploys a key vault with optional diagnostics written to blob storage.
 
 ## Description
 
-Deploys a key vault with optional diagnostics written to blob storage.
+A low-level module that handles the deployment of Azure Key Vault and supports the following configuration options:
+
+* Azure Storage based diagnostic settings
+* Network access control lists
+* Use of Azure RBAC instead of Key Vault Access Policies
+
+
+, with the Deploys a key vault with optional diagnostics written to blob storage.
 
 ## Parameters
 
