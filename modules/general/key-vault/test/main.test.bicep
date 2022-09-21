@@ -12,6 +12,7 @@ module keyvault_with_diagnostics '../main.bicep' = {
   }
 }
 
+var subnetName = 'default'
 resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   name: '${prefix}vnet'
   location: location
@@ -23,7 +24,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
     }
     subnets: [
       {
-        name: 'default'
+        name: subnetName
         properties: {
           addressPrefix: '10.0.0.0/24'
           serviceEndpoints: [
@@ -57,7 +58,7 @@ module keyvault_with_networkacls '../main.bicep' = {
       ]
       virtualNetworkRules: [   // ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.keyvault/vaults#virtualnetworkrule
         {
-          id: vnet.id
+          id: '${vnet.id}/subnets/${subnetName}'
           ignoreMissingVnetServiceEndpoint: false
         }
       ]

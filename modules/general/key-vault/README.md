@@ -62,6 +62,11 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' existing = {
   scope: resourceGroup('my-networking-resource-group')
 }
 
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-08-01' existing = {
+    name: 'default'
+    parent: vnet
+}
+
 module keyvault 'br:<registry-fqdn>/bicep/general/key-vault:<version>' = {
   name: 'keyVaultWithNetworkAcl'
   params: {
@@ -80,7 +85,7 @@ module keyvault 'br:<registry-fqdn>/bicep/general/key-vault:<version>' = {
       ]
       virtualNetworkRules: [   // ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.keyvault/vaults#virtualnetworkrule
         {
-          id: vnet.id
+          id: subnet.id
           ignoreMissingVnetServiceEndpoint: false
         }
       ]
