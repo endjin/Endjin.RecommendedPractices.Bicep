@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "7877228508613825521"
+      "templateHash": "15230690921329797217"
     }
   },
   "parameters": {
@@ -181,7 +181,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.8.9.13224",
-              "templateHash": "13765888981210691206"
+              "templateHash": "3939348384675764906"
             }
           },
           "parameters": {
@@ -352,7 +352,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.8.9.13224",
-                      "templateHash": "6153766965144569806"
+                      "templateHash": "8266500478195651963"
                     }
                   },
                   "parameters": {
@@ -402,6 +402,20 @@
                       "defaultValue": "Hot",
                       "metadata": {
                         "description": "The access tier of the storage account"
+                      }
+                    },
+                    "isHnsEnabled": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities"
+                      }
+                    },
+                    "networkAcls": {
+                      "type": "object",
+                      "defaultValue": {},
+                      "metadata": {
+                        "description": "The optional network rules securing access to the storage account (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts?pivots=deployment-language-bicep#networkruleset)"
                       }
                     },
                     "saveAccessKeyToKeyVault": {
@@ -482,7 +496,9 @@
                       "properties": {
                         "minimumTlsVersion": "[parameters('tlsVersion')]",
                         "supportsHttpsTrafficOnly": "[parameters('httpsOnly')]",
-                        "accessTier": "[parameters('accessTier')]"
+                        "accessTier": "[parameters('accessTier')]",
+                        "isHnsEnabled": "[parameters('isHnsEnabled')]",
+                        "networkAcls": "[parameters('networkAcls')]"
                       },
                       "tags": "[parameters('resource_tags')]"
                     },
