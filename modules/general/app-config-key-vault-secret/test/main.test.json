@@ -5,11 +5,11 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "2528679654793620450"
+      "templateHash": "4506848463104755171"
     }
   },
   "parameters": {
-    "prefix": {
+    "suffix": {
       "type": "string",
       "defaultValue": "[uniqueString(resourceGroup().id)]"
     },
@@ -22,7 +22,7 @@
     {
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2021-11-01-preview",
-      "name": "[format('{0}kv', parameters('prefix'))]",
+      "name": "[format('kv{0}', parameters('suffix'))]",
       "location": "[parameters('location')]",
       "properties": {
         "sku": {
@@ -36,7 +36,7 @@
     {
       "type": "Microsoft.AppConfiguration/configurationStores",
       "apiVersion": "2022-05-01",
-      "name": "[format('{0}acs', parameters('prefix'))]",
+      "name": "[format('acs{0}', parameters('suffix'))]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "Standard"
@@ -45,12 +45,12 @@
     {
       "type": "Microsoft.KeyVault/vaults/secrets",
       "apiVersion": "2021-11-01-preview",
-      "name": "[format('{0}/{1}', format('{0}kv', parameters('prefix')), 'mysecret2')]",
+      "name": "[format('{0}/{1}', format('kv{0}', parameters('suffix')), 'mysecret2')]",
       "properties": {
         "value": "p@55w0rd!"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.KeyVault/vaults', format('{0}kv', parameters('prefix')))]"
+        "[resourceId('Microsoft.KeyVault/vaults', format('kv{0}', parameters('suffix')))]"
       ]
     },
     {
@@ -64,10 +64,10 @@
         "mode": "Incremental",
         "parameters": {
           "appConfigStoreName": {
-            "value": "[format('{0}acs', parameters('prefix'))]"
+            "value": "[format('acs{0}', parameters('suffix'))]"
           },
           "keyVaultName": {
-            "value": "[format('{0}kv', parameters('prefix'))]"
+            "value": "[format('kv{0}', parameters('suffix'))]"
           },
           "secretName": {
             "value": "mysecret1"
@@ -256,8 +256,8 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}acs', parameters('prefix')))]",
-        "[resourceId('Microsoft.KeyVault/vaults', format('{0}kv', parameters('prefix')))]"
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('acs{0}', parameters('suffix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('kv{0}', parameters('suffix')))]"
       ]
     },
     {
@@ -271,10 +271,10 @@
         "mode": "Incremental",
         "parameters": {
           "appConfigStoreName": {
-            "value": "[format('{0}acs', parameters('prefix'))]"
+            "value": "[format('acs{0}', parameters('suffix'))]"
           },
           "keyVaultName": {
-            "value": "[format('{0}kv', parameters('prefix'))]"
+            "value": "[format('kv{0}', parameters('suffix'))]"
           },
           "secretName": {
             "value": "mysecret2"
@@ -460,8 +460,8 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('{0}acs', parameters('prefix')))]",
-        "[resourceId('Microsoft.KeyVault/vaults', format('{0}kv', parameters('prefix')))]"
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', format('acs{0}', parameters('suffix')))]",
+        "[resourceId('Microsoft.KeyVault/vaults', format('kv{0}', parameters('suffix')))]"
       ]
     }
   ]

@@ -1,8 +1,8 @@
-param prefix string = uniqueString(resourceGroup().id)
+param suffix string = uniqueString(resourceGroup().id)
 param location string = resourceGroup().location
 
 resource kv 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
-  name: '${prefix}kv'
+  name: 'kv${suffix}'
   location: location
   properties: {
     sku: {
@@ -15,7 +15,7 @@ resource kv 'Microsoft.KeyVault/vaults@2021-11-01-preview' = {
 }
 
 resource acs 'Microsoft.AppConfiguration/configurationStores@2022-05-01' = {
-  name: '${prefix}acs'
+  name: 'acs${suffix}'
   location: location
   sku: {
     name: 'Standard'
