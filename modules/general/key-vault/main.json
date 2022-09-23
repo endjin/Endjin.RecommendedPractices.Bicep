@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "3939348384675764906"
+      "templateHash": "6385582366287877817"
     }
   },
   "parameters": {
@@ -20,7 +20,11 @@
       "defaultValue": "standard",
       "metadata": {
         "description": "SKU for the key vault"
-      }
+      },
+      "allowedValues": [
+        "standard",
+        "premium"
+      ]
     },
     "accessPolicies": {
       "type": "array",
@@ -39,6 +43,20 @@
       "type": "string",
       "metadata": {
         "description": "The location of the key vault"
+      }
+    },
+    "networkAcls": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The optional network rules securing access to the key vault (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.keyvault/vaults#networkruleset)"
+      }
+    },
+    "enableRbacAuthorization": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the key vault uses Azure RBAC-based access controls and any specified access policy will be ignored"
       }
     },
     "enabledForDeployment": {
@@ -60,6 +78,19 @@
       "defaultValue": false,
       "metadata": {
         "description": "When true, the key vault will be accessible by ARM deployments"
+      }
+    },
+    "enableSoftDelete": {
+      "type": "bool",
+      "metadata": {
+        "description": "When true, 'soft delete' functionality is enabled for this key vault. Once set to true, it cannot be reverted to false."
+      }
+    },
+    "softDeleteRetentionInDays": {
+      "type": "int",
+      "defaultValue": 7,
+      "metadata": {
+        "description": "Sets the retention policy if this key vault is soft deleted"
       }
     },
     "enableDiagnostics": {
@@ -123,7 +154,11 @@
         "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
         "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
         "tenantId": "[parameters('tenantId')]",
-        "accessPolicies": "[parameters('accessPolicies')]"
+        "accessPolicies": "[if(parameters('enableRbacAuthorization'), createArray(), parameters('accessPolicies'))]",
+        "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
+        "enableSoftDelete": "[parameters('enableSoftDelete')]",
+        "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]",
+        "networkAcls": "[parameters('networkAcls')]"
       },
       "tags": "[parameters('resourceTags')]"
     },

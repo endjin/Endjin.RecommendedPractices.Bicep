@@ -5,6 +5,10 @@
 @description('The name of the key vault')
 param name string
 
+@allowed([
+  'standard'
+  'premium'
+])
 @description('SKU for the key vault')
 param sku string = 'standard'
 
@@ -17,6 +21,12 @@ param tenantId string
 @description('The location of the key vault')
 param location string
 
+@description('The optional network rules securing access to the key vault (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.keyvault/vaults#networkruleset)')
+param networkAcls object = {}
+
+@description('When true, the key vault uses Azure RBAC-based access controls and any specified access policy will be ignored')
+param enableRbacAuthorization bool = false
+
 @description('When true, the key vault will be accessible by deployments')
 param enabledForDeployment bool = false
 
@@ -25,6 +35,12 @@ param enabledForDiskEncryption bool = false
 
 @description('When true, the key vault will be accessible by ARM deployments')
 param enabledForTemplateDeployment bool = false
+
+@description('When true, \'soft delete\' functionality is enabled for this key vault. Once set to true, it cannot be reverted to false.')
+param enableSoftDelete bool
+
+@description('Sets the retention policy if this key vault is soft deleted')
+param softDeleteRetentionInDays int = 7
 
 @description('When true, diagnostics settings will be enabled for the key vault')
 param enableDiagnostics bool
@@ -48,7 +64,9 @@ param resourceTags object = {}
 
 targetScope = 'resourceGroup'
 
+
 var _diagnosticsStorageAccountName = empty(diagnosticsStorageAccountName) ? name : diagnosticsStorageAccountName
+
 
 resource existing_key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = if (useExisting) {
   name: name
@@ -77,8 +95,11 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExis
     enabledForDiskEncryption: enabledForDiskEncryption
     enabledForTemplateDeployment: enabledForTemplateDeployment
     tenantId: tenantId
-    accessPolicies: accessPolicies
-
+    accessPolicies: enableRbacAuthorization ? [] : accessPolicies
+    enableRbacAuthorization: enableRbacAuthorization
+    enableSoftDelete: enableSoftDelete
+    softDeleteRetentionInDays: softDeleteRetentionInDays
+    networkAcls: networkAcls
   }
   tags: resourceTags
 }
