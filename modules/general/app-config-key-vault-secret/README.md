@@ -8,7 +8,7 @@ Adds or updates an App Configuration key-value with a reference to an Azure Key 
 
 Some libraries and tools can understand the linked secret reference and retrieve the underlying secret value for the given App Configuration key (e.g. see [ASP.NET Core example](https://learn.microsoft.com/en-us/azure/azure-app-configuration/use-key-vault-references-dotnet-core)).
 
-This module allows for either using existing Key Vault secrets and for automatically creating new secrets with a given value.
+This module allows for either using existing Key Vault secrets or for automatically creating new secrets with a given value.
 
 ## Parameters
 
