@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "4881392564295863085"
+    }
+  },
+  "parameters": {
+    "appConfigKey": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional value for the key in App Configuration. If left blank, the key will be set to the (sanitized) secret name."
+      }
+    },
+    "secretName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the secret in Key Vault (either existing or to be created)."
+      }
+    },
+    "secretValue": {
+      "type": "secureString",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional value to set as the secret. If left blank, a secret with the provided `secretName` must already exist in Key Vault."
+      }
+    },
+    "appConfigStoreName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the App Configuration Store."
+      }
+    },
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Key Vault instance."
+      }
+    },
+    "label": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Optional label attribute to apply to the App Configuration key-value."
+      }
+    }
+  },
+  "variables": {
+    "secretNameSanitized": "[if(not(empty(parameters('secretValue'))), replace(parameters('secretName'), ':', '--'), parameters('secretName'))]",
+    "sanitisedAppConfigKey": "[format('{0}{1}', replace(replace(uriComponent(if(empty(parameters('appConfigKey')), parameters('secretName'), parameters('appConfigKey'))), '~', '~7E'), '%', '~'), if(empty(parameters('label')), '', format('${0}', parameters('label'))))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[format('{0}/{1}', parameters('appConfigStoreName'), variables('sanitisedAppConfigKey'))]",
+      "properties": {
+        "contentType": "application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8",
+        "value": "[string(createObject('uri', reference(resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized'))).outputs.secretUriWithVersion.value))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "[variables('secretNameSanitized')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "secretName": {
+            "value": "[variables('secretNameSanitized')]"
+          },
+          "keyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "useExisting": {
+            "value": "[empty(parameters('secretValue'))]"
+          },
+          "contentValue": {
+            "value": "[if(empty(parameters('secretValue')), '', parameters('secretValue'))]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "12015994460177070841"
+            }
+          },
+          "parameters": {
+            "secretName": {
+              "type": "string",
+              "metadata": {
+                "description": "Enter the secret name."
+              }
+            },
+            "contentType": {
+              "type": "string",
+              "defaultValue": "text/plain",
+              "metadata": {
+                "description": "Type of the secret"
+              }
+            },
+            "contentValue": {
+              "type": "secureString",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Value of the secret"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the vault"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, a pre-existing secret will be returned"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-06-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+              "properties": {
+                "contentType": "[parameters('contentType')]",
+                "value": "[parameters('contentValue')]"
+              }
+            }
+          ],
+          "outputs": {
+            "secretUriWithVersion": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+              "metadata": {
+                "description": "The key vault URI linking to the new/updated secret"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "secretUriWithVersion": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized'))).outputs.secretUriWithVersion.value]",
+      "metadata": {
+        "description": "The secret URI (with version) of the secret backing the App Configuration key-value."
+      }
+    },
+    "appConfigKey": {
+      "type": "string",
+      "value": "[variables('sanitisedAppConfigKey')]",
+      "metadata": {
+        "description": "The key for the App Configuration key-value."
+      }
+    }
+  }
+}
