@@ -1,9 +1,9 @@
 @description('The name of the log analytics workspace')
 param name string
 @description('The location of the log analytics workspace')
-param location string
+param location string = resourceGroup().location
 @description('The SKU of the log analytics workspace')
-param skuName string
+param skuName string = 'Standard'
 @description('The daily ingestion quota (in GB) of the log analytics workspace - use "-1" for no limit')
 param dailyQuotaGb int
 @description('When true, the log analytics workspace will only be accessible by using resource permissions')

@@ -4,15 +4,15 @@ Adds or updates log analytics workspace
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys a log analytics workspace or returns a reference to an existing one.
 
 ## Parameters
 
 | Name                                         | Type     | Required | Description                                                                                                                                |
 | :------------------------------------------- | :------: | :------: | :----------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`                                       | `string` | Yes      | The name of the log analytics workspace                                                                                                    |
-| `location`                                   | `string` | Yes      | The location of the log analytics workspace                                                                                                |
-| `skuName`                                    | `string` | Yes      | The SKU of the log analytics workspace                                                                                                     |
+| `location`                                   | `string` | No       | The location of the log analytics workspace                                                                                                |
+| `skuName`                                    | `string` | No       | The SKU of the log analytics workspace                                                                                                     |
 | `dailyQuotaGb`                               | `int`    | Yes      | The daily ingestion quota (in GB) of the log analytics workspace - use "-1" for no limit                                                   |
 | `enableLogAccessUsingOnlyResourcePermisions` | `bool`   | Yes      | When true, the log analytics workspace will only be accessible by using resource permissions                                               |
 | `publicNetworkAccessForIngestion`            | `string` | Yes      | Indicates whether the public network access for ingestion is enabled or disabled                                                           |
@@ -31,6 +31,20 @@ Adds or updates log analytics workspace
 ## Examples
 
 ### Example 1
+
+### Log analytics workspace
+
+```bicep
+module storage 'br:<registry-fqdn>/bicep/general/log-analytics:<version>' = {
+  name: 'logAnalytics'
+  params: {
+    name: 'myloganalytics'
+    dailyQuotaGb: 1
+    enableLogAccessUsingOnlyResourcePermisions: false
+    publicNetworkAccessForIngestion: true
+    publicNetworkAccessForQuery: true
+  }
+}
 
 ```bicep
 ```
