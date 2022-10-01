@@ -23,6 +23,12 @@ param httpsOnly bool = true
 @description('The access tier of the storage account')
 param accessTier string = 'Hot'
 
+@description('When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities')
+param isHnsEnabled bool = false
+
+@description('The optional network rules securing access to the storage account (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts?pivots=deployment-language-bicep#networkruleset)')
+param networkAcls object = {}
+
 @description('When true, the primary storage access key will be written to the specified key vault')
 param saveAccessKeyToKeyVault bool = false
 
@@ -69,6 +75,8 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!u
     minimumTlsVersion: tlsVersion
     supportsHttpsTrafficOnly: httpsOnly
     accessTier: accessTier
+    isHnsEnabled: isHnsEnabled
+    networkAcls: networkAcls
   }
   tags: resource_tags
 }

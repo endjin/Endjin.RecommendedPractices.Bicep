@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "6236435900649272331"
+    }
+  },
+  "parameters": {
+    "zoneName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of existing private DNS zone that the CNAME record will be associated with."
+      }
+    },
+    "recordName": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource name for the CNAME record."
+      }
+    },
+    "recordValue": {
+      "type": "string",
+      "metadata": {
+        "description": "The value for the CNAME record."
+      }
+    },
+    "recordMetadata": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Key-value pair metadata associated with the CNAME record."
+      }
+    },
+    "recordTtl": {
+      "type": "int",
+      "defaultValue": 10,
+      "metadata": {
+        "description": "The TTL (time-to-live) for the CNAME record, in seconds."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/privateDnsZones/CNAME",
+      "apiVersion": "2020-06-01",
+      "name": "[format('{0}/{1}', parameters('zoneName'), parameters('recordName'))]",
+      "properties": {
+        "cnameRecord": {
+          "cname": "[parameters('recordValue')]"
+        },
+        "metadata": "[parameters('recordMetadata')]",
+        "ttl": "[parameters('recordTtl')]"
+      }
+    }
+  ]
+}
