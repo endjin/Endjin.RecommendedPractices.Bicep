@@ -26,7 +26,16 @@ param kind string = 'web'
 ])
 param applicationType string = 'web'
 
-@description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated')
+@description('The name of the existing Log Analytics workspace which the data will be ingested to.')
+param logAnalyticsWorkspaceName string
+
+@description('When true, public network access is disabled for ingestion of data.')
+param disablePublicNetworkAccessForIngestion bool = false
+
+@description('When true, public network access is disabled for querying of data.')
+param disablePublicNetworkAccessForQuery bool = false
+
+@description('When true, the details of an existing app insights instance will be returned; When false, the app insights instance is created/updated')
 param useExisting bool = false
 
 @description('The resource tags applied to resources')
@@ -40,14 +49,22 @@ resource existing_app_insights 'Microsoft.Insights/components@2020-02-02' existi
   name: name
 }
 
-// TODO: Create LogAnalytics-linked workspace
+resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2020-10-01' existing = {
+  name: logAnalyticsWorkspaceName
+}
 
-resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExisting) {
+resource app_insights 'Microsoft.Insights/components@2020-02-02-preview' = if (!useExisting) {
   name: name
   location: location
   kind: kind
   properties: {
     Application_Type: applicationType
+    Flow_Type: any('Redfield')
+    Request_Source: any('IbizaAIExtension')
+    WorkspaceResourceId: log_analytics_workspace.id
+    IngestionMode: 'LogAnalytics'
+    publicNetworkAccessForIngestion: disablePublicNetworkAccessForIngestion ? 'Disabled' : 'Enabled'
+    publicNetworkAccessForQuery: disablePublicNetworkAccessForQuery ? 'Disabled' : 'Enabled'
   }
   tags: resourceTags
 }

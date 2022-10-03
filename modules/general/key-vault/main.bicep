@@ -65,22 +65,8 @@ param resourceTags object = {}
 targetScope = 'resourceGroup'
 
 
-var _diagnosticsStorageAccountName = empty(diagnosticsStorageAccountName) ? name : diagnosticsStorageAccountName
-
-
 resource existing_key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = if (useExisting) {
   name: name
-}
-
-resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (!useExisting && enableDiagnostics && useExistingStorageAccount) {
-  name: diagnosticsStorageAccountName
-}
-module diagnostics_storage '../storage-account/main.bicep' = if (!useExisting && enableDiagnostics && !useExistingStorageAccount) {
-  name: 'kvDiagnosticsDeploy'
-  params: {
-    name: _diagnosticsStorageAccountName
-    location: location
-  }
 }
 
 resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExisting) {
@@ -104,23 +90,17 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExis
   tags: resourceTags
 }
 
-resource keyvault_diagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = if (enableDiagnostics) {
-  scope: key_vault
-  name: 'service'
-  properties: {
-    storageAccountId: useExistingStorageAccount ? existing_storage_account.id : diagnostics_storage.outputs.id
-    logs: [
-      {
-        category: 'AuditEvent'
-        enabled: true
-        retentionPolicy: {
-          days: diagnosticsRetentionDays
-          enabled: true
-        }
-      }
-    ]
+module diagnostics 'diagnostics.bicep' = if (enableDiagnostics) {
+  name: 'kvDiagnosticsDeploy'
+  params: {
+    location: location
+    keyVaultName: name
+    diagnosticsRetentionDays: diagnosticsRetentionDays
+    diagnosticsStorageAccountName: diagnosticsStorageAccountName
+    useExistingStorageAccount: useExistingStorageAccount
   }
 }
+
 
 // Template outputs
 @description('The resource ID of the key vault')
