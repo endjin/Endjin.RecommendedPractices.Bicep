@@ -35,7 +35,7 @@ param serviceResourceId string
 ])
 param serviceGroupId string
 
-@description('When true, the serviceGroupId will be appended to the private endpoint name with the convention: <name>-<serviceGroupId>. Useful when a resource exposes multiple services as private endpoints.')
+@description('When true, the serviceGroupId will be appended to the private endpoint name with the convention: &lt;name&gt;-&lt;serviceGroupId&gt;. Useful when a resource exposes multiple services as private endpoints.')
 param appendServiceToName bool = true
 
 @description('When true, the private endpoint sub-resource will be registered with the relevant PrivateDns zone')

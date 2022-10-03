@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "3525001796562438594"
+      "templateHash": "7609907922490330296"
     }
   },
   "parameters": {
@@ -75,7 +75,7 @@
       "type": "bool",
       "defaultValue": true,
       "metadata": {
-        "description": "When true, the serviceGroupId will be appended to the private endpoint name with the convention: <name>-<serviceGroupId>. Useful when a resource exposes multiple services as private endpoints."
+        "description": "When true, the serviceGroupId will be appended to the private endpoint name with the convention: &lt;name&gt;-&lt;serviceGroupId&gt;. Useful when a resource exposes multiple services as private endpoints."
       }
     },
     "enablePrivateDns": {
