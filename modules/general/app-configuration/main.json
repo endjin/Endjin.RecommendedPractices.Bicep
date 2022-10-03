@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "1514586493810046853"
+      "templateHash": "10695924962515863488"
     }
   },
   "parameters": {
@@ -37,6 +37,48 @@
       ],
       "metadata": {
         "description": "SKU for the app configuration store"
+      }
+    },
+    "saveConnectionStringsToKeyVault": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the primary connection strings (read/write and read-only) will be written to the specified key vault"
+      }
+    },
+    "keyVaultName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of the key vault used to store the connection strings"
+      }
+    },
+    "keyVaultResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "The resource group containing the key vault used to store the connection strings"
+      }
+    },
+    "keyVaultSubscriptionId": {
+      "type": "string",
+      "defaultValue": "[subscription().subscriptionId]",
+      "metadata": {
+        "description": "The ID of the subscription containing the key vault used to store the connection strings"
+      }
+    },
+    "keyVaultConnectionStringSecretName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The key vault secret name used to store the read/write connection string"
+      }
+    },
+    "keyVaultReadOnlyConnectionStringSecretName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The key vault secret name used to store the read-only connection string"
       }
     },
     "useExisting": {
@@ -71,6 +113,196 @@
         "publicNetworkAccess": "[variables('publicNetworkAccess')]"
       },
       "tags": "[parameters('resourceTags')]"
+    },
+    {
+      "condition": "[parameters('saveConnectionStringsToKeyVault')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "[format('appConfigConnStrSecretDeploy{0}', parameters('name'))]",
+      "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+      "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "secretName": {
+            "value": "[parameters('keyVaultConnectionStringSecretName')]"
+          },
+          "contentValue": {
+            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString, listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString)]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "12015994460177070841"
+            }
+          },
+          "parameters": {
+            "secretName": {
+              "type": "string",
+              "metadata": {
+                "description": "Enter the secret name."
+              }
+            },
+            "contentType": {
+              "type": "string",
+              "defaultValue": "text/plain",
+              "metadata": {
+                "description": "Type of the secret"
+              }
+            },
+            "contentValue": {
+              "type": "secureString",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Value of the secret"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the vault"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, a pre-existing secret will be returned"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-06-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+              "properties": {
+                "contentType": "[parameters('contentType')]",
+                "value": "[parameters('contentValue')]"
+              }
+            }
+          ],
+          "outputs": {
+            "secretUriWithVersion": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+              "metadata": {
+                "description": "The key vault URI linking to the new/updated secret"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+      ]
+    },
+    {
+      "condition": "[parameters('saveConnectionStringsToKeyVault')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "[format('appConfigRoConnStrSecretDeploy{0}', parameters('name'))]",
+      "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+      "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "secretName": {
+            "value": "[parameters('keyVaultReadOnlyConnectionStringSecretName')]"
+          },
+          "contentValue": {
+            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString, listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString)]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "12015994460177070841"
+            }
+          },
+          "parameters": {
+            "secretName": {
+              "type": "string",
+              "metadata": {
+                "description": "Enter the secret name."
+              }
+            },
+            "contentType": {
+              "type": "string",
+              "defaultValue": "text/plain",
+              "metadata": {
+                "description": "Type of the secret"
+              }
+            },
+            "contentValue": {
+              "type": "secureString",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Value of the secret"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the vault"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, a pre-existing secret will be returned"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-06-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+              "properties": {
+                "contentType": "[parameters('contentType')]",
+                "value": "[parameters('contentValue')]"
+              }
+            }
+          ],
+          "outputs": {
+            "secretUriWithVersion": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+              "metadata": {
+                "description": "The key vault URI linking to the new/updated secret"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+      ]
     }
   ],
   "outputs": {
