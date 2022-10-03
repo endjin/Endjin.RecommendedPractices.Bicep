@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "14232187135720442599"
+      "templateHash": "10695924962515863488"
     }
   },
   "parameters": {
@@ -134,7 +134,7 @@
             "value": "[parameters('keyVaultConnectionStringSecretName')]"
           },
           "contentValue": {
-            "value": "[listKeys(parameters('name'), '2020-06-01').value[0].connectionString]"
+            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString, listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString)]"
           }
         },
         "template": {
@@ -204,7 +204,10 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+      ]
     },
     {
       "condition": "[parameters('saveConnectionStringsToKeyVault')]",
@@ -226,7 +229,7 @@
             "value": "[parameters('keyVaultReadOnlyConnectionStringSecretName')]"
           },
           "contentValue": {
-            "value": "[listKeys(parameters('name'), '2020-06-01').value[2].connectionString]"
+            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString, listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString)]"
           }
         },
         "template": {
@@ -296,7 +299,10 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+      ]
     }
   ],
   "outputs": {
