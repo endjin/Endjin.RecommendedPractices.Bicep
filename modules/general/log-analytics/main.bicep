@@ -32,7 +32,7 @@ resource existing_log_analytics_workspace 'Microsoft.OperationalInsights/workspa
   name: name
 }
 
-resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2020-10-01' = {
+resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2020-10-01' = if (!useExisting) {
   name: name
   location: location
   properties: {

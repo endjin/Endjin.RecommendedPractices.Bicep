@@ -30,8 +30,6 @@ Deploys a log analytics workspace or returns a reference to an existing one.
 
 ## Examples
 
-### Example 1
-
 ### Log analytics workspace
 
 ```bicep
@@ -45,11 +43,4 @@ module storage 'br:<registry-fqdn>/bicep/general/log-analytics:<version>' = {
     publicNetworkAccessForQuery: true
   }
 }
-
-```bicep
-```
-
-### Example 2
-
-```bicep
 ```

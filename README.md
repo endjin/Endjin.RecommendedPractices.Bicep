@@ -53,16 +53,16 @@ The build can be run locally by executing the `build.ps1` script.
 
 1. Fill in the properties in the `metadata.json` file.
 1. Add a version (in `major.minor` format) in the `version.json` file. Initial version should be `1.0` unless there a strong reason to set it otherwise.
-2. Add the parameters/variables/resources/outputs to the `main.bicep` file. 
+1. Add the parameters/variables/resources/outputs to the `main.bicep` file. 
     - Note: you can reference other modules using relative paths.
     - Ensure that all parameters and outputs have description attributes.
-3. Add tests to the `main.test.bicep` file
+1. Add tests to the `main.test.bicep` file
     - The resources in this file are expected to be deployed successfully as part of running the test suite.
     - Instantiate the module with as many combinations of parameters as are necessary to test the module's functionality.
-4. Run the `build.ps1` script
+1. Run the `build.ps1` script
     - This will compile the ARM templates from the Bicep files and validate the files.
     - If the build shows any errors, make any necessary changes and repeat.
-5. The `README.md` will be partially auto-generated based on the `main.bicep` and `metadata.json` files.
+1. The `README.md` will be partially auto-generated based on the `main.bicep` and `metadata.json` files.
     - Fill in the `Description` and `Examples` sections of the README manually.
-6. Commit the changes and push up the branch.
-7. Open a pull request with the changes.
+1. Commit the changes and push up the branch.
+1. Open a pull request with the changes.
