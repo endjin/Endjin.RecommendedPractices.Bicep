@@ -41,8 +41,8 @@ param keyVaultName string = ''
 @description('The resource group containing the key vault used to store the access key')
 param keyVaultResourceGroupName string = resourceGroup().name
 
-@description('The subscription containing the key vault used to store the access key')
-param keyVaultSubscriptionName string = subscription().subscriptionId
+@description('The ID of the subscription containing the key vault used to store the access key')
+param keyVaultSubscriptionId string = subscription().subscriptionId
 
 @description('The key vault secret name used to store the access key')
 param keyVaultAccessKeySecretName string = ''
@@ -87,7 +87,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!u
 // a separate template from the main storage account definition
 module storage_access_key_secret '../key-vault-secret/main.bicep' = if (saveAccessKeyToKeyVault) {
   name: 'storageAccessKeySecretDeploy${name}'
-  scope: resourceGroup(keyVaultSubscriptionName, keyVaultResourceGroupName) 
+  scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName) 
   params: {
     keyVaultName: keyVaultName
     secretName: keyVaultAccessKeySecretName
@@ -97,7 +97,7 @@ module storage_access_key_secret '../key-vault-secret/main.bicep' = if (saveAcce
 
 module storage_connection_string_secret '../key-vault-secret/main.bicep' = if (saveConnectionStringToKeyVault) {
   name: 'storageConnectionStringSecretDeploy${name}'
-  scope: resourceGroup(keyVaultSubscriptionName, keyVaultResourceGroupName) 
+  scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName) 
   params: {
     keyVaultName: keyVaultName
     secretName: keyVaultConnectionStringSecretName

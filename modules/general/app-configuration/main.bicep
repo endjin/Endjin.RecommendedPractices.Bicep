@@ -18,6 +18,24 @@ param enablePublicNetworkAccess bool = true
 ])
 param sku string = 'Standard'
 
+@description('When true, the primary connection strings (read/write and read-only) will be written to the specified key vault')
+param saveConnectionStringsToKeyVault bool = false
+
+@description('The name of the key vault used to store the connection strings')
+param keyVaultName string = ''
+
+@description('The resource group containing the key vault used to store the connection strings')
+param keyVaultResourceGroupName string = resourceGroup().name
+
+@description('The ID of the subscription containing the key vault used to store the connection strings')
+param keyVaultSubscriptionId string = subscription().subscriptionId
+
+@description('The key vault secret name used to store the read/write connection string')
+param keyVaultConnectionStringSecretName string = ''
+
+@description('The key vault secret name used to store the read-only connection string')
+param keyVaultReadOnlyConnectionStringSecretName string = ''
+
 @description('When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated')
 param useExisting bool = false
 
@@ -43,6 +61,26 @@ resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-0
     publicNetworkAccess: publicNetworkAccess
   }
   tags: resourceTags
+}
+
+module connection_string_secret '../key-vault-secret/main.bicep' = if (saveConnectionStringsToKeyVault) {
+  name: 'appConfigConnStrSecretDeploy${name}'
+  scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName) 
+  params: {
+    keyVaultName: keyVaultName
+    secretName: keyVaultConnectionStringSecretName
+    contentValue: listKeys(name, '2020-06-01').value[0].connectionString
+  }
+}
+
+module readonly_connection_string_secret '../key-vault-secret/main.bicep' = if (saveConnectionStringsToKeyVault) {
+  name: 'appConfigRoConnStrSecretDeploy${name}'
+  scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName) 
+  params: {
+    keyVaultName: keyVaultName
+    secretName: keyVaultReadOnlyConnectionStringSecretName
+    contentValue: listKeys(name, '2020-06-01').value[2].connectionString
+  }
 }
 
 // Template outputs
