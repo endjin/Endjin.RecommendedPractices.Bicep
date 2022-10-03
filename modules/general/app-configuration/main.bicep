@@ -63,15 +63,19 @@ resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-0
   tags: resourceTags
 }
 
+var acsConnectionString = useExisting ? existing_app_config_store.listKeys().value[0].connectionString : app_config_store.listKeys().value[0].connectionString
+
 module connection_string_secret '../key-vault-secret/main.bicep' = if (saveConnectionStringsToKeyVault) {
   name: 'appConfigConnStrSecretDeploy${name}'
   scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName) 
   params: {
     keyVaultName: keyVaultName
     secretName: keyVaultConnectionStringSecretName
-    contentValue: listKeys(name, '2020-06-01').value[0].connectionString
+    contentValue: acsConnectionString
   }
 }
+
+var acsReadOnlyConnectionString = useExisting ? existing_app_config_store.listKeys().value[2].connectionString : app_config_store.listKeys().value[2].connectionString
 
 module readonly_connection_string_secret '../key-vault-secret/main.bicep' = if (saveConnectionStringsToKeyVault) {
   name: 'appConfigRoConnStrSecretDeploy${name}'
@@ -79,7 +83,7 @@ module readonly_connection_string_secret '../key-vault-secret/main.bicep' = if (
   params: {
     keyVaultName: keyVaultName
     secretName: keyVaultReadOnlyConnectionStringSecretName
-    contentValue: listKeys(name, '2020-06-01').value[2].connectionString
+    contentValue: acsReadOnlyConnectionString
   }
 }
 
