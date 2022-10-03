@@ -11,6 +11,15 @@ param subscriptionId string = subscription().subscriptionId
 @description('The location of the app insights workspace')
 param location string
 
+@description('The name of the existing Log Analytics workspace which the data will be ingested to.')
+param logAnalyticsWorkspaceName string
+
+@description('When true, public network access is disabled for ingestion of data.')
+param disablePublicNetworkAccessForIngestion bool = false
+
+@description('When true, public network access is disabled for querying of data.')
+param disablePublicNetworkAccessForQuery bool = false
+
 @description('The key vault name where the instrumentation key will be stored')
 param keyVaultName string
 
@@ -52,6 +61,9 @@ module app_insights '../app-insights/main.bicep' = {
   name: 'appInsightsWithConfigPublish'
   params:{
     name: name
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName
+    disablePublicNetworkAccessForIngestion: disablePublicNetworkAccessForIngestion
+    disablePublicNetworkAccessForQuery: disablePublicNetworkAccessForQuery
     applicationType: applicationType
     kind: kind
     useExisting: useExisting
