@@ -1,13 +1,12 @@
-# Container App Environments
+# Container App Environment
 
-Deploys a Container Apps hosting environment
+Deploys a Container App hosting environment
 
 ## Description
 
 Deploys or updates a [Container Apps Environment](https://learn.microsoft.com/en-us/azure/container-apps/environment) resource which can then be used to deploy Container Apps.
 
 If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
-
 
 ## Parameters
 

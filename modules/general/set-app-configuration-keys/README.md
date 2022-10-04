@@ -12,7 +12,7 @@ Adds a list configuration keys to an existing App Configuration resource.
 | :------------------- | :------: | :------: | :----------------------------------------------------------------------------------------------------------------------------------- |
 | `appConfigStoreName` | `string` | Yes      | The app configuration instance where the keys will be stored                                                                         |
 | `entries`            | `array`  | Yes      | Array of key/values to be written to the app configuration store, each with the structure {name: "<key-name>", value: "<key-value>"} |
-| `label`              | `string` | No       | When defined, all app configuration keys will have this labelled applied                                                             |
+| `label`              | `string` | No       | When defined, all app configuration keys will have this label applied                                                                |
 
 ## Outputs
 

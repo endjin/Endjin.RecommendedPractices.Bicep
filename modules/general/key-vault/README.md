@@ -5,6 +5,7 @@ Deploys a key vault with optional diagnostics written to blob storage.
 ## Description
 
 Deploys or updates a [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) resource, supporting the following configuration options:
+
 * Azure Storage based diagnostic settings
 * Network access control lists
 * Use of Azure RBAC instead of Key Vault Access Policies

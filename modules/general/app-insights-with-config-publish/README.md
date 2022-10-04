@@ -1,6 +1,6 @@
 # Application Insights with published configuration
 
-Application Insights with instrumentation key published to a Key Vault.
+Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault
 
 ## Description
 

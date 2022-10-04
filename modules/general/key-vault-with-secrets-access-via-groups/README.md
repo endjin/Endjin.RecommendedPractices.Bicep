@@ -7,6 +7,7 @@ Deploys a Key Vault with a secrets access policy managed via group membership
 Deploys or updates a [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) resource with a secrets access policy managed via group membership. This does **not** use Key Vault's Azure RBAC feature, instead it generates a suitable Key Vault Access Policy that grants the relevant permissions to the specified Azure Active Directory groups.
 
 This module can also be used to optionally configure:
+
 * Azure Storage based diagnostic settings
 * Network access control lists
 
