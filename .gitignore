@@ -1,2 +1,3 @@
 _buildOutputs/**/*
 .github/node_modules
+*slnx.sqlite*

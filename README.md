@@ -50,11 +50,12 @@ The build can be run locally by executing the `build.ps1` script.
         - `metadata.json`
         - `README.md`
         - `version.json`
+
+1. Fill in the properties in the `metadata.json` file.
+1. Add a version (in `major.minor` format) in the `version.json` file. Initial version should be `1.0` unless there a strong reason to set it otherwise.
 1. Add the parameters/variables/resources/outputs to the `main.bicep` file. 
     - Note: you can reference other modules using relative paths.
     - Ensure that all parameters and outputs have description attributes.
-1. Fill in the properties in the `metadata.json` file.
-1. Add a version (in `major.minor` format) in the `version.json` file. Initial version should be `1.0` unless there a strong reason to set it otherwise.
 1. Add tests to the `main.test.bicep` file
     - The resources in this file are expected to be deployed successfully as part of running the test suite.
     - Instantiate the module with as many combinations of parameters as are necessary to test the module's functionality.

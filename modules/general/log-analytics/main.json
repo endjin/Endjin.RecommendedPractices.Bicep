@@ -1,0 +1,125 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "9636339933313603966"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the log analytics workspace"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the log analytics workspace"
+      }
+    },
+    "skuName": {
+      "type": "string",
+      "defaultValue": "Standard",
+      "metadata": {
+        "description": "The SKU of the log analytics workspace"
+      }
+    },
+    "dailyQuotaGb": {
+      "type": "int",
+      "metadata": {
+        "description": "The daily ingestion quota (in GB) of the log analytics workspace - use \"-1\" for no limit"
+      }
+    },
+    "enableLogAccessUsingOnlyResourcePermisions": {
+      "type": "bool",
+      "metadata": {
+        "description": "When true, the log analytics workspace will only be accessible by using resource permissions"
+      }
+    },
+    "publicNetworkAccessForIngestion": {
+      "type": "string",
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ],
+      "metadata": {
+        "description": "Indicates whether the public network access for ingestion is enabled or disabled"
+      }
+    },
+    "publicNetworkAccessForQuery": {
+      "type": "string",
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ],
+      "metadata": {
+        "description": "Indicates whether the public network access for query is enabled or disabled"
+      }
+    },
+    "tagValues": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The tag values of the log analytics workspace"
+      }
+    },
+    "useExisting": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the details of an existing log analytics workspace will be returned; When false, the log analytics workspace is created/updated"
+      }
+    }
+  },
+  "resources": [
+    {
+      "condition": "[not(parameters('useExisting'))]",
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2020-10-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "name": "[parameters('skuName')]"
+        },
+        "features": {
+          "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermisions')]"
+        },
+        "workspaceCapping": {
+          "dailyQuotaGb": "[parameters('dailyQuotaGb')]"
+        },
+        "publicNetworkAccessForIngestion": "[parameters('publicNetworkAccessForIngestion')]",
+        "publicNetworkAccessForQuery": "[parameters('publicNetworkAccessForQuery')]"
+      },
+      "tags": "[parameters('tagValues')]"
+    }
+  ],
+  "outputs": {
+    "workspaceResource": {
+      "type": "object",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'))]",
+      "metadata": {
+        "description": "An object representing the log analytics workspace"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+      "metadata": {
+        "description": "The workspace resource name"
+      }
+    },
+    "id": {
+      "type": "string",
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')))]",
+      "metadata": {
+        "description": "The workspace resource ID"
+      }
+    }
+  }
+}
