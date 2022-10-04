@@ -1,10 +1,12 @@
 # Application Insights with published configuration
 
-Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault
+Application Insights with instrumentation key published to a Key Vault.
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys or updates an [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) resource. The instrumentation key for the resource is then stored in the specified Key Vault with the name `AppInsightsInstrumentationKey`.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will ensure the instrumentation key is stored in the Key Vault and return the details of the resource without modifying it, but will fail if the resource does not exist.
 
 ## Parameters
 

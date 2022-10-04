@@ -4,7 +4,9 @@ Azure Application Insights
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys or updates an [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) resource.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
 
 ## Parameters
 
