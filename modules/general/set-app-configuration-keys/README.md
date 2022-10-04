@@ -1,10 +1,10 @@
-# Adds or updates an App Configuration key
+# Adds or updates a list of App Configuration keys
 
-Adds or updates an App Configuration key
+Adds or updates a list of App Configuration keys
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Adds a list configuration keys to an existing App Configuration resource.
 
 ## Parameters
 
