@@ -4,7 +4,9 @@ Deploys an AppInsights workspace and publishes the instrumentation key to a Key 
 
 ## Description
 
-Creates an Azure Application Insights instance, backed by an existing Log Analytics workspace for data ingestion, and publishes the instrumentation key to a Key Vault
+Deploys or updates an [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) resource backed by an existing Log Analytics workspace for data ingestion. The instrumentation key for the resource is then stored in the specified Key Vault with the name `AppInsightsInstrumentationKey`.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will ensure the instrumentation key is stored in the Key Vault and return the details of the resource without modifying it, but will fail if the resource does not exist.
 
 ## Parameters
 

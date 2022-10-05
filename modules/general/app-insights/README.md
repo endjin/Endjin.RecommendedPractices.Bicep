@@ -4,7 +4,9 @@ Azure Application Insights
 
 ## Description
 
-Creates an Azure Application Insights instance, backed by an existing Log Analytics workspace for data ingestion.
+Deploys or updates an [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) resource backed by an existing Log Analytics workspace for data ingestion.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
 
 ## Parameters
 

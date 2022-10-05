@@ -4,7 +4,9 @@ Adds or updates log analytics workspace
 
 ## Description
 
-Deploys a log analytics workspace or returns a reference to an existing one.
+Deploys or updates a [Log Analytics workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview).
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
 
 ## Parameters
 

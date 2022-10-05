@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "63933821206022769"
+      "templateHash": "8790207047158870351"
     }
   },
   "parameters": {
@@ -25,7 +25,7 @@
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "When defined, all app configuration keys will have this labelled applied"
+        "description": "When defined, all app configuration keys will have this label applied"
       }
     }
   },

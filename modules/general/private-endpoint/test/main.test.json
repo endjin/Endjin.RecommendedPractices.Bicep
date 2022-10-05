@@ -1,0 +1,528 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "14458887063689794365"
+    }
+  },
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2021-09-01",
+      "name": "[parameters('prefix')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2"
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion": "2021-08-01",
+      "name": "[parameters('prefix')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "10.0.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "default",
+            "properties": {
+              "addressPrefix": "10.0.0.0/24"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "privateEndpointDeployBlob",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "enablePrivateDns": {
+            "value": false
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[parameters('prefix')]"
+          },
+          "serviceGroupId": {
+            "value": "blob"
+          },
+          "serviceResourceId": {
+            "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('prefix'))]"
+          },
+          "subnetName": {
+            "value": "default"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('prefix')]"
+          },
+          "virtualNetworkResourceGroup": {
+            "value": "[resourceGroup().name]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "7609907922490330296"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the private endpoint"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the private endpoint"
+              }
+            },
+            "virtualNetworkSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "virtualNetworkResourceGroup": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource group of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "virtualNetworkName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "subnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the subnet the private endpoint will be connected to"
+              }
+            },
+            "serviceResourceId": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource Id of the service that will be accessible via this private endpoint"
+              }
+            },
+            "serviceGroupId": {
+              "type": "string",
+              "allowedValues": [
+                "vault",
+                "dfs",
+                "blob",
+                "file",
+                "queue",
+                "table",
+                "web",
+                "configurationStores",
+                "sql",
+                "sqlOnDemand",
+                "dev"
+              ],
+              "metadata": {
+                "description": "The service's sub-resource (if any) to be associated with the private endpoint"
+              }
+            },
+            "appendServiceToName": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "When true, the serviceGroupId will be appended to the private endpoint name with the convention: &lt;name&gt;-&lt;serviceGroupId&gt;. Useful when a resource exposes multiple services as private endpoints."
+              }
+            },
+            "enablePrivateDns": {
+              "type": "bool",
+              "metadata": {
+                "description": "When true, the private endpoint sub-resource will be registered with the relevant PrivateDns zone"
+              }
+            },
+            "privateDnsZonesSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkSubscriptionId')]",
+              "metadata": {
+                "description": "The subscription where the PrivateDns zones are managed, defaults to the virtual network resource group"
+              }
+            },
+            "privateDnsZonesResourceGroup": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkResourceGroup')]",
+              "metadata": {
+                "description": "The resource group where the PrivateDns zones are managed, defaults to the virtual network resource group"
+              }
+            },
+            "privateDnsZoneName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The PrivateDns zone the private endpoint will be registered in. When blank, the module will attempt to identify the required zone from a list of common services"
+              }
+            },
+            "tagValues": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "variables": {
+            "serviceGroupPrivateDnsZoneLookup": {
+              "vault": "privatelink.vaultcore.azure.net",
+              "dfs": "[format('privatelink.dfs.{0}', environment().suffixes.storage)]",
+              "blob": "[format('privatelink.blob.{0}', environment().suffixes.storage)]",
+              "file": "[format('privatelink.file.{0}', environment().suffixes.storage)]",
+              "queue": "[format('privatelink.queue.{0}', environment().suffixes.storage)]",
+              "table": "[format('privatelink.table.{0}', environment().suffixes.storage)]",
+              "web": "[format('privatelink.web.{0}', environment().suffixes.storage)]",
+              "configurationStores": "privatelink.azconfig.io",
+              "sql": "privatelink.sql.azuresynapse.net",
+              "sqlOnDemand": "privatelink.sql.azuresynapse.net",
+              "dev": "privatelink.dev.azuresynapse.net"
+            },
+            "endpointName": "[if(parameters('appendServiceToName'), toLower(format('{0}-{1}', parameters('name'), parameters('serviceGroupId'))), toLower(parameters('name')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateEndpoints",
+              "apiVersion": "2021-08-01",
+              "name": "[variables('endpointName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "subnet": {
+                  "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('virtualNetworkSubscriptionId'), parameters('virtualNetworkResourceGroup')), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                },
+                "privateLinkServiceConnections": [
+                  {
+                    "name": "[variables('endpointName')]",
+                    "properties": {
+                      "privateLinkServiceId": "[parameters('serviceResourceId')]",
+                      "groupIds": "[array(parameters('serviceGroupId'))]"
+                    }
+                  }
+                ]
+              },
+              "tags": "[parameters('tagValues')]"
+            },
+            {
+              "condition": "[parameters('enablePrivateDns')]",
+              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+              "apiVersion": "2021-08-01",
+              "name": "[format('{0}/{1}', variables('endpointName'), variables('endpointName'))]",
+              "properties": {
+                "privateDnsZoneConfigs": [
+                  {
+                    "name": "[format('config-{0}', parameters('serviceGroupId'))]",
+                    "properties": {
+                      "privateDnsZoneId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('privateDnsZonesSubscriptionId'), parameters('privateDnsZonesResourceGroup')), 'Microsoft.Network/privateDnsZones', if(not(empty(parameters('privateDnsZoneName'))), parameters('privateDnsZoneName'), variables('serviceGroupPrivateDnsZoneLookup')[parameters('serviceGroupId')]))]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "privateEndpointId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]",
+              "metadata": {
+                "description": "The resource ID of the private endpoint"
+              }
+            },
+            "privateDnsZoneId": {
+              "type": "string",
+              "value": "[if(parameters('enablePrivateDns'), resourceId('Microsoft.Network/privateEndpoints/privateDnsZoneGroups', variables('endpointName'), variables('endpointName')), '')]",
+              "metadata": {
+                "description": "The resource ID of the PrivateDns zone"
+              }
+            },
+            "privateEndpointResource": {
+              "type": "object",
+              "value": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpointName')), '2021-08-01', 'full')]",
+              "metadata": {
+                "description": "An object representing the private endpoint resource"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('prefix'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "privateEndpointDeployDfs",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "enablePrivateDns": {
+            "value": false
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[parameters('prefix')]"
+          },
+          "serviceGroupId": {
+            "value": "dfs"
+          },
+          "serviceResourceId": {
+            "value": "[resourceId('Microsoft.Storage/storageAccounts', parameters('prefix'))]"
+          },
+          "subnetName": {
+            "value": "default"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('prefix')]"
+          },
+          "virtualNetworkResourceGroup": {
+            "value": "[resourceGroup().name]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "7609907922490330296"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the private endpoint"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the private endpoint"
+              }
+            },
+            "virtualNetworkSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "virtualNetworkResourceGroup": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource group of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "virtualNetworkName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "subnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the subnet the private endpoint will be connected to"
+              }
+            },
+            "serviceResourceId": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource Id of the service that will be accessible via this private endpoint"
+              }
+            },
+            "serviceGroupId": {
+              "type": "string",
+              "allowedValues": [
+                "vault",
+                "dfs",
+                "blob",
+                "file",
+                "queue",
+                "table",
+                "web",
+                "configurationStores",
+                "sql",
+                "sqlOnDemand",
+                "dev"
+              ],
+              "metadata": {
+                "description": "The service's sub-resource (if any) to be associated with the private endpoint"
+              }
+            },
+            "appendServiceToName": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "When true, the serviceGroupId will be appended to the private endpoint name with the convention: &lt;name&gt;-&lt;serviceGroupId&gt;. Useful when a resource exposes multiple services as private endpoints."
+              }
+            },
+            "enablePrivateDns": {
+              "type": "bool",
+              "metadata": {
+                "description": "When true, the private endpoint sub-resource will be registered with the relevant PrivateDns zone"
+              }
+            },
+            "privateDnsZonesSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkSubscriptionId')]",
+              "metadata": {
+                "description": "The subscription where the PrivateDns zones are managed, defaults to the virtual network resource group"
+              }
+            },
+            "privateDnsZonesResourceGroup": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkResourceGroup')]",
+              "metadata": {
+                "description": "The resource group where the PrivateDns zones are managed, defaults to the virtual network resource group"
+              }
+            },
+            "privateDnsZoneName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The PrivateDns zone the private endpoint will be registered in. When blank, the module will attempt to identify the required zone from a list of common services"
+              }
+            },
+            "tagValues": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "variables": {
+            "serviceGroupPrivateDnsZoneLookup": {
+              "vault": "privatelink.vaultcore.azure.net",
+              "dfs": "[format('privatelink.dfs.{0}', environment().suffixes.storage)]",
+              "blob": "[format('privatelink.blob.{0}', environment().suffixes.storage)]",
+              "file": "[format('privatelink.file.{0}', environment().suffixes.storage)]",
+              "queue": "[format('privatelink.queue.{0}', environment().suffixes.storage)]",
+              "table": "[format('privatelink.table.{0}', environment().suffixes.storage)]",
+              "web": "[format('privatelink.web.{0}', environment().suffixes.storage)]",
+              "configurationStores": "privatelink.azconfig.io",
+              "sql": "privatelink.sql.azuresynapse.net",
+              "sqlOnDemand": "privatelink.sql.azuresynapse.net",
+              "dev": "privatelink.dev.azuresynapse.net"
+            },
+            "endpointName": "[if(parameters('appendServiceToName'), toLower(format('{0}-{1}', parameters('name'), parameters('serviceGroupId'))), toLower(parameters('name')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateEndpoints",
+              "apiVersion": "2021-08-01",
+              "name": "[variables('endpointName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "subnet": {
+                  "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('virtualNetworkSubscriptionId'), parameters('virtualNetworkResourceGroup')), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                },
+                "privateLinkServiceConnections": [
+                  {
+                    "name": "[variables('endpointName')]",
+                    "properties": {
+                      "privateLinkServiceId": "[parameters('serviceResourceId')]",
+                      "groupIds": "[array(parameters('serviceGroupId'))]"
+                    }
+                  }
+                ]
+              },
+              "tags": "[parameters('tagValues')]"
+            },
+            {
+              "condition": "[parameters('enablePrivateDns')]",
+              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+              "apiVersion": "2021-08-01",
+              "name": "[format('{0}/{1}', variables('endpointName'), variables('endpointName'))]",
+              "properties": {
+                "privateDnsZoneConfigs": [
+                  {
+                    "name": "[format('config-{0}', parameters('serviceGroupId'))]",
+                    "properties": {
+                      "privateDnsZoneId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('privateDnsZonesSubscriptionId'), parameters('privateDnsZonesResourceGroup')), 'Microsoft.Network/privateDnsZones', if(not(empty(parameters('privateDnsZoneName'))), parameters('privateDnsZoneName'), variables('serviceGroupPrivateDnsZoneLookup')[parameters('serviceGroupId')]))]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "privateEndpointId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]",
+              "metadata": {
+                "description": "The resource ID of the private endpoint"
+              }
+            },
+            "privateDnsZoneId": {
+              "type": "string",
+              "value": "[if(parameters('enablePrivateDns'), resourceId('Microsoft.Network/privateEndpoints/privateDnsZoneGroups', variables('endpointName'), variables('endpointName')), '')]",
+              "metadata": {
+                "description": "The resource ID of the PrivateDns zone"
+              }
+            },
+            "privateEndpointResource": {
+              "type": "object",
+              "value": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpointName')), '2021-08-01', 'full')]",
+              "metadata": {
+                "description": "An object representing the private endpoint resource"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('prefix'))]"
+      ]
+    }
+  ]
+}

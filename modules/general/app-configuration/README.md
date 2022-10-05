@@ -4,7 +4,15 @@ Azure App Configuration
 
 ## Description
 
-Deploys an instance of Azure App Configuration, optionally storing the primary connection strings in Azure Key Vault.
+Deploys or updates an [App Configuration](https://azure.microsoft.com/en-gb/products/app-configuration/) resource, optionally storing the primary connection strings in Azure Key Vault.
+
+Once the App Configuration instance is created, configuration keys can be created or updated using the [set-app-configuration-keys](https://github.com/endjin/Endjin.RecommendedPractices.Bicep/tree/main/modules/general/set-app-configuration-keys) module.
+
+Keys which should be references to Azure Key Vault secrets can be added using the [`app-config-key-vault-secret`](https://github.com/endjin/Endjin.RecommendedPractices.Bicep/tree/main/modules/general/app-config-key-vault-secret) module.
+
+It you need to add multiple keys referencing KeyVault secrets, the [`app-config-key-vault-secrets`](https://github.com/endjin/Endjin.RecommendedPractices.Bicep/tree/main/modules/general/app-config-key-vault-secrets) module can be used.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
 
 ## Parameters
 
