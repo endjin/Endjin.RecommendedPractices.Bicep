@@ -1,0 +1,276 @@
+@description('The name of the Synapse workspace.')
+param workspaceName string
+
+@description('The location of the Synapse workspace.')
+param location string = resourceGroup().location
+
+@description('The name of the existing Data Lake storage account.')
+param defaultDataLakeStorageAccountName string
+
+@description('The name of the filesystem to create in the existing Data Lake storage account.')
+param defaultDataLakeStorageFilesystemName string
+
+@description('If true, grants "Storage Blob Data Contributor" RBAC role for the workspace managed identity on the Data Lake storage account.')
+param setWorkspaceIdentityRbacOnStorageAccount bool
+
+@description('If true, grants SQL control to the workspace managed identity.')
+param grantWorkspaceIdentityControlForSql bool = true
+
+@description('Provides the configuration for git-integrated workspaces. Ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.synapse/workspaces?pivots=deployment-language-bicep#workspacerepositoryconfiguration')
+param workspaceRepositoryConfiguration object = {}
+
+
+// Networking parameters
+
+@description('When true, a single firewall rule is configured on the workspace allowing all IP addresses')
+param allowAllConnections bool = false
+
+@description('An array of objects defining firewall rules with the structure {name: "rule_name", startAddress: "a.b.c.d", endAddress: "w.x.y.z"}')
+param workspaceFirewallRules array = []
+
+@description('If true, will ensure that all compute for this workspace is in a virtual network managed on behalf of the user.')
+param managedVirtualNetwork bool = false
+
+@description('Resource group name for existing virtual network to use when configuring private endpoints.')
+param virtualNetworkResourceGroupName string = ''
+
+@description('Name of existing virtual network to use when configuring private endpoints.')
+param virtualNetworkName string = ''
+
+@description('Subnet to use when configuring private endpoints.')
+param subnetName string = ''
+
+@allowed([
+  'dev'
+  'sql'
+  'sqlOnDemand'
+])
+@description('List of services to configure when enabling private endpoints. If not empty, virtual network related parameters must also be set.')
+param enabledSynapsePrivateEndpointServices array = [
+  'dev'
+  'sql'
+  'sqlOnDemand'
+]
+
+@description('When true, the private endpoint sub-resources will be registered with the relevant PrivateDns zone.')
+param enablePrivateEndpointsPrivateDns bool
+
+
+@description('The subscription ID of the Data Lake storage account. Defaults to current subscription, if not set.')
+param storageSubscriptionID string = subscription().subscriptionId
+
+@description('The resource group name of the Data Lake storage account. Defaults to current resource group, if not set.')
+param storageResourceGroupName string = resourceGroup().name
+
+@description('The Azure AD group ID for the group to assign "Storage Blob Data Contributor" and "Reader" RBAC roles on the Data Lake storage account resource group.')
+param datalakeContributorGroupId string = ''
+
+@description('The name of an existing service principal to set as the SQL Administrator for the workspace. This will be used as the login.')
+param sqlAdministratorPrincipalName string
+
+@description('The principal/object ID of an existing service principal to set as the SQL Administrator for the workspace.')
+param sqlAdministratorPrincipalId string
+
+@description('If true, the group defined by `datalakeContributorGroupId` will be assigned "Storage Blob Data Contributor" and "Reader" RBAC roles on the Data Lake storage account resource group.')
+param setSbdcRbacOnStorageAccount bool = false
+
+@description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')
+param enableDiagnostics bool
+
+@description('When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs.')
+param logAnalyticsWorkspaceId string = ''
+
+@description('The resource tags applied to resources.')
+param tagValues object = {}
+
+
+var allowAllFirewallRule = {
+  name: 'allowAll'
+  startAddress: '0.0.0.0'
+  endAddress: '255.255.255.255'
+}
+var firewallRules = allowAllConnections ? array(allowAllFirewallRule) : workspaceFirewallRules
+var readerRoleId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+var storageBlobDataContributorRoleID = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
+var defaultDataLakeStorageAccountUrl = 'https://${defaultDataLakeStorageAccountName}.dfs.${environment().suffixes.storage}'
+
+
+module default_datalake_filesystem './storage-blob-container.bicep' = {
+  name: 'defaultDataLakeStorageFilesystemDeploy'
+  scope: resourceGroup(storageSubscriptionID, storageResourceGroupName)
+  params: {
+    containerName: defaultDataLakeStorageFilesystemName
+    storageAccountName: defaultDataLakeStorageAccountName
+    publicAccess: 'None'
+  }
+}
+
+resource workspace 'Microsoft.Synapse/workspaces@2021-03-01' = {
+  name: workspaceName
+  location: location
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    defaultDataLakeStorage: {
+      accountUrl: defaultDataLakeStorageAccountUrl
+      filesystem: default_datalake_filesystem.outputs.name
+    }
+    managedVirtualNetwork: managedVirtualNetwork ? 'default' : ''
+    workspaceRepositoryConfiguration: workspaceRepositoryConfiguration
+  }
+  tags: tagValues
+}
+
+resource workspace_mi_sql_control 'Microsoft.Synapse/workspaces/managedIdentitySqlControlSettings@2020-12-01' = {
+  name: 'default'
+  parent: workspace
+  properties: {
+    grantSqlControlToManagedIdentity: {
+      desiredState: grantWorkspaceIdentityControlForSql ? 'Enabled' : 'Disabled'
+    }
+  }
+}
+
+resource workspace_sql_admin 'Microsoft.Synapse/workspaces/administrators@2020-12-01' = {
+  parent: workspace
+  name: 'activeDirectory'
+  properties: {
+    administratorType: 'ActiveDirectory'
+    login: sqlAdministratorPrincipalName
+    sid: sqlAdministratorPrincipalId
+    tenantId: subscription().tenantId
+  }
+}
+
+module workspace_firewall_rules './synapse-firewall-rule.bicep' = if (length(firewallRules) > 0) {
+  name: 'firewallRulesDeploy'
+  params: {
+    firewallRules: firewallRules
+    workspaceName: workspace.name
+  }
+}
+
+resource workspace_diagnostic_settings 'microsoft.insights/diagnosticSettings@2016-09-01' = if (enableDiagnostics) {
+  name: 'service'
+  scope: workspace
+  location: location
+  properties: {
+    workspaceId: logAnalyticsWorkspaceId
+    logs: [
+      {
+        category: 'IntegrationPipelineRuns'
+        enabled: true
+      }
+      {
+        category: 'IntegrationActivityRuns'
+        enabled: true
+      }
+      {
+        category: 'IntegrationTriggerRuns'
+        enabled: true
+      }
+    ]
+  }
+}
+
+// Default Data Lake Permissions
+// NOTE: Previous roleAssignmentId generation logic retained to support upgrades
+
+// Old logic: concat"[concat(resourceGroup().id, '/', parameters('defaultDataLakeStorageAccountName'), '/', variables('storageBlobDataContributorRoleID'), '/', parameters('workspaceName'))
+var synapseMsiRbacBaseString = '${resourceGroup().id}/${defaultDataLakeStorageAccountName}/${storageBlobDataContributorRoleID}/${workspaceName}'
+module default_datalake_rbac_msi_data_contrib './storage-account-rbac.bicep' = if (setWorkspaceIdentityRbacOnStorageAccount) {
+  name: 'defaultDataLakeRbacMsiDataContribDeploy'
+  scope: resourceGroup(storageResourceGroupName)
+  params: {
+    storageAccountName: defaultDataLakeStorageAccountName
+    role: 'storageBlobDataContributor'
+    assigneeObjectId: workspace.identity.principalId
+    principalType: 'ServicePrincipal'
+    // Old logic: guid(concat(variables('synapseManagedIdentityRoleAssignmentIdBaseEntropy'), '/', reference(concat('Microsoft.Synapse/workspaces/', parameters('workspaceName')), '2019-06-01-preview', 'Full').identity.principalId))
+    roleAssignmentId: guid('${synapseMsiRbacBaseString}/${workspace.identity.principalId}')
+  }
+}
+
+// Old logic: guid(concat(resourceGroup().id, '/', parameters('defaultDataLakeStorageAccountName'), '/', variables('storageBlobDataContributorRoleID'), '/', parameters('datalakeContributorGroupId'), '/', 'datalake-contributor-group'))
+var defaultDataLakeDataContributorRoleAssignmentId = guid('${resourceGroup().id}/${defaultDataLakeStorageAccountName}/${storageBlobDataContributorRoleID}/${datalakeContributorGroupId}/datalake-contributor-group')
+module default_datalake_rbac_group_data_contrib './storage-account-rbac.bicep' = if (setSbdcRbacOnStorageAccount) {
+  name: 'defaultDataLakeRbacGroupDataContribDeploy'
+  scope: resourceGroup(storageSubscriptionID, storageResourceGroupName)
+  params: {
+    storageAccountName: defaultDataLakeStorageAccountName
+    role: 'storageBlobDataContributor'
+    assigneeObjectId: datalakeContributorGroupId
+    principalType: 'Group'
+    roleAssignmentId: defaultDataLakeDataContributorRoleAssignmentId
+  }
+}
+
+// Old logic: guid(concat(resourceGroup().id, '/', parameters('defaultDataLakeStorageAccountName'), '/', variables('readerRoleID'), '/', parameters('datalakeContributorGroupId'), '/', 'datalake-contributor-group'))
+var defaultDataLakeReaderRoleAssignmentId = guid('${resourceGroup().id}/${defaultDataLakeStorageAccountName}/${readerRoleId}/${datalakeContributorGroupId}/datalake-contributor-group')
+module default_datalake_rbac_group_reader './storage-account-rbac.bicep' = if (setSbdcRbacOnStorageAccount) {
+  name: 'defaultDataLakeRbacGroupReaderDeploy'
+  scope: resourceGroup(storageSubscriptionID, storageResourceGroupName)
+  params: {
+    storageAccountName: defaultDataLakeStorageAccountName
+    role: 'reader'
+    assigneeObjectId: datalakeContributorGroupId
+    principalType: 'Group'
+    roleAssignmentId: defaultDataLakeReaderRoleAssignmentId
+  }
+}
+
+
+module private_endpoints '../private-endpoint/main.bicep' = [ for service in enabledSynapsePrivateEndpointServices : if (length(enabledSynapsePrivateEndpointServices) > 0) {
+  name: 'synapsePrivateEndpoints-${service}'
+  params: {
+    name: 'private-endpoint-synapse-${workspace.name}'
+    location: location
+    virtualNetworkResourceGroup: virtualNetworkResourceGroupName
+    virtualNetworkName: virtualNetworkName
+    subnetName: subnetName
+    serviceGroupId: service
+    serviceResourceId: workspace.id
+    enablePrivateDns: enablePrivateEndpointsPrivateDns
+    tagValues: tagValues
+  }
+}]
+
+//
+// Additional PrivateDns CNAME entries for SQL-related private endpoints
+// These are required as the private endpoint name resolution only works 
+// properly with '.database.windows.net' FQDNs rather than the Synapse-specific
+// '.sql.azuresynapse.net' FQDNs.
+//
+// We can't reference the '.database.windows.net' zone when configuring the
+// private endpoint as the Synapse SQL-related services seem unable to 
+// register themselves on that domain.
+//
+module sql_cname_records '../private-dns-cname/main.bicep' = if (contains(enabledSynapsePrivateEndpointServices, 'sql')) {
+  name: 'sqlCNameDeploy'
+  scope: resourceGroup(virtualNetworkResourceGroupName)
+  params: {
+    zoneName: 'privatelink${environment().suffixes.sqlServerHostname}'
+    recordName: workspace.name
+    recordValue: '${workspace.name}.privatelink.sql.azuresynapse.net'
+    recordMetadata: {
+      creator: 'Created by MDP provisioning to support private endpoint access to Azure Synapse SQL Pools'
+    }
+  }
+}
+
+module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (contains(enabledSynapsePrivateEndpointServices, 'sqlOnDemand')) {
+  name: 'sqlOnDemandCNameDeploy'
+  scope: resourceGroup(virtualNetworkResourceGroupName)
+  params: {
+    zoneName: 'privatelink${environment().suffixes.sqlServerHostname}'
+    recordName: '${workspace.name}-ondemand'
+    recordValue: '${workspace.name}-ondemand.privatelink.sql.azuresynapse.net'
+    recordMetadata: {
+      creator: 'Created by MDP provisioning to support private endpoint access to Azure Synapse SQL Serverless Pools'
+    }
+  }
+}
+
+@description('The principal ID of the workspace managed identity.')
+output synapseManagedIdentity string = workspace.identity.principalId
