@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "2547626762473758328"
+    }
+  },
+  "parameters": {
+    "appConfigStoreName": {
+      "type": "string",
+      "metadata": {
+        "description": "The app configuration instance where the keys will be stored"
+      }
+    },
+    "entries": {
+      "type": "array",
+      "metadata": {
+        "description": "Array of key/values to be written to the app configuration store, each with the structure {name: \"<key-name>\", value: \"<key-value>\"}"
+      }
+    },
+    "label": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "When defined, all app configuration keys will have this labelled applied"
+      }
+    }
+  },
+  "resources": [
+    {
+      "copy": {
+        "name": "test_app_config_entry",
+        "count": "[length(parameters('entries'))]"
+      },
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[format('{0}/{1}', parameters('appConfigStoreName'), if(empty(parameters('label')), parameters('entries')[copyIndex()].name, format('{0}${1}', parameters('entries')[copyIndex()].name, parameters('label'))))]",
+      "properties": {
+        "value": "[parameters('entries')[copyIndex()].value]"
+      }
+    }
+  ]
+}

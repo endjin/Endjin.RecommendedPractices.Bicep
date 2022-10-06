@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
+  "name": "App Config Key Values",
+  "summary": "Sets a list of key-values on an existing App Configuration Store",
+  "owner": "endjin"
+}
