@@ -46,6 +46,9 @@ Deploys an Azure Synapse workspace. The following features are also supported vi
 | Name                   | Type   | Description                                         |
 | :--------------------- | :----: | :-------------------------------------------------- |
 | synapseManagedIdentity | string | The principal ID of the workspace managed identity. |
+| id                     | string | The resource ID of the workspace                    |
+| name                   | string | The name of the workspace                           |
+| workspaceResource      | object | An object representing the workspace resource       |
 
 ## Examples
 

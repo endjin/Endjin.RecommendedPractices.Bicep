@@ -274,3 +274,13 @@ module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (contain
 
 @description('The principal ID of the workspace managed identity.')
 output synapseManagedIdentity string = workspace.identity.principalId
+
+@description('The resource ID of the workspace')
+output id string = workspace.id
+
+@description('The name of the workspace')
+output name string = workspace.name
+
+// Returns the full workspace resource object (workaround whilst resource types cannot be returned directly)
+@description('An object representing the workspace resource')
+output workspaceResource object = workspace

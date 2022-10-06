@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "9804473859451281319"
+      "templateHash": "9209120487580376379"
     }
   },
   "parameters": {
@@ -1116,6 +1116,27 @@
       "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-03-01', 'full').identity.principalId]",
       "metadata": {
         "description": "The principal ID of the workspace managed identity."
+      }
+    },
+    "id": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]",
+      "metadata": {
+        "description": "The resource ID of the workspace"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[parameters('workspaceName')]",
+      "metadata": {
+        "description": "The name of the workspace"
+      }
+    },
+    "workspaceResource": {
+      "type": "object",
+      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-03-01', 'full')]",
+      "metadata": {
+        "description": "An object representing the workspace resource"
       }
     }
   }
