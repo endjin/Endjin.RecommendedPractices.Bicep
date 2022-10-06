@@ -4,21 +4,26 @@ param workspaceName string
 @description('The location of the Synapse workspace.')
 param location string = resourceGroup().location
 
-@description('The name of the existing storage account that the default data lake file system will be created in.')
-param defaultDataLakeStorageAccountName string
-
-@description('The name of the filesystem to create in the storage account.')
-param defaultDataLakeStorageFilesystemName string
-
-@description('If true, grants "Storage Blob Data Contributor" RBAC role for the workspace managed identity on the storage account.')
-param setWorkspaceIdentityRbacOnStorageAccount bool
-
 @description('If true, grants SQL control to the workspace managed identity.')
 param grantWorkspaceIdentityControlForSql bool = true
 
 @description('Provides the configuration for git-integrated workspaces. Ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.synapse/workspaces?pivots=deployment-language-bicep#workspacerepositoryconfiguration')
 param workspaceRepositoryConfiguration object = {}
 
+@description('The name of an existing service principal to set as the SQL Administrator for the workspace. This will be used as the login.')
+param sqlAdministratorPrincipalName string
+
+@description('The principal/object ID of an existing service principal to set as the SQL Administrator for the workspace.')
+param sqlAdministratorPrincipalId string
+
+@description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')
+param enableDiagnostics bool
+
+@description('When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs.')
+param logAnalyticsWorkspaceId string = ''
+
+@description('The resource tags applied to resources.')
+param tagValues object = {}
 
 // Networking parameters
 
@@ -55,6 +60,16 @@ param enabledSynapsePrivateEndpointServices array = [
 @description('When true, the private endpoint sub-resources will be registered with the relevant PrivateDns zone.')
 param enablePrivateEndpointsPrivateDns bool
 
+// Storage parameters
+
+@description('The name of the existing storage account that the default data lake file system will be created in.')
+param defaultDataLakeStorageAccountName string
+
+@description('The name of the filesystem to create in the storage account.')
+param defaultDataLakeStorageFilesystemName string
+
+@description('If true, grants "Storage Blob Data Contributor" RBAC role for the workspace managed identity on the storage account.')
+param setWorkspaceIdentityRbacOnStorageAccount bool
 
 @description('The subscription ID of the existing storage account. Defaults to current subscription, if not set.')
 param storageSubscriptionID string = subscription().subscriptionId
@@ -65,23 +80,8 @@ param storageResourceGroupName string = resourceGroup().name
 @description('The Azure AD group ID for the group to assign "Storage Blob Data Contributor" and "Reader" RBAC roles on the storage account resource group.')
 param datalakeContributorGroupId string = ''
 
-@description('The name of an existing service principal to set as the SQL Administrator for the workspace. This will be used as the login.')
-param sqlAdministratorPrincipalName string
-
-@description('The principal/object ID of an existing service principal to set as the SQL Administrator for the workspace.')
-param sqlAdministratorPrincipalId string
-
 @description('If true, the group defined by `datalakeContributorGroupId` will be assigned "Storage Blob Data Contributor" and "Reader" RBAC roles on the storage account resource group.')
 param setSbdcRbacOnStorageAccount bool = false
-
-@description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')
-param enableDiagnostics bool
-
-@description('When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs.')
-param logAnalyticsWorkspaceId string = ''
-
-@description('The resource tags applied to resources.')
-param tagValues object = {}
 
 
 var allowAllFirewallRule = {
@@ -273,7 +273,7 @@ module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (contain
 }
 
 @description('The principal ID of the workspace managed identity.')
-output synapseManagedIdentity string = workspace.identity.principalId
+output synapseManagedIdentityId string = workspace.identity.principalId
 
 @description('The resource ID of the workspace')
 output id string = workspace.id
