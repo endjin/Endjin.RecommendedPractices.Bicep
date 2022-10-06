@@ -4,13 +4,13 @@ param workspaceName string
 @description('The location of the Synapse workspace.')
 param location string = resourceGroup().location
 
-@description('The name of the existing Data Lake storage account.')
+@description('The name of the existing storage account that the default data lake file system will be created in.')
 param defaultDataLakeStorageAccountName string
 
-@description('The name of the filesystem to create in the existing Data Lake storage account.')
+@description('The name of the filesystem to create in the storage account.')
 param defaultDataLakeStorageFilesystemName string
 
-@description('If true, grants "Storage Blob Data Contributor" RBAC role for the workspace managed identity on the Data Lake storage account.')
+@description('If true, grants "Storage Blob Data Contributor" RBAC role for the workspace managed identity on the storage account.')
 param setWorkspaceIdentityRbacOnStorageAccount bool
 
 @description('If true, grants SQL control to the workspace managed identity.')
@@ -56,13 +56,13 @@ param enabledSynapsePrivateEndpointServices array = [
 param enablePrivateEndpointsPrivateDns bool
 
 
-@description('The subscription ID of the Data Lake storage account. Defaults to current subscription, if not set.')
+@description('The subscription ID of the existing storage account. Defaults to current subscription, if not set.')
 param storageSubscriptionID string = subscription().subscriptionId
 
-@description('The resource group name of the Data Lake storage account. Defaults to current resource group, if not set.')
+@description('The resource group name of the existing storage account. Defaults to current resource group, if not set.')
 param storageResourceGroupName string = resourceGroup().name
 
-@description('The Azure AD group ID for the group to assign "Storage Blob Data Contributor" and "Reader" RBAC roles on the Data Lake storage account resource group.')
+@description('The Azure AD group ID for the group to assign "Storage Blob Data Contributor" and "Reader" RBAC roles on the storage account resource group.')
 param datalakeContributorGroupId string = ''
 
 @description('The name of an existing service principal to set as the SQL Administrator for the workspace. This will be used as the login.')
@@ -71,7 +71,7 @@ param sqlAdministratorPrincipalName string
 @description('The principal/object ID of an existing service principal to set as the SQL Administrator for the workspace.')
 param sqlAdministratorPrincipalId string
 
-@description('If true, the group defined by `datalakeContributorGroupId` will be assigned "Storage Blob Data Contributor" and "Reader" RBAC roles on the Data Lake storage account resource group.')
+@description('If true, the group defined by `datalakeContributorGroupId` will be assigned "Storage Blob Data Contributor" and "Reader" RBAC roles on the storage account resource group.')
 param setSbdcRbacOnStorageAccount bool = false
 
 @description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')

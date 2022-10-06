@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "9209120487580376379"
+      "templateHash": "6496516925513843779"
     }
   },
   "parameters": {
@@ -25,19 +25,19 @@
     "defaultDataLakeStorageAccountName": {
       "type": "string",
       "metadata": {
-        "description": "The name of the existing Data Lake storage account."
+        "description": "The name of the existing storage account that the default data lake file system will be created in."
       }
     },
     "defaultDataLakeStorageFilesystemName": {
       "type": "string",
       "metadata": {
-        "description": "The name of the filesystem to create in the existing Data Lake storage account."
+        "description": "The name of the filesystem to create in the storage account."
       }
     },
     "setWorkspaceIdentityRbacOnStorageAccount": {
       "type": "bool",
       "metadata": {
-        "description": "If true, grants \"Storage Blob Data Contributor\" RBAC role for the workspace managed identity on the Data Lake storage account."
+        "description": "If true, grants \"Storage Blob Data Contributor\" RBAC role for the workspace managed identity on the storage account."
       }
     },
     "grantWorkspaceIdentityControlForSql": {
@@ -122,21 +122,21 @@
       "type": "string",
       "defaultValue": "[subscription().subscriptionId]",
       "metadata": {
-        "description": "The subscription ID of the Data Lake storage account. Defaults to current subscription, if not set."
+        "description": "The subscription ID of the existing storage account. Defaults to current subscription, if not set."
       }
     },
     "storageResourceGroupName": {
       "type": "string",
       "defaultValue": "[resourceGroup().name]",
       "metadata": {
-        "description": "The resource group name of the Data Lake storage account. Defaults to current resource group, if not set."
+        "description": "The resource group name of the existing storage account. Defaults to current resource group, if not set."
       }
     },
     "datalakeContributorGroupId": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "The Azure AD group ID for the group to assign \"Storage Blob Data Contributor\" and \"Reader\" RBAC roles on the Data Lake storage account resource group."
+        "description": "The Azure AD group ID for the group to assign \"Storage Blob Data Contributor\" and \"Reader\" RBAC roles on the storage account resource group."
       }
     },
     "sqlAdministratorPrincipalName": {
@@ -155,7 +155,7 @@
       "type": "bool",
       "defaultValue": false,
       "metadata": {
-        "description": "If true, the group defined by `datalakeContributorGroupId` will be assigned \"Storage Blob Data Contributor\" and \"Reader\" RBAC roles on the Data Lake storage account resource group."
+        "description": "If true, the group defined by `datalakeContributorGroupId` will be assigned \"Storage Blob Data Contributor\" and \"Reader\" RBAC roles on the storage account resource group."
       }
     },
     "enableDiagnostics": {
