@@ -1,0 +1,99 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "16828574551504348209"
+    }
+  },
+  "parameters": {
+    "workspaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Synapse workspace that the spark pools are linked to"
+      }
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the spark pool"
+      }
+    },
+    "sparkPools": {
+      "type": "array",
+      "metadata": {
+        "description": "An array of objects defining the spark pools that should be provisioned, with the structure {name: \"<poolName>\", properties: {<object>} } - where the properties object matches the schema documented here: https://docs.microsoft.com/en-us/azure/templates/microsoft.synapse/2021-03-01/workspaces/bigdatapools?tabs=json.  Also note that the first pool defined will be discoverable via App Configuration."
+      }
+    },
+    "enableDiagnostics": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, the log diagnostic settings supported by the spark pool will be enabled"
+      }
+    },
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The log analytics workspace Id where diagnostics log data will be sent"
+      }
+    },
+    "tagValues": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The resource tags applied to resources"
+      }
+    }
+  },
+  "resources": [
+    {
+      "copy": {
+        "name": "spark_pool",
+        "count": "[length(parameters('sparkPools'))]"
+      },
+      "type": "Microsoft.Synapse/workspaces/bigDataPools",
+      "apiVersion": "2021-03-01",
+      "name": "[format('{0}/{1}', parameters('workspaceName'), parameters('sparkPools')[copyIndex()].name)]",
+      "location": "[parameters('location')]",
+      "properties": "[parameters('sparkPools')[copyIndex()].properties]",
+      "tags": "[parameters('tagValues')]"
+    },
+    {
+      "condition": "[parameters('enableDiagnostics')]",
+      "copy": {
+        "name": "spark_pool_diagnostic_settings",
+        "count": "[length(parameters('sparkPools'))]"
+      },
+      "type": "microsoft.insights/diagnosticSettings",
+      "apiVersion": "2016-09-01",
+      "scope": "[format('Microsoft.Synapse/workspaces/{0}/bigDataPools/{1}', parameters('workspaceName'), parameters('sparkPools')[copyIndex()].name)]",
+      "name": "service",
+      "location": "[parameters('location')]",
+      "properties": {
+        "workspaceId": "[parameters('logAnalyticsWorkspaceId')]",
+        "logs": [
+          {
+            "category": "BigDataPoolAppsEnded",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces/bigDataPools', parameters('workspaceName'), parameters('sparkPools')[copyIndex()].name)]"
+      ]
+    }
+  ],
+  "outputs": {
+    "defaultSparkPoolName": {
+      "type": "string",
+      "value": "[parameters('sparkPools')[0].name]",
+      "metadata": {
+        "description": "The name of the default Spark Pool. Note: the first configured Spark Pool will be considered the notional default."
+      }
+    }
+  }
+}
