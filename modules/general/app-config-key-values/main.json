@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "12784846648298868195"
+      "templateHash": "15123283022457470910"
     }
   },
   "parameters": {
@@ -32,7 +32,7 @@
   "resources": [
     {
       "copy": {
-        "name": "key_values",
+        "name": "key_value",
         "count": "[length(parameters('entries'))]"
       },
       "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
