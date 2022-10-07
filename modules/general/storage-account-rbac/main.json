@@ -1,0 +1,91 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "16222554879906653387"
+    }
+  },
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the storage account to apply the role assignement."
+      }
+    },
+    "role": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the role to grant the assignee on the storage account. See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles"
+      },
+      "allowedValues": [
+        "Owner",
+        "Contributor",
+        "Reader",
+        "Storage Blob Data Owner",
+        "Storage Blob Data Contributor",
+        "Storage Blob Data Reader"
+      ]
+    },
+    "assigneeObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "The object ID of the assignee Azure AD group / service principal / user."
+      }
+    },
+    "principalType": {
+      "type": "string",
+      "metadata": {
+        "description": "The assignee's type of Azure AD principal."
+      },
+      "allowedValues": [
+        "Group",
+        "ServicePrincipal",
+        "User"
+      ]
+    },
+    "roleAssignmentId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "A GUID to use as the role assignment resource name, if omitted, one will be generated based on the storage account, role and assignee"
+      }
+    }
+  },
+  "variables": {
+    "roles": {
+      "Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+      "Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+      "Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+      "Storage Blob Data Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
+      "Storage Blob Data Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+      "Storage Blob Data Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')]"
+    },
+    "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+    "generatedRoleAssignmentId": "[guid(format('{0}{1}{2}', variables('storageAccountId'), variables('roles')[parameters('role')], parameters('assigneeObjectId')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+      "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
+      "properties": {
+        "roleDefinitionId": "[variables('roles')[parameters('role')]]",
+        "principalId": "[parameters('assigneeObjectId')]",
+        "principalType": "[parameters('principalType')]"
+      }
+    }
+  ],
+  "outputs": {
+    "roleAssignmentId": {
+      "type": "string",
+      "value": "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), 'Microsoft.Authorization/roleAssignments', if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId')))]",
+      "metadata": {
+        "description": "The resource ID of the role assignement."
+      }
+    }
+  }
+}
