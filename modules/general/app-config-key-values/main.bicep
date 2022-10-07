@@ -13,7 +13,7 @@ resource app_config_store 'Microsoft.AppConfiguration/configurationStores@2020-0
   name: appConfigStoreName
 }
 
-resource test_app_config_entry 'Microsoft.AppConfiguration/configurationStores/keyValues@2021-03-01-preview' = [for entry in entries : {
+resource key_values 'Microsoft.AppConfiguration/configurationStores/keyValues@2021-03-01-preview' = [for entry in entries : {
   // use the required syntax '<name>$<label>' if a label has been specified
   name: empty(label) ? entry.name : '${entry.name}$${label}'
   parent: app_config_store
