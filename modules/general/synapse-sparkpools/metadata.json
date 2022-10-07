@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
+  "name": "Synapse Spark Pools",
+  "summary": "Adds/Updates Synapse Spark Pools in an existing Synapse workspace.",
+  "owner": "endjin"
+}
