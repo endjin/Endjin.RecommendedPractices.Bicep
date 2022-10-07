@@ -179,12 +179,12 @@ resource workspace_diagnostic_settings 'microsoft.insights/diagnosticSettings@20
 
 // Old logic: concat"[concat(resourceGroup().id, '/', parameters('defaultDataLakeStorageAccountName'), '/', variables('storageBlobDataContributorRoleID'), '/', parameters('workspaceName'))
 var synapseMsiRbacBaseString = '${resourceGroup().id}/${defaultDataLakeStorageAccountName}/${storageBlobDataContributorRoleID}/${workspaceName}'
-module default_datalake_rbac_msi_data_contrib './storage-account-rbac.bicep' = if (setWorkspaceIdentityRbacOnStorageAccount) {
+module default_datalake_rbac_msi_data_contrib '../storage-account-rbac/main.bicep' = if (setWorkspaceIdentityRbacOnStorageAccount) {
   name: 'defaultDataLakeRbacMsiDataContribDeploy'
   scope: resourceGroup(storageResourceGroupName)
   params: {
     storageAccountName: defaultDataLakeStorageAccountName
-    role: 'storageBlobDataContributor'
+    role: 'Storage Blob Data Contributor'
     assigneeObjectId: workspace.identity.principalId
     principalType: 'ServicePrincipal'
     // Old logic: guid(concat(variables('synapseManagedIdentityRoleAssignmentIdBaseEntropy'), '/', reference(concat('Microsoft.Synapse/workspaces/', parameters('workspaceName')), '2019-06-01-preview', 'Full').identity.principalId))
@@ -194,12 +194,12 @@ module default_datalake_rbac_msi_data_contrib './storage-account-rbac.bicep' = i
 
 // Old logic: guid(concat(resourceGroup().id, '/', parameters('defaultDataLakeStorageAccountName'), '/', variables('storageBlobDataContributorRoleID'), '/', parameters('datalakeContributorGroupId'), '/', 'datalake-contributor-group'))
 var defaultDataLakeDataContributorRoleAssignmentId = guid('${resourceGroup().id}/${defaultDataLakeStorageAccountName}/${storageBlobDataContributorRoleID}/${datalakeContributorGroupId}/datalake-contributor-group')
-module default_datalake_rbac_group_data_contrib './storage-account-rbac.bicep' = if (setSbdcRbacOnStorageAccount) {
+module default_datalake_rbac_group_data_contrib '../storage-account-rbac/main.bicep' = if (setSbdcRbacOnStorageAccount) {
   name: 'defaultDataLakeRbacGroupDataContribDeploy'
   scope: resourceGroup(storageSubscriptionID, storageResourceGroupName)
   params: {
     storageAccountName: defaultDataLakeStorageAccountName
-    role: 'storageBlobDataContributor'
+    role: 'Storage Blob Data Contributor'
     assigneeObjectId: datalakeContributorGroupId
     principalType: 'Group'
     roleAssignmentId: defaultDataLakeDataContributorRoleAssignmentId
@@ -208,12 +208,12 @@ module default_datalake_rbac_group_data_contrib './storage-account-rbac.bicep' =
 
 // Old logic: guid(concat(resourceGroup().id, '/', parameters('defaultDataLakeStorageAccountName'), '/', variables('readerRoleID'), '/', parameters('datalakeContributorGroupId'), '/', 'datalake-contributor-group'))
 var defaultDataLakeReaderRoleAssignmentId = guid('${resourceGroup().id}/${defaultDataLakeStorageAccountName}/${readerRoleId}/${datalakeContributorGroupId}/datalake-contributor-group')
-module default_datalake_rbac_group_reader './storage-account-rbac.bicep' = if (setSbdcRbacOnStorageAccount) {
+module default_datalake_rbac_group_reader '../storage-account-rbac/main.bicep' = if (setSbdcRbacOnStorageAccount) {
   name: 'defaultDataLakeRbacGroupReaderDeploy'
   scope: resourceGroup(storageSubscriptionID, storageResourceGroupName)
   params: {
     storageAccountName: defaultDataLakeStorageAccountName
-    role: 'reader'
+    role: 'Reader'
     assigneeObjectId: datalakeContributorGroupId
     principalType: 'Group'
     roleAssignmentId: defaultDataLakeReaderRoleAssignmentId
