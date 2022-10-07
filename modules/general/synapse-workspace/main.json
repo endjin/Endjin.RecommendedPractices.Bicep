@@ -1,0 +1,1233 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "18202313117613231377"
+    }
+  },
+  "parameters": {
+    "workspaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Synapse workspace."
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "The location of the Synapse workspace."
+      }
+    },
+    "grantWorkspaceIdentityControlForSql": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "If true, grants SQL control to the workspace managed identity."
+      }
+    },
+    "workspaceRepositoryConfiguration": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "Provides the configuration for git-integrated workspaces. Ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.synapse/workspaces?pivots=deployment-language-bicep#workspacerepositoryconfiguration"
+      }
+    },
+    "sqlAdministratorPrincipalName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of an existing service principal to set as the SQL Administrator for the workspace. This will be used as the login."
+      }
+    },
+    "sqlAdministratorPrincipalId": {
+      "type": "string",
+      "metadata": {
+        "description": "The principal/object ID of an existing service principal to set as the SQL Administrator for the workspace."
+      }
+    },
+    "enableDiagnostics": {
+      "type": "bool",
+      "metadata": {
+        "description": "If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set)."
+      }
+    },
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs."
+      }
+    },
+    "tagValues": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The resource tags applied to resources."
+      }
+    },
+    "allowAllConnections": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, a single firewall rule is configured on the workspace allowing all IP addresses"
+      }
+    },
+    "workspaceFirewallRules": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "An array of objects defining firewall rules with the structure {name: \"rule_name\", startAddress: \"a.b.c.d\", endAddress: \"w.x.y.z\"}"
+      }
+    },
+    "managedVirtualNetwork": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "If true, will ensure that all compute for this workspace is in a virtual network managed on behalf of the user."
+      }
+    },
+    "virtualNetworkResourceGroupName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Resource group name for existing virtual network to use when configuring private endpoints."
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Name of existing virtual network to use when configuring private endpoints."
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Subnet to use when configuring private endpoints."
+      }
+    },
+    "enabledSynapsePrivateEndpointServices": {
+      "type": "array",
+      "defaultValue": [
+        "dev",
+        "sql",
+        "sqlOnDemand"
+      ],
+      "metadata": {
+        "description": "List of services to configure when enabling private endpoints. If not empty, virtual network related parameters must also be set."
+      },
+      "allowedValues": [
+        "dev",
+        "sql",
+        "sqlOnDemand"
+      ]
+    },
+    "enablePrivateEndpointsPrivateDns": {
+      "type": "bool",
+      "metadata": {
+        "description": "When true, the private endpoint sub-resources will be registered with the relevant PrivateDns zone."
+      }
+    },
+    "defaultDataLakeStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the existing storage account that the default data lake file system will be created in."
+      }
+    },
+    "defaultDataLakeStorageFilesystemName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the filesystem to create in the storage account."
+      }
+    },
+    "setWorkspaceIdentityRbacOnStorageAccount": {
+      "type": "bool",
+      "metadata": {
+        "description": "If true, grants \"Storage Blob Data Contributor\" RBAC role for the workspace managed identity on the storage account."
+      }
+    },
+    "storageSubscriptionID": {
+      "type": "string",
+      "defaultValue": "[subscription().subscriptionId]",
+      "metadata": {
+        "description": "The subscription ID of the existing storage account. Defaults to current subscription, if not set."
+      }
+    },
+    "storageResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "The resource group name of the existing storage account. Defaults to current resource group, if not set."
+      }
+    },
+    "datalakeContributorGroupId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The Azure AD group ID for the group to assign \"Storage Blob Data Contributor\" and \"Reader\" RBAC roles on the storage account resource group."
+      }
+    },
+    "setSbdcRbacOnStorageAccount": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "If true, the group defined by `datalakeContributorGroupId` will be assigned \"Storage Blob Data Contributor\" and \"Reader\" RBAC roles on the storage account resource group."
+      }
+    }
+  },
+  "variables": {
+    "allowAllFirewallRule": {
+      "name": "allowAll",
+      "startAddress": "0.0.0.0",
+      "endAddress": "255.255.255.255"
+    },
+    "firewallRules": "[if(parameters('allowAllConnections'), array(variables('allowAllFirewallRule')), parameters('workspaceFirewallRules'))]",
+    "readerRoleId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
+    "defaultDataLakeStorageAccountUrl": "[format('https://{0}.dfs.{1}', parameters('defaultDataLakeStorageAccountName'), environment().suffixes.storage)]",
+    "synapseMsiRbacBaseString": "[format('{0}/{1}/{2}/{3}', resourceGroup().id, parameters('defaultDataLakeStorageAccountName'), variables('storageBlobDataContributorRoleID'), parameters('workspaceName'))]",
+    "defaultDataLakeDataContributorRoleAssignmentId": "[guid(format('{0}/{1}/{2}/{3}/datalake-contributor-group', resourceGroup().id, parameters('defaultDataLakeStorageAccountName'), variables('storageBlobDataContributorRoleID'), parameters('datalakeContributorGroupId')))]",
+    "defaultDataLakeReaderRoleAssignmentId": "[guid(format('{0}/{1}/{2}/{3}/datalake-contributor-group', resourceGroup().id, parameters('defaultDataLakeStorageAccountName'), variables('readerRoleId'), parameters('datalakeContributorGroupId')))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Synapse/workspaces",
+      "apiVersion": "2021-06-01",
+      "name": "[parameters('workspaceName')]",
+      "location": "[parameters('location')]",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "properties": {
+        "defaultDataLakeStorage": {
+          "accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
+          "filesystem": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy')).outputs.name.value]"
+        },
+        "managedVirtualNetwork": "[if(parameters('managedVirtualNetwork'), 'default', '')]",
+        "workspaceRepositoryConfiguration": "[parameters('workspaceRepositoryConfiguration')]"
+      },
+      "tags": "[parameters('tagValues')]",
+      "dependsOn": [
+        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Synapse/workspaces/managedIdentitySqlControlSettings",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', parameters('workspaceName'), 'default')]",
+      "properties": {
+        "grantSqlControlToManagedIdentity": {
+          "desiredState": "[if(parameters('grantWorkspaceIdentityControlForSql'), 'Enabled', 'Disabled')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Synapse/workspaces/administrators",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', parameters('workspaceName'), 'activeDirectory')]",
+      "properties": {
+        "administratorType": "ActiveDirectory",
+        "login": "[parameters('sqlAdministratorPrincipalName')]",
+        "sid": "[parameters('sqlAdministratorPrincipalId')]",
+        "tenantId": "[subscription().tenantId]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "condition": "[parameters('enableDiagnostics')]",
+      "type": "microsoft.insights/diagnosticSettings",
+      "apiVersion": "2016-09-01",
+      "scope": "[format('Microsoft.Synapse/workspaces/{0}', parameters('workspaceName'))]",
+      "name": "service",
+      "location": "[parameters('location')]",
+      "properties": {
+        "workspaceId": "[parameters('logAnalyticsWorkspaceId')]",
+        "logs": [
+          {
+            "category": "IntegrationPipelineRuns",
+            "enabled": true
+          },
+          {
+            "category": "IntegrationActivityRuns",
+            "enabled": true
+          },
+          {
+            "category": "IntegrationTriggerRuns",
+            "enabled": true
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "defaultDataLakeStorageFilesystemDeploy",
+      "subscriptionId": "[parameters('storageSubscriptionID')]",
+      "resourceGroup": "[parameters('storageResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "containerName": {
+            "value": "[parameters('defaultDataLakeStorageFilesystemName')]"
+          },
+          "storageAccountName": {
+            "value": "[parameters('defaultDataLakeStorageAccountName')]"
+          },
+          "publicAccess": {
+            "value": "None"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "1237832470772607883"
+            }
+          },
+          "parameters": {
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The parent storage account of the container"
+              }
+            },
+            "containerName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the container"
+              }
+            },
+            "publicAccess": {
+              "type": "string",
+              "defaultValue": "None",
+              "allowedValues": [
+                "None",
+                "Blob",
+                "Container"
+              ]
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "apiVersion": "2021-09-01",
+              "name": "[format('{0}/default/{1}', parameters('storageAccountName'), parameters('containerName'))]",
+              "properties": {
+                "publicAccess": "[parameters('publicAccess')]"
+              }
+            }
+          ],
+          "outputs": {
+            "name": {
+              "type": "string",
+              "value": "[parameters('containerName')]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "[greater(length(variables('firewallRules')), 0)]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "firewallRulesDeploy",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "firewallRules": {
+            "value": "[variables('firewallRules')]"
+          },
+          "workspaceName": {
+            "value": "[parameters('workspaceName')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "4198905363696241096"
+            }
+          },
+          "parameters": {
+            "workspaceName": {
+              "type": "string"
+            },
+            "firewallRules": {
+              "type": "array",
+              "metadata": {
+                "description": "An array of objects defining firewall rules with the structure {name: \"rule_name\", startAddress=\"a.b.c.d\", endAddress=\"w.x.y.z\"}"
+              }
+            }
+          },
+          "resources": [
+            {
+              "copy": {
+                "name": "firewall_rules",
+                "count": "[length(parameters('firewallRules'))]"
+              },
+              "type": "Microsoft.Synapse/workspaces/firewallRules",
+              "apiVersion": "2021-06-01",
+              "name": "[format('{0}/{1}', parameters('workspaceName'), parameters('firewallRules')[copyIndex()].name)]",
+              "properties": {
+                "startIpAddress": "[parameters('firewallRules')[copyIndex()].startAddress]",
+                "endIpAddress": "[parameters('firewallRules')[copyIndex()].endAddress]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "condition": "[parameters('setWorkspaceIdentityRbacOnStorageAccount')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "defaultDataLakeRbacMsiDataContribDeploy",
+      "resourceGroup": "[parameters('storageResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('defaultDataLakeStorageAccountName')]"
+          },
+          "role": {
+            "value": "Storage Blob Data Contributor"
+          },
+          "assigneeObjectId": {
+            "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full').identity.principalId]"
+          },
+          "principalType": {
+            "value": "ServicePrincipal"
+          },
+          "roleAssignmentId": {
+            "value": "[guid(format('{0}/{1}', variables('synapseMsiRbacBaseString'), reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full').identity.principalId))]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "16222554879906653387"
+            }
+          },
+          "parameters": {
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the storage account to apply the role assignement."
+              }
+            },
+            "role": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the role to grant the assignee on the storage account. See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles"
+              },
+              "allowedValues": [
+                "Owner",
+                "Contributor",
+                "Reader",
+                "Storage Blob Data Owner",
+                "Storage Blob Data Contributor",
+                "Storage Blob Data Reader"
+              ]
+            },
+            "assigneeObjectId": {
+              "type": "string",
+              "metadata": {
+                "description": "The object ID of the assignee Azure AD group / service principal / user."
+              }
+            },
+            "principalType": {
+              "type": "string",
+              "metadata": {
+                "description": "The assignee's type of Azure AD principal."
+              },
+              "allowedValues": [
+                "Group",
+                "ServicePrincipal",
+                "User"
+              ]
+            },
+            "roleAssignmentId": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "A GUID to use as the role assignment resource name, if omitted, one will be generated based on the storage account, role and assignee"
+              }
+            }
+          },
+          "variables": {
+            "roles": {
+              "Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+              "Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+              "Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+              "Storage Blob Data Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
+              "Storage Blob Data Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+              "Storage Blob Data Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')]"
+            },
+            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+            "generatedRoleAssignmentId": "[guid(format('{0}{1}{2}', variables('storageAccountId'), variables('roles')[parameters('role')], parameters('assigneeObjectId')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+              "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('roles')[parameters('role')]]",
+                "principalId": "[parameters('assigneeObjectId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            }
+          ],
+          "outputs": {
+            "roleAssignmentId": {
+              "type": "string",
+              "value": "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), 'Microsoft.Authorization/roleAssignments', if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId')))]",
+              "metadata": {
+                "description": "The resource ID of the role assignement."
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "condition": "[parameters('setSbdcRbacOnStorageAccount')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "defaultDataLakeRbacGroupDataContribDeploy",
+      "subscriptionId": "[parameters('storageSubscriptionID')]",
+      "resourceGroup": "[parameters('storageResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('defaultDataLakeStorageAccountName')]"
+          },
+          "role": {
+            "value": "Storage Blob Data Contributor"
+          },
+          "assigneeObjectId": {
+            "value": "[parameters('datalakeContributorGroupId')]"
+          },
+          "principalType": {
+            "value": "Group"
+          },
+          "roleAssignmentId": {
+            "value": "[variables('defaultDataLakeDataContributorRoleAssignmentId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "16222554879906653387"
+            }
+          },
+          "parameters": {
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the storage account to apply the role assignement."
+              }
+            },
+            "role": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the role to grant the assignee on the storage account. See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles"
+              },
+              "allowedValues": [
+                "Owner",
+                "Contributor",
+                "Reader",
+                "Storage Blob Data Owner",
+                "Storage Blob Data Contributor",
+                "Storage Blob Data Reader"
+              ]
+            },
+            "assigneeObjectId": {
+              "type": "string",
+              "metadata": {
+                "description": "The object ID of the assignee Azure AD group / service principal / user."
+              }
+            },
+            "principalType": {
+              "type": "string",
+              "metadata": {
+                "description": "The assignee's type of Azure AD principal."
+              },
+              "allowedValues": [
+                "Group",
+                "ServicePrincipal",
+                "User"
+              ]
+            },
+            "roleAssignmentId": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "A GUID to use as the role assignment resource name, if omitted, one will be generated based on the storage account, role and assignee"
+              }
+            }
+          },
+          "variables": {
+            "roles": {
+              "Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+              "Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+              "Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+              "Storage Blob Data Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
+              "Storage Blob Data Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+              "Storage Blob Data Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')]"
+            },
+            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+            "generatedRoleAssignmentId": "[guid(format('{0}{1}{2}', variables('storageAccountId'), variables('roles')[parameters('role')], parameters('assigneeObjectId')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+              "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('roles')[parameters('role')]]",
+                "principalId": "[parameters('assigneeObjectId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            }
+          ],
+          "outputs": {
+            "roleAssignmentId": {
+              "type": "string",
+              "value": "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), 'Microsoft.Authorization/roleAssignments', if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId')))]",
+              "metadata": {
+                "description": "The resource ID of the role assignement."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "[parameters('setSbdcRbacOnStorageAccount')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "defaultDataLakeRbacGroupReaderDeploy",
+      "subscriptionId": "[parameters('storageSubscriptionID')]",
+      "resourceGroup": "[parameters('storageResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('defaultDataLakeStorageAccountName')]"
+          },
+          "role": {
+            "value": "Reader"
+          },
+          "assigneeObjectId": {
+            "value": "[parameters('datalakeContributorGroupId')]"
+          },
+          "principalType": {
+            "value": "Group"
+          },
+          "roleAssignmentId": {
+            "value": "[variables('defaultDataLakeReaderRoleAssignmentId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "16222554879906653387"
+            }
+          },
+          "parameters": {
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the storage account to apply the role assignement."
+              }
+            },
+            "role": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the role to grant the assignee on the storage account. See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles"
+              },
+              "allowedValues": [
+                "Owner",
+                "Contributor",
+                "Reader",
+                "Storage Blob Data Owner",
+                "Storage Blob Data Contributor",
+                "Storage Blob Data Reader"
+              ]
+            },
+            "assigneeObjectId": {
+              "type": "string",
+              "metadata": {
+                "description": "The object ID of the assignee Azure AD group / service principal / user."
+              }
+            },
+            "principalType": {
+              "type": "string",
+              "metadata": {
+                "description": "The assignee's type of Azure AD principal."
+              },
+              "allowedValues": [
+                "Group",
+                "ServicePrincipal",
+                "User"
+              ]
+            },
+            "roleAssignmentId": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "A GUID to use as the role assignment resource name, if omitted, one will be generated based on the storage account, role and assignee"
+              }
+            }
+          },
+          "variables": {
+            "roles": {
+              "Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', '8e3af657-a8ff-443c-a75c-2fe8c4bcb635')]",
+              "Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+              "Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+              "Storage Blob Data Owner": "[resourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b')]",
+              "Storage Blob Data Contributor": "[resourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+              "Storage Blob Data Reader": "[resourceId('Microsoft.Authorization/roleDefinitions', '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1')]"
+            },
+            "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
+            "generatedRoleAssignmentId": "[guid(format('{0}{1}{2}', variables('storageAccountId'), variables('roles')[parameters('role')], parameters('assigneeObjectId')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2020-04-01-preview",
+              "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
+              "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('roles')[parameters('role')]]",
+                "principalId": "[parameters('assigneeObjectId')]",
+                "principalType": "[parameters('principalType')]"
+              }
+            }
+          ],
+          "outputs": {
+            "roleAssignmentId": {
+              "type": "string",
+              "value": "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), 'Microsoft.Authorization/roleAssignments', if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId')))]",
+              "metadata": {
+                "description": "The resource ID of the role assignement."
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "condition": "[greater(length(parameters('enabledSynapsePrivateEndpointServices')), 0)]",
+      "copy": {
+        "name": "private_endpoints",
+        "count": "[length(parameters('enabledSynapsePrivateEndpointServices'))]"
+      },
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "[format('synapsePrivateEndpoints-{0}', parameters('enabledSynapsePrivateEndpointServices')[copyIndex()])]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('private-endpoint-synapse-{0}', parameters('workspaceName'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "virtualNetworkResourceGroup": {
+            "value": "[parameters('virtualNetworkResourceGroupName')]"
+          },
+          "virtualNetworkName": {
+            "value": "[parameters('virtualNetworkName')]"
+          },
+          "subnetName": {
+            "value": "[parameters('subnetName')]"
+          },
+          "serviceGroupId": {
+            "value": "[parameters('enabledSynapsePrivateEndpointServices')[copyIndex()]]"
+          },
+          "serviceResourceId": {
+            "value": "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+          },
+          "enablePrivateDns": {
+            "value": "[parameters('enablePrivateEndpointsPrivateDns')]"
+          },
+          "tagValues": {
+            "value": "[parameters('tagValues')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "7609907922490330296"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the private endpoint"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the private endpoint"
+              }
+            },
+            "virtualNetworkSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "virtualNetworkResourceGroup": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource group of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "virtualNetworkName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the virtual network the private endpoint will be connected to"
+              }
+            },
+            "subnetName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the subnet the private endpoint will be connected to"
+              }
+            },
+            "serviceResourceId": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource Id of the service that will be accessible via this private endpoint"
+              }
+            },
+            "serviceGroupId": {
+              "type": "string",
+              "allowedValues": [
+                "vault",
+                "dfs",
+                "blob",
+                "file",
+                "queue",
+                "table",
+                "web",
+                "configurationStores",
+                "sql",
+                "sqlOnDemand",
+                "dev"
+              ],
+              "metadata": {
+                "description": "The service's sub-resource (if any) to be associated with the private endpoint"
+              }
+            },
+            "appendServiceToName": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "When true, the serviceGroupId will be appended to the private endpoint name with the convention: &lt;name&gt;-&lt;serviceGroupId&gt;. Useful when a resource exposes multiple services as private endpoints."
+              }
+            },
+            "enablePrivateDns": {
+              "type": "bool",
+              "metadata": {
+                "description": "When true, the private endpoint sub-resource will be registered with the relevant PrivateDns zone"
+              }
+            },
+            "privateDnsZonesSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkSubscriptionId')]",
+              "metadata": {
+                "description": "The subscription where the PrivateDns zones are managed, defaults to the virtual network resource group"
+              }
+            },
+            "privateDnsZonesResourceGroup": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkResourceGroup')]",
+              "metadata": {
+                "description": "The resource group where the PrivateDns zones are managed, defaults to the virtual network resource group"
+              }
+            },
+            "privateDnsZoneName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The PrivateDns zone the private endpoint will be registered in. When blank, the module will attempt to identify the required zone from a list of common services"
+              }
+            },
+            "tagValues": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "variables": {
+            "serviceGroupPrivateDnsZoneLookup": {
+              "vault": "privatelink.vaultcore.azure.net",
+              "dfs": "[format('privatelink.dfs.{0}', environment().suffixes.storage)]",
+              "blob": "[format('privatelink.blob.{0}', environment().suffixes.storage)]",
+              "file": "[format('privatelink.file.{0}', environment().suffixes.storage)]",
+              "queue": "[format('privatelink.queue.{0}', environment().suffixes.storage)]",
+              "table": "[format('privatelink.table.{0}', environment().suffixes.storage)]",
+              "web": "[format('privatelink.web.{0}', environment().suffixes.storage)]",
+              "configurationStores": "privatelink.azconfig.io",
+              "sql": "privatelink.sql.azuresynapse.net",
+              "sqlOnDemand": "privatelink.sql.azuresynapse.net",
+              "dev": "privatelink.dev.azuresynapse.net"
+            },
+            "endpointName": "[if(parameters('appendServiceToName'), toLower(format('{0}-{1}', parameters('name'), parameters('serviceGroupId'))), toLower(parameters('name')))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateEndpoints",
+              "apiVersion": "2021-08-01",
+              "name": "[variables('endpointName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "subnet": {
+                  "id": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('virtualNetworkSubscriptionId'), parameters('virtualNetworkResourceGroup')), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                },
+                "privateLinkServiceConnections": [
+                  {
+                    "name": "[variables('endpointName')]",
+                    "properties": {
+                      "privateLinkServiceId": "[parameters('serviceResourceId')]",
+                      "groupIds": "[array(parameters('serviceGroupId'))]"
+                    }
+                  }
+                ]
+              },
+              "tags": "[parameters('tagValues')]"
+            },
+            {
+              "condition": "[parameters('enablePrivateDns')]",
+              "type": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups",
+              "apiVersion": "2021-08-01",
+              "name": "[format('{0}/{1}', variables('endpointName'), variables('endpointName'))]",
+              "properties": {
+                "privateDnsZoneConfigs": [
+                  {
+                    "name": "[format('config-{0}', parameters('serviceGroupId'))]",
+                    "properties": {
+                      "privateDnsZoneId": "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('privateDnsZonesSubscriptionId'), parameters('privateDnsZonesResourceGroup')), 'Microsoft.Network/privateDnsZones', if(not(empty(parameters('privateDnsZoneName'))), parameters('privateDnsZoneName'), variables('serviceGroupPrivateDnsZoneLookup')[parameters('serviceGroupId')]))]"
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "privateEndpointId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]",
+              "metadata": {
+                "description": "The resource ID of the private endpoint"
+              }
+            },
+            "privateDnsZoneId": {
+              "type": "string",
+              "value": "[if(parameters('enablePrivateDns'), resourceId('Microsoft.Network/privateEndpoints/privateDnsZoneGroups', variables('endpointName'), variables('endpointName')), '')]",
+              "metadata": {
+                "description": "The resource ID of the PrivateDns zone"
+              }
+            },
+            "privateEndpointResource": {
+              "type": "object",
+              "value": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpointName')), '2021-08-01', 'full')]",
+              "metadata": {
+                "description": "An object representing the private endpoint resource"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "condition": "[contains(parameters('enabledSynapsePrivateEndpointServices'), 'sql')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "sqlCNameDeploy",
+      "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "zoneName": {
+            "value": "[format('privatelink{0}', environment().suffixes.sqlServerHostname)]"
+          },
+          "recordName": {
+            "value": "[parameters('workspaceName')]"
+          },
+          "recordValue": {
+            "value": "[format('{0}.privatelink.sql.azuresynapse.net', parameters('workspaceName'))]"
+          },
+          "recordMetadata": {
+            "value": {
+              "creator": "Created by MDP provisioning to support private endpoint access to Azure Synapse SQL Pools"
+            }
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "6236435900649272331"
+            }
+          },
+          "parameters": {
+            "zoneName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of existing private DNS zone that the CNAME record will be associated with."
+              }
+            },
+            "recordName": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource name for the CNAME record."
+              }
+            },
+            "recordValue": {
+              "type": "string",
+              "metadata": {
+                "description": "The value for the CNAME record."
+              }
+            },
+            "recordMetadata": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "Key-value pair metadata associated with the CNAME record."
+              }
+            },
+            "recordTtl": {
+              "type": "int",
+              "defaultValue": 10,
+              "metadata": {
+                "description": "The TTL (time-to-live) for the CNAME record, in seconds."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateDnsZones/CNAME",
+              "apiVersion": "2020-06-01",
+              "name": "[format('{0}/{1}', parameters('zoneName'), parameters('recordName'))]",
+              "properties": {
+                "cnameRecord": {
+                  "cname": "[parameters('recordValue')]"
+                },
+                "metadata": "[parameters('recordMetadata')]",
+                "ttl": "[parameters('recordTtl')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "condition": "[contains(parameters('enabledSynapsePrivateEndpointServices'), 'sqlOnDemand')]",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "sqlOnDemandCNameDeploy",
+      "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "zoneName": {
+            "value": "[format('privatelink{0}', environment().suffixes.sqlServerHostname)]"
+          },
+          "recordName": {
+            "value": "[format('{0}-ondemand', parameters('workspaceName'))]"
+          },
+          "recordValue": {
+            "value": "[format('{0}-ondemand.privatelink.sql.azuresynapse.net', parameters('workspaceName'))]"
+          },
+          "recordMetadata": {
+            "value": {
+              "creator": "Created by MDP provisioning to support private endpoint access to Azure Synapse SQL Serverless Pools"
+            }
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.8.9.13224",
+              "templateHash": "6236435900649272331"
+            }
+          },
+          "parameters": {
+            "zoneName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of existing private DNS zone that the CNAME record will be associated with."
+              }
+            },
+            "recordName": {
+              "type": "string",
+              "metadata": {
+                "description": "The resource name for the CNAME record."
+              }
+            },
+            "recordValue": {
+              "type": "string",
+              "metadata": {
+                "description": "The value for the CNAME record."
+              }
+            },
+            "recordMetadata": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "Key-value pair metadata associated with the CNAME record."
+              }
+            },
+            "recordTtl": {
+              "type": "int",
+              "defaultValue": 10,
+              "metadata": {
+                "description": "The TTL (time-to-live) for the CNAME record, in seconds."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/privateDnsZones/CNAME",
+              "apiVersion": "2020-06-01",
+              "name": "[format('{0}/{1}', parameters('zoneName'), parameters('recordName'))]",
+              "properties": {
+                "cnameRecord": {
+                  "cname": "[parameters('recordValue')]"
+                },
+                "metadata": "[parameters('recordMetadata')]",
+                "ttl": "[parameters('recordTtl')]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "synapseManagedIdentityId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full').identity.principalId]",
+      "metadata": {
+        "description": "The principal ID of the workspace managed identity."
+      }
+    },
+    "id": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]",
+      "metadata": {
+        "description": "The resource ID of the workspace"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[parameters('workspaceName')]",
+      "metadata": {
+        "description": "The name of the workspace"
+      }
+    },
+    "workspaceResource": {
+      "type": "object",
+      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full')]",
+      "metadata": {
+        "description": "An object representing the workspace resource"
+      }
+    }
+  }
+}
