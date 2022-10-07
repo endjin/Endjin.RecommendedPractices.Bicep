@@ -20,11 +20,11 @@ param tagValues object = {}
 targetScope = 'resourceGroup'
 
 
-resource workspace 'Microsoft.Synapse/workspaces@2021-03-01' existing = {
+resource workspace 'Microsoft.Synapse/workspaces@2021-06-01' existing = {
   name: workspaceName
 }
 
-resource spark_pool 'Microsoft.Synapse/workspaces/bigDataPools@2021-03-01' = [for sparkPool in sparkPools : {
+resource spark_pool 'Microsoft.Synapse/workspaces/bigDataPools@2021-06-01' = [for sparkPool in sparkPools : {
   name: sparkPool.name
   parent: workspace
   location: location

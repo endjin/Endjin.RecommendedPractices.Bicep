@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "16828574551504348209"
+      "templateHash": "7255884037746738959"
     }
   },
   "parameters": {
@@ -56,7 +56,7 @@
         "count": "[length(parameters('sparkPools'))]"
       },
       "type": "Microsoft.Synapse/workspaces/bigDataPools",
-      "apiVersion": "2021-03-01",
+      "apiVersion": "2021-06-01",
       "name": "[format('{0}/{1}', parameters('workspaceName'), parameters('sparkPools')[copyIndex()].name)]",
       "location": "[parameters('location')]",
       "properties": "[parameters('sparkPools')[copyIndex()].properties]",
