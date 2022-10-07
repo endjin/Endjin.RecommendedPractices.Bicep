@@ -105,7 +105,7 @@ module default_datalake_filesystem './storage-blob-container.bicep' = {
   }
 }
 
-resource workspace 'Microsoft.Synapse/workspaces@2021-03-01' = {
+resource workspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
   name: workspaceName
   location: location
   identity: {
@@ -122,7 +122,7 @@ resource workspace 'Microsoft.Synapse/workspaces@2021-03-01' = {
   tags: tagValues
 }
 
-resource workspace_mi_sql_control 'Microsoft.Synapse/workspaces/managedIdentitySqlControlSettings@2020-12-01' = {
+resource workspace_mi_sql_control 'Microsoft.Synapse/workspaces/managedIdentitySqlControlSettings@2021-06-01' = {
   name: 'default'
   parent: workspace
   properties: {
@@ -132,7 +132,7 @@ resource workspace_mi_sql_control 'Microsoft.Synapse/workspaces/managedIdentityS
   }
 }
 
-resource workspace_sql_admin 'Microsoft.Synapse/workspaces/administrators@2020-12-01' = {
+resource workspace_sql_admin 'Microsoft.Synapse/workspaces/administrators@2021-06-01' = {
   parent: workspace
   name: 'activeDirectory'
   properties: {

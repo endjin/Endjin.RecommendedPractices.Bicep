@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.8.9.13224",
-      "templateHash": "9596633492567948029"
+      "templateHash": "18202313117613231377"
     }
   },
   "parameters": {
@@ -196,7 +196,7 @@
   "resources": [
     {
       "type": "Microsoft.Synapse/workspaces",
-      "apiVersion": "2021-03-01",
+      "apiVersion": "2021-06-01",
       "name": "[parameters('workspaceName')]",
       "location": "[parameters('location')]",
       "identity": {
@@ -217,7 +217,7 @@
     },
     {
       "type": "Microsoft.Synapse/workspaces/managedIdentitySqlControlSettings",
-      "apiVersion": "2020-12-01",
+      "apiVersion": "2021-06-01",
       "name": "[format('{0}/{1}', parameters('workspaceName'), 'default')]",
       "properties": {
         "grantSqlControlToManagedIdentity": {
@@ -230,7 +230,7 @@
     },
     {
       "type": "Microsoft.Synapse/workspaces/administrators",
-      "apiVersion": "2020-12-01",
+      "apiVersion": "2021-06-01",
       "name": "[format('{0}/{1}', parameters('workspaceName'), 'activeDirectory')]",
       "properties": {
         "administratorType": "ActiveDirectory",
@@ -299,7 +299,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.8.9.13224",
-              "templateHash": "18086758471714456995"
+              "templateHash": "1237832470772607883"
             }
           },
           "parameters": {
@@ -328,7 +328,7 @@
           "resources": [
             {
               "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
-              "apiVersion": "2019-06-01",
+              "apiVersion": "2021-09-01",
               "name": "[format('{0}/default/{1}', parameters('storageAccountName'), parameters('containerName'))]",
               "properties": {
                 "publicAccess": "[parameters('publicAccess')]"
@@ -369,7 +369,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.8.9.13224",
-              "templateHash": "15772582597812716610"
+              "templateHash": "4198905363696241096"
             }
           },
           "parameters": {
@@ -390,7 +390,7 @@
                 "count": "[length(parameters('firewallRules'))]"
               },
               "type": "Microsoft.Synapse/workspaces/firewallRules",
-              "apiVersion": "2021-03-01",
+              "apiVersion": "2021-06-01",
               "name": "[format('{0}/{1}', parameters('workspaceName'), parameters('firewallRules')[copyIndex()].name)]",
               "properties": {
                 "startIpAddress": "[parameters('firewallRules')[copyIndex()].startAddress]",
@@ -423,13 +423,13 @@
             "value": "Storage Blob Data Contributor"
           },
           "assigneeObjectId": {
-            "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-03-01', 'full').identity.principalId]"
+            "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full').identity.principalId]"
           },
           "principalType": {
             "value": "ServicePrincipal"
           },
           "roleAssignmentId": {
-            "value": "[guid(format('{0}/{1}', variables('synapseMsiRbacBaseString'), reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-03-01', 'full').identity.principalId))]"
+            "value": "[guid(format('{0}/{1}', variables('synapseMsiRbacBaseString'), reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full').identity.principalId))]"
           }
         },
         "template": {
@@ -1203,7 +1203,7 @@
   "outputs": {
     "synapseManagedIdentityId": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-03-01', 'full').identity.principalId]",
+      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full').identity.principalId]",
       "metadata": {
         "description": "The principal ID of the workspace managed identity."
       }
@@ -1224,7 +1224,7 @@
     },
     "workspaceResource": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-03-01', 'full')]",
+      "value": "[reference(resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName')), '2021-06-01', 'full')]",
       "metadata": {
         "description": "An object representing the workspace resource"
       }
