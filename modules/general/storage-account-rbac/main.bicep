@@ -36,7 +36,7 @@ module role_definitions '../rbac-built-in-roles/main.bicep' = {
 
 // generate a stable Id for a given role assignment
 var storageAccountId = resourceId('Microsoft.Storage/storageAccounts', storageAccountName)
-var generatedRoleAssignmentId = guid('${storageAccountId}${role}${assigneeObjectId}')
+var generatedRoleAssignmentId = guid(storageAccountId, toLower(role), assigneeObjectId)
 
 
 resource storage_account 'Microsoft.Storage/storageAccounts@2021-02-01' existing = {
