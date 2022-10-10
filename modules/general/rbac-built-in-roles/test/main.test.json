@@ -5,78 +5,47 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "15757164757703100743"
+      "templateHash": "10317661085026972309"
     }
   },
   "parameters": {
-    "storageAccountName": {
+    "suffix": {
       "type": "string",
-      "metadata": {
-        "description": "The name of the storage account to apply the role assignement."
-      }
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
     },
-    "role": {
+    "location": {
       "type": "string",
-      "metadata": {
-        "description": "The name of the role to grant the assignee on the storage account. See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles"
-      },
-      "allowedValues": [
-        "Owner",
-        "Contributor",
-        "Reader",
-        "Storage Blob Data Owner",
-        "Storage Blob Data Contributor",
-        "Storage Blob Data Reader"
-      ]
-    },
-    "assigneeObjectId": {
-      "type": "string",
-      "metadata": {
-        "description": "The object ID of the assignee Azure AD group / service principal / user."
-      }
-    },
-    "principalType": {
-      "type": "string",
-      "metadata": {
-        "description": "The assignee's type of Azure AD principal."
-      },
-      "allowedValues": [
-        "Group",
-        "ServicePrincipal",
-        "User"
-      ]
-    },
-    "roleAssignmentId": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "A GUID to use as the role assignment resource name, if omitted, one will be generated based on the storage account, role and assignee"
-      }
+      "defaultValue": "[resourceGroup().location]"
     }
   },
   "variables": {
-    "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
-    "generatedRoleAssignmentId": "[guid(format('{0}{1}{2}', variables('storageAccountId'), parameters('role'), parameters('assigneeObjectId')))]"
+    "roleName": "Storage Account Contributor"
   },
   "resources": [
     {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2021-09-30-preview",
+      "name": "[format('mi{0}', parameters('suffix'))]",
+      "location": "[parameters('location')]"
+    },
+    {
       "type": "Microsoft.Authorization/roleAssignments",
-      "apiVersion": "2020-04-01-preview",
-      "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
-      "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
+      "apiVersion": "2020-10-01-preview",
+      "name": "[guid(resourceGroup().id, format('mi{0}', parameters('suffix')), variables('roleName'))]",
       "properties": {
-        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
-        "principalId": "[parameters('assigneeObjectId')]",
-        "principalType": "[parameters('principalType')]"
+        "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('mi{0}', parameters('suffix')))).principalId]",
+        "principalType": "ServicePrincipal",
+        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'rbacBuiltInRoles')).outputs.roleDefinitionIds.value[variables('roleName')]]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('mi{0}', parameters('suffix')))]",
+        "[resourceId('Microsoft.Resources/deployments', 'rbacBuiltInRoles')]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
-      "name": "roleDefinitions",
+      "name": "rbacBuiltInRoles",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -485,14 +454,5 @@
         }
       }
     }
-  ],
-  "outputs": {
-    "roleAssignmentId": {
-      "type": "string",
-      "value": "[extensionResourceId(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), 'Microsoft.Authorization/roleAssignments', if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId')))]",
-      "metadata": {
-        "description": "The resource ID of the role assignement."
-      }
-    }
-  }
+  ]
 }
