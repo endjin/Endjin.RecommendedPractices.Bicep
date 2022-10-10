@@ -45,11 +45,6 @@ param virtualNetworkName string = ''
 @description('Subnet to use when configuring private endpoints.')
 param subnetName string = ''
 
-@allowed([
-  'dev'
-  'sql'
-  'sqlOnDemand'
-])
 @description('List of services to configure when enabling private endpoints. If not empty, virtual network related parameters must also be set.')
 param enabledSynapsePrivateEndpointServices array = [
   'dev'
