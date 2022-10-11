@@ -92,6 +92,10 @@ module synapse '../main.bicep' = {
       }
     ]
     grantWorkspaceIdentityControlForSql: true
+    enabledSynapsePrivateEndpointServices: [
+      'dev'
+      'sql'
+    ]
   }
   dependsOn: [
     privatedns_zones
