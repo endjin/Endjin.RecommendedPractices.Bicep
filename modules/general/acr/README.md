@@ -4,7 +4,9 @@ Azure Container Registry
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys or updates an [Azure Container Registry](https://azure.microsoft.com/en-us/products/container-registry/) resource.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
 
 ## Parameters
 

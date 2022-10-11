@@ -23,7 +23,7 @@ Deploys a storage account or returns a reference to an existing one - typically 
 | `saveConnectionStringToKeyVault`     | `bool`   | No       | When true, the default connection string using the primary storage access key will be written to the specified key vault                                                                                     |
 | `keyVaultName`                       | `string` | No       | The name of the key vault used to store the access key                                                                                                                                                       |
 | `keyVaultResourceGroupName`          | `string` | No       | The resource group containing the key vault used to store the access key                                                                                                                                     |
-| `keyVaultSubscriptionName`           | `string` | No       | The subscription containing the key vault used to store the access key                                                                                                                                       |
+| `keyVaultSubscriptionId`             | `string` | No       | The ID of the subscription containing the key vault used to store the access key                                                                                                                             |
 | `keyVaultAccessKeySecretName`        | `string` | No       | The key vault secret name used to store the access key                                                                                                                                                       |
 | `keyVaultConnectionStringSecretName` | `string` | No       | The key vault secret name used to store the connection string                                                                                                                                                |
 | `useExisting`                        | `bool`   | No       | When true, the details of an existing storage account will be returned; When false, the storage account is created/updated                                                                                   |
@@ -42,7 +42,7 @@ Deploys a storage account or returns a reference to an existing one - typically 
 ### Storage with defaults
 
 ```bicep
-module storage 'br:<registry-fqdn>/bicep/general/storage:<version>' = {
+module storage 'br:<registry-fqdn>/bicep/general/storage-account:<version>' = {
   name: 'storage'
   params: {
     name: 'mystorage'
@@ -54,7 +54,7 @@ module storage 'br:<registry-fqdn>/bicep/general/storage:<version>' = {
 ### Storage with hierarchical namespaces (ADLS gen2)
 
 ```bicep
-module storage_with_hns 'br:<registry-fqdn>/bicep/general/storage:<version>' = {
+module storage_with_hns 'br:<registry-fqdn>/bicep/general/storage-account:<version>' = {
   name: 'storageWithHns'
   params: {
     name: 'mystorage'
@@ -76,7 +76,7 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-08-01' existing 
     parent: vnet
 }
 
-module storage 'br:<registry-fqdn>/bicep/general/storage:<version>' = {
+module storage 'br:<registry-fqdn>/bicep/general/storage-account:<version>' = {
   name: 'storageWithNetworkAcls'
   params: {
     name: 'mystorage'

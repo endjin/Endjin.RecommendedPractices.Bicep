@@ -4,7 +4,14 @@ Deploys a ContainerApp hosting environment and publishes related configuration t
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys or updates a [Container Apps Environment](https://learn.microsoft.com/en-us/azure/container-apps/environment) resource which can then be used to deploy Container Apps. Also deploys a Log Analytics workspace and App Insights resource. Once deployment is complete, it publishes the following:
+
+| Value                                                 | Destination                           | Key/Secret name                     |
+|:------------------------------------------------------|:--------------------------------------|:------------------------------------|
+| The resource Id of the Container Apps environment     | The specified App Configuration store | `ContainerAppEnvironmentResourceId` |
+| The instrumentation key for the App Insights resource | The specified Key Vault               | `AppInsightsInstrumentationKey`     |
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will publish the values shown above and return the details of the resource without modifying it, but will fail if the resource does not exist.
 
 ## Parameters
 

@@ -4,13 +4,15 @@ Deploys a key vault with optional diagnostics written to blob storage.
 
 ## Description
 
-A low-level module that handles the deployment of Azure Key Vault and supports the following configuration options:
+Deploys or updates a [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) resource, supporting the following configuration options:
 
 * Azure Storage based diagnostic settings
 * Network access control lists
 * Use of Azure RBAC instead of Key Vault Access Policies
 
-, with the Deploys a key vault with optional diagnostics written to blob storage.
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
+
+Once the Key Vault is created, secrets can be added via the [`key-vault-secret`](https://github.com/endjin/Endjin.RecommendedPractices.Bicep/tree/main/modules/general/key-vault-secret) module.
 
 ## Parameters
 
