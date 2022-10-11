@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.8.9.13224",
-      "templateHash": "12614728658115318884"
+      "version": "0.11.1.770",
+      "templateHash": "6337660328246402065"
     }
   },
   "parameters": {
@@ -47,11 +47,31 @@
         "description": "The type of application using the workspace"
       }
     },
+    "logAnalyticsWorkspaceName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the existing Log Analytics workspace which the data will be ingested to."
+      }
+    },
+    "disablePublicNetworkAccessForIngestion": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, public network access is disabled for ingestion of data."
+      }
+    },
+    "disablePublicNetworkAccessForQuery": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, public network access is disabled for querying of data."
+      }
+    },
     "useExisting": {
       "type": "bool",
       "defaultValue": false,
       "metadata": {
-        "description": "When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated"
+        "description": "When true, the details of an existing app insights instance will be returned; When false, the app insights instance is created/updated"
       }
     },
     "resourceTags": {
@@ -66,12 +86,18 @@
     {
       "condition": "[not(parameters('useExisting'))]",
       "type": "Microsoft.Insights/components",
-      "apiVersion": "2020-02-02",
+      "apiVersion": "2020-02-02-preview",
       "name": "[parameters('name')]",
       "location": "[parameters('location')]",
       "kind": "[parameters('kind')]",
       "properties": {
-        "Application_Type": "[parameters('applicationType')]"
+        "Application_Type": "[parameters('applicationType')]",
+        "Flow_Type": "Redfield",
+        "Request_Source": "IbizaAIExtension",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('logAnalyticsWorkspaceName'))]",
+        "IngestionMode": "LogAnalytics",
+        "publicNetworkAccessForIngestion": "[if(parameters('disablePublicNetworkAccessForIngestion'), 'Disabled', 'Enabled')]",
+        "publicNetworkAccessForQuery": "[if(parameters('disablePublicNetworkAccessForQuery'), 'Disabled', 'Enabled')]"
       },
       "tags": "[parameters('resourceTags')]"
     }
@@ -93,7 +119,7 @@
     },
     "appInsightsWorkspaceResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'))]",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02-preview', 'full'))]",
       "metadata": {
         "description": "An object representing the app insights workspace resource"
       }

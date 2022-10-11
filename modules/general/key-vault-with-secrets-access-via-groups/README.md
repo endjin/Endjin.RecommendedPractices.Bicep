@@ -4,12 +4,16 @@ Deploys a Key Vault with a secrets access policy managed via group membership
 
 ## Description
 
-Deploys a Key Vault with a secrets access policy managed via group membership. This does **not** use Key Vault's Azure RBAC feature, instead it generates a suitable Key Vault Access Policy that grants the relevant permissions to the specified Azure Active Directory groups.
+Deploys or updates a [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) resource with a secrets access policy managed via group membership. This does **not** use Key Vault's Azure RBAC feature, instead it generates a suitable Key Vault Access Policy that grants the relevant permissions to the specified Azure Active Directory groups.
 
 This module can also be used to optionally configure:
 
 * Azure Storage based diagnostic settings
 * Network access control lists
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
+
+Once the Key Vault is created, secrets can be added via the [`key-vault-secret`](https://github.com/endjin/Endjin.RecommendedPractices.Bicep/tree/main/modules/general/key-vault-secret) module.
 
 ## Parameters
 

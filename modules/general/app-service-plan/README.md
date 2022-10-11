@@ -4,7 +4,9 @@ Deploys an App Service Plan
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys or updates an [App Service plan](https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans) resource.
+
+If the resource is expected to already exist, the `useExisting` flag should be used. This will return the details of the resource without modifying it, but fail if the resource does not exist.
 
 ## Parameters
 

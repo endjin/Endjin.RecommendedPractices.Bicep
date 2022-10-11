@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.8.9.13224",
-      "templateHash": "8266500478195651963"
+      "version": "0.11.1.770",
+      "templateHash": "11649316981690118518"
     }
   },
   "parameters": {
@@ -99,11 +99,11 @@
         "description": "The resource group containing the key vault used to store the access key"
       }
     },
-    "keyVaultSubscriptionName": {
+    "keyVaultSubscriptionId": {
       "type": "string",
       "defaultValue": "[subscription().subscriptionId]",
       "metadata": {
-        "description": "The subscription containing the key vault used to store the access key"
+        "description": "The ID of the subscription containing the key vault used to store the access key"
       }
     },
     "keyVaultAccessKeySecretName": {
@@ -160,7 +160,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "[format('storageAccessKeySecretDeploy{0}', parameters('name'))]",
-      "subscriptionId": "[parameters('keyVaultSubscriptionName')]",
+      "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -184,8 +184,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.8.9.13224",
-              "templateHash": "12015994460177070841"
+              "version": "0.11.1.770",
+              "templateHash": "2174283464875371780"
             }
           },
           "parameters": {
@@ -255,7 +255,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "[format('storageConnectionStringSecretDeploy{0}', parameters('name'))]",
-      "subscriptionId": "[parameters('keyVaultSubscriptionName')]",
+      "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -279,8 +279,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.8.9.13224",
-              "templateHash": "12015994460177070841"
+              "version": "0.11.1.770",
+              "templateHash": "2174283464875371780"
             }
           },
           "parameters": {

@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.8.9.13224",
+      "templateHash": "4198905363696241096"
+    }
+  },
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    },
+    "firewallRules": {
+      "type": "array",
+      "metadata": {
+        "description": "An array of objects defining firewall rules with the structure {name: \"rule_name\", startAddress=\"a.b.c.d\", endAddress=\"w.x.y.z\"}"
+      }
+    }
+  },
+  "resources": [
+    {
+      "copy": {
+        "name": "firewall_rules",
+        "count": "[length(parameters('firewallRules'))]"
+      },
+      "type": "Microsoft.Synapse/workspaces/firewallRules",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', parameters('workspaceName'), parameters('firewallRules')[copyIndex()].name)]",
+      "properties": {
+        "startIpAddress": "[parameters('firewallRules')[copyIndex()].startAddress]",
+        "endIpAddress": "[parameters('firewallRules')[copyIndex()].endAddress]"
+      }
+    }
+  ]
+}
