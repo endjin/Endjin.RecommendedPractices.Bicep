@@ -29,9 +29,10 @@ param roleAssignmentId string = ''
 
 targetScope = 'resourceGroup'
 
+var uniqueSuffix = uniqueString(storageAccountName, role, assigneeObjectId, principalType, roleAssignmentId)
 
 module role_definitions '../rbac-built-in-roles/main.bicep' = {
-  name: 'roleDefinitions'
+  name: 'roleDefinitions-${uniqueSuffix}'
 }
 
 // generate a stable Id for a given role assignment
