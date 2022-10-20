@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "3605088910074408392"
+      "templateHash": "14845305247654339224"
     }
   },
   "parameters": {
@@ -434,7 +434,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "14571549217707018219"
+              "templateHash": "4036681235479195564"
             }
           },
           "parameters": {
@@ -484,6 +484,7 @@
             }
           },
           "variables": {
+            "uniqueSuffix": "[uniqueString(parameters('storageAccountName'), parameters('role'), parameters('assigneeObjectId'), parameters('principalType'), parameters('roleAssignmentId'))]",
             "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
             "generatedRoleAssignmentId": "[guid(variables('storageAccountId'), toLower(parameters('role')), parameters('assigneeObjectId'))]"
           },
@@ -494,18 +495,18 @@
               "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
               "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
               "properties": {
-                "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
+                "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))).outputs.roleDefinitionIds.value[parameters('role')]]",
                 "principalId": "[parameters('assigneeObjectId')]",
                 "principalType": "[parameters('principalType')]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+                "[resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))]"
               ]
             },
             {
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "roleDefinitions",
+              "name": "[format('roleDefinitions-{0}', variables('uniqueSuffix'))]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -966,7 +967,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "14571549217707018219"
+              "templateHash": "4036681235479195564"
             }
           },
           "parameters": {
@@ -1016,6 +1017,7 @@
             }
           },
           "variables": {
+            "uniqueSuffix": "[uniqueString(parameters('storageAccountName'), parameters('role'), parameters('assigneeObjectId'), parameters('principalType'), parameters('roleAssignmentId'))]",
             "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
             "generatedRoleAssignmentId": "[guid(variables('storageAccountId'), toLower(parameters('role')), parameters('assigneeObjectId'))]"
           },
@@ -1026,18 +1028,18 @@
               "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
               "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
               "properties": {
-                "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
+                "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))).outputs.roleDefinitionIds.value[parameters('role')]]",
                 "principalId": "[parameters('assigneeObjectId')]",
                 "principalType": "[parameters('principalType')]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+                "[resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))]"
               ]
             },
             {
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "roleDefinitions",
+              "name": "[format('roleDefinitions-{0}', variables('uniqueSuffix'))]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -1495,7 +1497,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "14571549217707018219"
+              "templateHash": "4036681235479195564"
             }
           },
           "parameters": {
@@ -1545,6 +1547,7 @@
             }
           },
           "variables": {
+            "uniqueSuffix": "[uniqueString(parameters('storageAccountName'), parameters('role'), parameters('assigneeObjectId'), parameters('principalType'), parameters('roleAssignmentId'))]",
             "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
             "generatedRoleAssignmentId": "[guid(variables('storageAccountId'), toLower(parameters('role')), parameters('assigneeObjectId'))]"
           },
@@ -1555,18 +1558,18 @@
               "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
               "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
               "properties": {
-                "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
+                "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))).outputs.roleDefinitionIds.value[parameters('role')]]",
                 "principalId": "[parameters('assigneeObjectId')]",
                 "principalType": "[parameters('principalType')]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+                "[resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))]"
               ]
             },
             {
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "roleDefinitions",
+              "name": "[format('roleDefinitions-{0}', variables('uniqueSuffix'))]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
