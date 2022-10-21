@@ -39,7 +39,7 @@ param (
     [string] $BuildModulePath,
 
     [Parameter()]
-    [version] $BuildModuleVersion = "0.2.16"
+    [version] $BuildModuleVersion = "0.2.17"
 )
 
 $ErrorActionPreference = $ErrorActionPreference ? $ErrorActionPreference : 'Stop'
