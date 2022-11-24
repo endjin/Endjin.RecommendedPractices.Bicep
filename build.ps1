@@ -118,7 +118,7 @@ task PreBuild {}
 task PostBuild {}
 task PreTest {
     if (!(Get-Module -ListAvailable PSRule)) { Install-Module PSRule -Force }
-    if (!(Get-Module -ListAvailable PSRule.Rules.Azure)) { Install-Module PSRule.Rules.Azure }
+    if (!(Get-Module -ListAvailable PSRule.Rules.Azure)) { Install-Module PSRule.Rules.Azure -Force }
 
     $psRuleSplat = @{
         InputPath =  "."
