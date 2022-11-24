@@ -1,0 +1,15 @@
+output:
+  culture:
+    - "en-GB"
+
+configuration:
+  AZURE_BICEP_FILE_EXPANSION: true
+
+execution:
+  notProcessedWarning: false
+  
+input:
+  pathIgnore:
+    - modules/**/*.bicep
+    - modules/**/*.json
+    - '!modules/**/*.test.bicep'

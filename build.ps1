@@ -116,7 +116,15 @@ task PreInit {}
 task PostInit {}
 task PreBuild {}
 task PostBuild {}
-task PreTest {}
+task PreTest {
+    $psRuleSplat = @{
+        InputPath =  "$here/modules"  
+        Module = @("PSRule.Rules.Azure")
+        Style = "Detect"
+    }
+
+    Assert-PSRule @psRuleSplat
+}
 task PostTest {}
 task PreTestReport {}
 task PostTestReport {}
