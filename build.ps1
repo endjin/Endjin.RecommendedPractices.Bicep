@@ -117,6 +117,9 @@ task PostInit {}
 task PreBuild {}
 task PostBuild {}
 task PreTest {
+    Install-Module PSRule -Force
+    Install-Module PSRule.Rules.Azure -Force
+
     $psRuleSplat = @{
         InputPath =  "$here/modules"  
         Module = @("PSRule.Rules.Azure")
