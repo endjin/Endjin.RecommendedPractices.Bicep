@@ -124,6 +124,8 @@ task PreTest {
         InputPath =  "."
         Module = @("PSRule.Rules.Azure")
         Style = "Detect"
+        OutputFormat = "NUnit3"
+        OutputPath = Join-Path $here "psrule-results.xml"
     }
 
     Assert-PSRule @psRuleSplat

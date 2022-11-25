@@ -67,3 +67,9 @@ jobs:
         # only builds of 'main' produce stable version numbers
         PublicRelease: ${{ (github.ref == 'refs/heads/main') }}
 
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        nunit_files: "psrule-results.xml"
+
