@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.11.1.770",
+      "templateHash": "10553651134010459443"
+    }
+  },
+  "parameters": {
+    "storageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of existing storage account in which to create the local user."
+      }
+    },
+    "userName": {
+      "type": "string",
+      "metadata": {
+        "description": "The user name for the local user."
+      }
+    },
+    "containerName": {
+      "type": "string",
+      "metadata": {
+        "description": "The blob container the user will have permissions to access. If the container does not exist, it will be created."
+      }
+    },
+    "permissions": {
+      "type": "string",
+      "defaultValue": "rcwdl",
+      "metadata": {
+        "description": "The permissions the user will have over the container. Possible values include: Read (r), Write (w), Delete (d), List (l), and Create (c)."
+      }
+    },
+    "sshPublicKey": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The SSH public key to match the private key that will be used by the user for authentication. If left blank, a password will need to be generated through the Azure Portal."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2022-05-01",
+      "name": "[format('{0}/{1}/{2}', parameters('storageAccountName'), 'default', parameters('containerName'))]"
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/localUsers",
+      "apiVersion": "2022-05-01",
+      "name": "[format('{0}/{1}', parameters('storageAccountName'), parameters('userName'))]",
+      "properties": {
+        "permissionScopes": [
+          {
+            "permissions": "[parameters('permissions')]",
+            "service": "blob",
+            "resourceName": "[parameters('containerName')]"
+          }
+        ],
+        "homeDirectory": "[parameters('containerName')]",
+        "sshAuthorizedKeys": "[if(empty(parameters('sshPublicKey')), null(), createArray(createObject('description', format('{0} public key', parameters('userName')), 'key', parameters('sshPublicKey'))))]",
+        "hasSharedKey": false
+      }
+    }
+  ]
+}
