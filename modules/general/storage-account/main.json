@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "11649316981690118518"
+      "templateHash": "7788915153373651358"
     }
   },
   "parameters": {
@@ -62,6 +62,13 @@
       "defaultValue": false,
       "metadata": {
         "description": "When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities"
+      }
+    },
+    "isSftpEnabled": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, enables SFTP feature. `isHnsEnabled` must also be set to true."
       }
     },
     "networkAcls": {
@@ -139,7 +146,7 @@
     {
       "condition": "[not(parameters('useExisting'))]",
       "type": "Microsoft.Storage/storageAccounts",
-      "apiVersion": "2021-06-01",
+      "apiVersion": "2022-05-01",
       "name": "[parameters('name')]",
       "location": "[parameters('location')]",
       "sku": {
@@ -151,7 +158,8 @@
         "supportsHttpsTrafficOnly": "[parameters('httpsOnly')]",
         "accessTier": "[parameters('accessTier')]",
         "isHnsEnabled": "[parameters('isHnsEnabled')]",
-        "networkAcls": "[parameters('networkAcls')]"
+        "networkAcls": "[parameters('networkAcls')]",
+        "isSftpEnabled": "[parameters('isSftpEnabled')]"
       },
       "tags": "[parameters('resource_tags')]"
     },
@@ -175,7 +183,7 @@
             "value": "[parameters('keyVaultAccessKeySecretName')]"
           },
           "contentValue": {
-            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value)]"
+            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value)]"
           }
         },
         "template": {
@@ -270,7 +278,7 @@
             "value": "[parameters('keyVaultConnectionStringSecretName')]"
           },
           "contentValue": {
-            "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value))]"
+            "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
           }
         },
         "template": {
@@ -363,7 +371,7 @@
     },
     "storageAccountResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]",
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'))]",
       "metadata": {
         "description": "An object representing the storage account resource"
       }

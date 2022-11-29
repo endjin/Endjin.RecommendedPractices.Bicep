@@ -26,6 +26,9 @@ param accessTier string = 'Hot'
 @description('When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities')
 param isHnsEnabled bool = false
 
+@description('When true, enables SFTP feature. `isHnsEnabled` must also be set to true.')
+param isSftpEnabled bool = false
+
 @description('The optional network rules securing access to the storage account (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts?pivots=deployment-language-bicep#networkruleset)')
 param networkAcls object = {}
 
@@ -60,11 +63,11 @@ param resource_tags object = {}
 targetScope = 'resourceGroup'
 
 
-resource existing_storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' existing = if (useExisting) {
+resource existing_storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' existing = if (useExisting) {
   name: name
 }
 
-resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!useExisting) {
+resource storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' = if (!useExisting) {
   name: name
   location: location
   sku: {
@@ -77,6 +80,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2021-06-01' = if (!u
     accessTier: accessTier
     isHnsEnabled: isHnsEnabled
     networkAcls: networkAcls
+    isSftpEnabled: isSftpEnabled
   }
   tags: resource_tags
 }
