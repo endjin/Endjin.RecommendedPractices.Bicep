@@ -1,0 +1,619 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.11.1.770",
+      "templateHash": "11929302076194015812"
+    }
+  },
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "storageDeploy",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "name": {
+            "value": "[format('{0}sa', parameters('prefix'))]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "isHnsEnabled": {
+            "value": true
+          },
+          "isSftpEnabled": {
+            "value": true
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.11.1.770",
+              "templateHash": "7788915153373651358"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the storage account"
+              }
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "The location of the storage account"
+              }
+            },
+            "sku": {
+              "type": "string",
+              "defaultValue": "Standard_LRS",
+              "metadata": {
+                "description": "The SKU of the storage account"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "defaultValue": "StorageV2",
+              "metadata": {
+                "description": "The kind of the storage account"
+              }
+            },
+            "tlsVersion": {
+              "type": "string",
+              "defaultValue": "TLS1_2",
+              "metadata": {
+                "description": "The minimum TLS version required by the storage account"
+              }
+            },
+            "httpsOnly": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "When true, disables access to the storage account via unencrypted HTTP connections"
+              }
+            },
+            "accessTier": {
+              "type": "string",
+              "defaultValue": "Hot",
+              "metadata": {
+                "description": "The access tier of the storage account"
+              }
+            },
+            "isHnsEnabled": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities"
+              }
+            },
+            "isSftpEnabled": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, enables SFTP feature. `isHnsEnabled` must also be set to true."
+              }
+            },
+            "networkAcls": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The optional network rules securing access to the storage account (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.storage/storageaccounts?pivots=deployment-language-bicep#networkruleset)"
+              }
+            },
+            "saveAccessKeyToKeyVault": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the primary storage access key will be written to the specified key vault"
+              }
+            },
+            "saveConnectionStringToKeyVault": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the default connection string using the primary storage access key will be written to the specified key vault"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The name of the key vault used to store the access key"
+              }
+            },
+            "keyVaultResourceGroupName": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().name]",
+              "metadata": {
+                "description": "The resource group containing the key vault used to store the access key"
+              }
+            },
+            "keyVaultSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The ID of the subscription containing the key vault used to store the access key"
+              }
+            },
+            "keyVaultAccessKeySecretName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The key vault secret name used to store the access key"
+              }
+            },
+            "keyVaultConnectionStringSecretName": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The key vault secret name used to store the connection string"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing storage account will be returned; When false, the storage account is created/updated"
+              }
+            },
+            "resource_tags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.Storage/storageAccounts",
+              "apiVersion": "2022-05-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('sku')]"
+              },
+              "kind": "[parameters('kind')]",
+              "properties": {
+                "minimumTlsVersion": "[parameters('tlsVersion')]",
+                "supportsHttpsTrafficOnly": "[parameters('httpsOnly')]",
+                "accessTier": "[parameters('accessTier')]",
+                "isHnsEnabled": "[parameters('isHnsEnabled')]",
+                "networkAcls": "[parameters('networkAcls')]",
+                "isSftpEnabled": "[parameters('isSftpEnabled')]"
+              },
+              "tags": "[parameters('resource_tags')]"
+            },
+            {
+              "condition": "[parameters('saveAccessKeyToKeyVault')]",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "[format('storageAccessKeySecretDeploy{0}', parameters('name'))]",
+              "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+              "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "secretName": {
+                    "value": "[parameters('keyVaultAccessKeySecretName')]"
+                  },
+                  "contentValue": {
+                    "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value)]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.11.1.770",
+                      "templateHash": "2174283464875371780"
+                    }
+                  },
+                  "parameters": {
+                    "secretName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Enter the secret name."
+                      }
+                    },
+                    "contentType": {
+                      "type": "string",
+                      "defaultValue": "text/plain",
+                      "metadata": {
+                        "description": "Type of the secret"
+                      }
+                    },
+                    "contentValue": {
+                      "type": "secureString",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "Value of the secret"
+                      }
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Name of the vault"
+                      }
+                    },
+                    "useExisting": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, a pre-existing secret will be returned"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2021-06-01-preview",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                      "properties": {
+                        "contentType": "[parameters('contentType')]",
+                        "value": "[parameters('contentValue')]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "secretUriWithVersion": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                      "metadata": {
+                        "description": "The key vault URI linking to the new/updated secret"
+                      }
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('name'))]"
+              ]
+            },
+            {
+              "condition": "[parameters('saveConnectionStringToKeyVault')]",
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "[format('storageConnectionStringSecretDeploy{0}', parameters('name'))]",
+              "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+              "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "secretName": {
+                    "value": "[parameters('keyVaultConnectionStringSecretName')]"
+                  },
+                  "contentValue": {
+                    "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.11.1.770",
+                      "templateHash": "2174283464875371780"
+                    }
+                  },
+                  "parameters": {
+                    "secretName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Enter the secret name."
+                      }
+                    },
+                    "contentType": {
+                      "type": "string",
+                      "defaultValue": "text/plain",
+                      "metadata": {
+                        "description": "Type of the secret"
+                      }
+                    },
+                    "contentValue": {
+                      "type": "secureString",
+                      "defaultValue": "",
+                      "metadata": {
+                        "description": "Value of the secret"
+                      }
+                    },
+                    "keyVaultName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "Name of the vault"
+                      }
+                    },
+                    "useExisting": {
+                      "type": "bool",
+                      "defaultValue": false,
+                      "metadata": {
+                        "description": "When true, a pre-existing secret will be returned"
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(parameters('useExisting'))]",
+                      "type": "Microsoft.KeyVault/vaults/secrets",
+                      "apiVersion": "2021-06-01-preview",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                      "properties": {
+                        "contentType": "[parameters('contentType')]",
+                        "value": "[parameters('contentValue')]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "secretUriWithVersion": {
+                      "type": "string",
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                      "metadata": {
+                        "description": "The key vault URI linking to the new/updated secret"
+                      }
+                    }
+                  }
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('name'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), resourceId('Microsoft.Storage/storageAccounts', parameters('name')), resourceId('Microsoft.Storage/storageAccounts', parameters('name')))]",
+              "metadata": {
+                "description": "The resource ID of the storage account"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+              "metadata": {
+                "description": "The name of the storage account"
+              }
+            },
+            "storageAccountResource": {
+              "type": "object",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'))]",
+              "metadata": {
+                "description": "An object representing the storage account resource"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "user1",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "storageAccountName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageDeploy')).outputs.name.value]"
+          },
+          "userName": {
+            "value": "user1"
+          },
+          "containerName": {
+            "value": "user1container"
+          },
+          "sshPublicKey": {
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQChpCPb5AHALUB/3B29oMvaH7CeJxcZT0UKll0xmViGUMdwbahPjnV+6WfLzjnPC33504IC+12yw+yosuusAkcUtp4ASNCz9D0ZXY4cxv5efBNUyyYAHcyGr1O8ssEweoyF0sGlrps/Pf9yHNXlzanC/WAAMXwLKw2XbIS1G1ZfyolTAkdNQo46cPgGfp4VehVirABmC1wNMWgj4jcwyC0F/M4tssFkoWTEWJEB+UFX+6shnbYV2NUWQFVN4orVLRoadgl1a+VpKZ7qdoFd1lprMhKSJRG5JD9IFCjVHEsU2WLBz4xiOZkcA/LIZpBHCbZQedHN5YjjxZIpurQfLPZt5/PSjKKc/alz0afWSVeOgYRSL79SV1qmYoR+uI61WcoyWzruczgkBzM8J5JAw/ADncRZsHI7MzOeo7gl6Y8lBCHs03OP2al0OT2gv4yzBBGGlNKR/e3twHAhBoQWMTxES9c6IEkM6GlsgoHSX30tSiN2NeJJluXSgFy5UEir44M= noname"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.11.1.770",
+              "templateHash": "10553651134010459443"
+            }
+          },
+          "parameters": {
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of existing storage account in which to create the local user."
+              }
+            },
+            "userName": {
+              "type": "string",
+              "metadata": {
+                "description": "The user name for the local user."
+              }
+            },
+            "containerName": {
+              "type": "string",
+              "metadata": {
+                "description": "The blob container the user will have permissions to access. If the container does not exist, it will be created."
+              }
+            },
+            "permissions": {
+              "type": "string",
+              "defaultValue": "rcwdl",
+              "metadata": {
+                "description": "The permissions the user will have over the container. Possible values include: Read (r), Write (w), Delete (d), List (l), and Create (c)."
+              }
+            },
+            "sshPublicKey": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The SSH public key to match the private key that will be used by the user for authentication. If left blank, a password will need to be generated through the Azure Portal."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "apiVersion": "2022-05-01",
+              "name": "[format('{0}/{1}/{2}', parameters('storageAccountName'), 'default', parameters('containerName'))]"
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/localUsers",
+              "apiVersion": "2022-05-01",
+              "name": "[format('{0}/{1}', parameters('storageAccountName'), parameters('userName'))]",
+              "properties": {
+                "permissionScopes": [
+                  {
+                    "permissions": "[parameters('permissions')]",
+                    "service": "blob",
+                    "resourceName": "[parameters('containerName')]"
+                  }
+                ],
+                "homeDirectory": "[parameters('containerName')]",
+                "sshAuthorizedKeys": "[if(empty(parameters('sshPublicKey')), null(), createArray(createObject('description', format('{0} public key', parameters('userName')), 'key', parameters('sshPublicKey'))))]",
+                "hasSharedKey": false
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'storageDeploy')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "user2",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "storageAccountName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageDeploy')).outputs.name.value]"
+          },
+          "userName": {
+            "value": "user2"
+          },
+          "containerName": {
+            "value": "user2container"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.11.1.770",
+              "templateHash": "10553651134010459443"
+            }
+          },
+          "parameters": {
+            "storageAccountName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of existing storage account in which to create the local user."
+              }
+            },
+            "userName": {
+              "type": "string",
+              "metadata": {
+                "description": "The user name for the local user."
+              }
+            },
+            "containerName": {
+              "type": "string",
+              "metadata": {
+                "description": "The blob container the user will have permissions to access. If the container does not exist, it will be created."
+              }
+            },
+            "permissions": {
+              "type": "string",
+              "defaultValue": "rcwdl",
+              "metadata": {
+                "description": "The permissions the user will have over the container. Possible values include: Read (r), Write (w), Delete (d), List (l), and Create (c)."
+              }
+            },
+            "sshPublicKey": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "The SSH public key to match the private key that will be used by the user for authentication. If left blank, a password will need to be generated through the Azure Portal."
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+              "apiVersion": "2022-05-01",
+              "name": "[format('{0}/{1}/{2}', parameters('storageAccountName'), 'default', parameters('containerName'))]"
+            },
+            {
+              "type": "Microsoft.Storage/storageAccounts/localUsers",
+              "apiVersion": "2022-05-01",
+              "name": "[format('{0}/{1}', parameters('storageAccountName'), parameters('userName'))]",
+              "properties": {
+                "permissionScopes": [
+                  {
+                    "permissions": "[parameters('permissions')]",
+                    "service": "blob",
+                    "resourceName": "[parameters('containerName')]"
+                  }
+                ],
+                "homeDirectory": "[parameters('containerName')]",
+                "sshAuthorizedKeys": "[if(empty(parameters('sshPublicKey')), null(), createArray(createObject('description', format('{0} public key', parameters('userName')), 'key', parameters('sshPublicKey'))))]",
+                "hasSharedKey": false
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'storageDeploy')]"
+      ]
+    }
+  ]
+}
