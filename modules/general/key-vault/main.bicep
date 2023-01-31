@@ -91,7 +91,7 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExis
 }
 
 module diagnostics 'diagnostics.bicep' = if (enableDiagnostics) {
-  name: 'kvDiagnosticsDeploy'
+  name: 'kvDiagnosticsDeploy-${name}'
   params: {
     location: location
     keyVaultName: name
