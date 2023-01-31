@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.5.6.12127",
-      "templateHash": "11628872054668914414"
+      "version": "0.11.1.770",
+      "templateHash": "2969168717625363317"
     }
   },
   "parameters": {
@@ -29,17 +29,20 @@
         },
         "mode": "Incremental",
         "parameters": {
+          "kind": {
+            "value": "app"
+          },
           "location": {
             "value": "[parameters('location')]"
           },
           "name": {
-            "value": "[format('{0}plan', parameters('prefix'))]"
+            "value": "[format('{0}appplan', parameters('prefix'))]"
           },
           "skuName": {
-            "value": "Standard"
-          },
-          "skuTier": {
             "value": "S1"
+          },
+          "skuCapacity": {
+            "value": 1
           }
         },
         "template": {
@@ -48,8 +51,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.5.6.12127",
-              "templateHash": "1371695098238276226"
+              "version": "0.11.1.770",
+              "templateHash": "7380515872524552332"
             }
           },
           "parameters": {
@@ -62,19 +65,30 @@
             "skuName": {
               "type": "string",
               "metadata": {
-                "description": "SKU for the app service plan"
+                "description": "The SKU for the app service plan"
               }
             },
-            "skuTier": {
-              "type": "string",
+            "skuCapacity": {
+              "type": "int",
               "metadata": {
-                "description": "SKU tier for the app service plan"
+                "description": "The SKU capacity for the app service plan"
               }
             },
             "location": {
               "type": "string",
               "metadata": {
                 "description": "The location of the app service plan"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "allowedValues": [
+                "app",
+                "functionapp",
+                "linux"
+              ],
+              "metadata": {
+                "description": "The kind of app service plan"
               }
             },
             "targetWorkerCount": {
@@ -145,15 +159,16 @@
             {
               "condition": "[not(parameters('useExisting'))]",
               "type": "Microsoft.Web/serverfarms",
-              "apiVersion": "2021-02-01",
+              "apiVersion": "2022-03-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "sku": {
                 "name": "[parameters('skuName')]",
-                "tier": "[parameters('skuTier')]"
+                "capacity": "[parameters('skuCapacity')]"
               },
-              "kind": "string",
+              "kind": "[parameters('kind')]",
               "properties": {
+                "reserved": "[if(equals(parameters('kind'), 'linux'), true(), false())]",
                 "elasticScaleEnabled": "[parameters('elasticScaleEnabled')]",
                 "maximumElasticWorkerCount": "[parameters('maximumElasticWorkerCount')]",
                 "targetWorkerCount": "[parameters('targetWorkerCount')]",
@@ -180,7 +195,377 @@
             },
             "appServicePlanResource": {
               "type": "object",
-              "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2021-02-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2021-02-01', 'full'))]",
+              "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'))]",
+              "metadata": {
+                "description": "An object representing the app configuration store resource"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "functionAppServicePlan",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "kind": {
+            "value": "functionapp"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[format('{0}functionappplan', parameters('prefix'))]"
+          },
+          "skuName": {
+            "value": "Y1"
+          },
+          "skuCapacity": {
+            "value": 1
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.11.1.770",
+              "templateHash": "7380515872524552332"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the app service plan"
+              }
+            },
+            "skuName": {
+              "type": "string",
+              "metadata": {
+                "description": "The SKU for the app service plan"
+              }
+            },
+            "skuCapacity": {
+              "type": "int",
+              "metadata": {
+                "description": "The SKU capacity for the app service plan"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the app service plan"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "allowedValues": [
+                "app",
+                "functionapp",
+                "linux"
+              ],
+              "metadata": {
+                "description": "The kind of app service plan"
+              }
+            },
+            "targetWorkerCount": {
+              "type": "int",
+              "defaultValue": 0,
+              "metadata": {
+                "description": "The target number of workers"
+              }
+            },
+            "targetWorkerSizeId": {
+              "type": "int",
+              "defaultValue": 0,
+              "metadata": {
+                "description": "The target size of the workers"
+              }
+            },
+            "elasticScaleEnabled": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, elastic scale is enabled"
+              }
+            },
+            "maximumElasticWorkerCount": {
+              "type": "int",
+              "defaultValue": 1,
+              "metadata": {
+                "description": "The maximum number of elastic workers"
+              }
+            },
+            "zoneRedundant": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the app service will have zone redundancy"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing app service plan will be returned; When false, the app service plan is created/updated"
+              }
+            },
+            "existingPlanResourceGroupName": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().name]",
+              "metadata": {
+                "description": "The resource group in which the existing app service plan resides"
+              }
+            },
+            "existingPlanResourceSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription in which the existing app service plan resides"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2022-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('skuName')]",
+                "capacity": "[parameters('skuCapacity')]"
+              },
+              "kind": "[parameters('kind')]",
+              "properties": {
+                "reserved": "[if(equals(parameters('kind'), 'linux'), true(), false())]",
+                "elasticScaleEnabled": "[parameters('elasticScaleEnabled')]",
+                "maximumElasticWorkerCount": "[parameters('maximumElasticWorkerCount')]",
+                "targetWorkerCount": "[parameters('targetWorkerCount')]",
+                "targetWorkerSizeId": "[parameters('targetWorkerSizeId')]",
+                "zoneRedundant": "[parameters('zoneRedundant')]"
+              },
+              "tags": "[parameters('resourceTags')]"
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), resourceId('Microsoft.Web/serverfarms', parameters('name')))]",
+              "metadata": {
+                "description": "The resource ID of the app service plan"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+              "metadata": {
+                "description": "The name of the app service plan"
+              }
+            },
+            "appServicePlanResource": {
+              "type": "object",
+              "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'))]",
+              "metadata": {
+                "description": "An object representing the app configuration store resource"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "linuxAppServicePlan",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "kind": {
+            "value": "linux"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "name": {
+            "value": "[format('{0}linuxplan', parameters('prefix'))]"
+          },
+          "skuName": {
+            "value": "B1"
+          },
+          "skuCapacity": {
+            "value": 1
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.11.1.770",
+              "templateHash": "7380515872524552332"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the app service plan"
+              }
+            },
+            "skuName": {
+              "type": "string",
+              "metadata": {
+                "description": "The SKU for the app service plan"
+              }
+            },
+            "skuCapacity": {
+              "type": "int",
+              "metadata": {
+                "description": "The SKU capacity for the app service plan"
+              }
+            },
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "The location of the app service plan"
+              }
+            },
+            "kind": {
+              "type": "string",
+              "allowedValues": [
+                "app",
+                "functionapp",
+                "linux"
+              ],
+              "metadata": {
+                "description": "The kind of app service plan"
+              }
+            },
+            "targetWorkerCount": {
+              "type": "int",
+              "defaultValue": 0,
+              "metadata": {
+                "description": "The target number of workers"
+              }
+            },
+            "targetWorkerSizeId": {
+              "type": "int",
+              "defaultValue": 0,
+              "metadata": {
+                "description": "The target size of the workers"
+              }
+            },
+            "elasticScaleEnabled": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, elastic scale is enabled"
+              }
+            },
+            "maximumElasticWorkerCount": {
+              "type": "int",
+              "defaultValue": 1,
+              "metadata": {
+                "description": "The maximum number of elastic workers"
+              }
+            },
+            "zoneRedundant": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the app service will have zone redundancy"
+              }
+            },
+            "resourceTags": {
+              "type": "object",
+              "defaultValue": {},
+              "metadata": {
+                "description": "The resource tags applied to resources"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the details of an existing app service plan will be returned; When false, the app service plan is created/updated"
+              }
+            },
+            "existingPlanResourceGroupName": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().name]",
+              "metadata": {
+                "description": "The resource group in which the existing app service plan resides"
+              }
+            },
+            "existingPlanResourceSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription in which the existing app service plan resides"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.Web/serverfarms",
+              "apiVersion": "2022-03-01",
+              "name": "[parameters('name')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "[parameters('skuName')]",
+                "capacity": "[parameters('skuCapacity')]"
+              },
+              "kind": "[parameters('kind')]",
+              "properties": {
+                "reserved": "[if(equals(parameters('kind'), 'linux'), true(), false())]",
+                "elasticScaleEnabled": "[parameters('elasticScaleEnabled')]",
+                "maximumElasticWorkerCount": "[parameters('maximumElasticWorkerCount')]",
+                "targetWorkerCount": "[parameters('targetWorkerCount')]",
+                "targetWorkerSizeId": "[parameters('targetWorkerSizeId')]",
+                "zoneRedundant": "[parameters('zoneRedundant')]"
+              },
+              "tags": "[parameters('resourceTags')]"
+            }
+          ],
+          "outputs": {
+            "id": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), resourceId('Microsoft.Web/serverfarms', parameters('name')))]",
+              "metadata": {
+                "description": "The resource ID of the app service plan"
+              }
+            },
+            "name": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
+              "metadata": {
+                "description": "The name of the app service plan"
+              }
+            },
+            "appServicePlanResource": {
+              "type": "object",
+              "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'))]",
               "metadata": {
                 "description": "An object representing the app configuration store resource"
               }
