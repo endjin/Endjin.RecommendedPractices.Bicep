@@ -37,12 +37,47 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Examples
 
-### Example 1
+### Windows App Service Plan
 
 ```bicep
+module appServicePlan '../main.bicep' = {
+  name: 'appServicePlan'
+  params: {
+    kind: 'app'
+    location: 'northeurope'
+    name: 'myappserviceplan'
+    skuName: 'S1'   // Standard Small
+    skuCapacity: 1
+  }
+}
 ```
 
-### Example 2
+### Windows FunctionApp Service Plan
 
 ```bicep
+module functionAppServicePlan '../main.bicep' = {
+  name: 'functionAppServicePlan'
+  params: {
+    kind: 'functionapp'
+    location: 'northeurope'
+    name: 'myappserviceplan'
+    skuName: 'Y1'   // Dynamic Small (aka Consumption plan)
+    skuCapacity: 1
+  }
+}
+```
+
+### Linux App Service Plan
+
+```bicep
+module linuxAppServicePlan '../main.bicep' = {
+  name: 'linuxAppServicePlan'
+  params: {
+    kind: 'linux'
+    location: 'northeurope'
+    name: 'myappserviceplan'
+    skuName: 'B2'   // Basic Medium
+    skuCapacity: 2
+  }
+}
 ```
