@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "1659365994634704077"
+      "templateHash": "7380515872524552332"
     }
   },
   "parameters": {
@@ -18,19 +18,30 @@
     "skuName": {
       "type": "string",
       "metadata": {
-        "description": "SKU for the app service plan"
+        "description": "The SKU for the app service plan"
       }
     },
-    "skuTier": {
-      "type": "string",
+    "skuCapacity": {
+      "type": "int",
       "metadata": {
-        "description": "SKU tier for the app service plan"
+        "description": "The SKU capacity for the app service plan"
       }
     },
     "location": {
       "type": "string",
       "metadata": {
         "description": "The location of the app service plan"
+      }
+    },
+    "kind": {
+      "type": "string",
+      "allowedValues": [
+        "app",
+        "functionapp",
+        "linux"
+      ],
+      "metadata": {
+        "description": "The kind of app service plan"
       }
     },
     "targetWorkerCount": {
@@ -101,15 +112,16 @@
     {
       "condition": "[not(parameters('useExisting'))]",
       "type": "Microsoft.Web/serverfarms",
-      "apiVersion": "2021-02-01",
+      "apiVersion": "2022-03-01",
       "name": "[parameters('name')]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "[parameters('skuName')]",
-        "tier": "[parameters('skuTier')]"
+        "capacity": "[parameters('skuCapacity')]"
       },
-      "kind": "string",
+      "kind": "[parameters('kind')]",
       "properties": {
+        "reserved": "[if(equals(parameters('kind'), 'linux'), true(), false())]",
         "elasticScaleEnabled": "[parameters('elasticScaleEnabled')]",
         "maximumElasticWorkerCount": "[parameters('maximumElasticWorkerCount')]",
         "targetWorkerCount": "[parameters('targetWorkerCount')]",
@@ -136,7 +148,7 @@
     },
     "appServicePlanResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2021-02-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2021-02-01', 'full'))]",
+      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'))]",
       "metadata": {
         "description": "An object representing the app configuration store resource"
       }

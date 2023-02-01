@@ -5,14 +5,22 @@
 @description('The name of the app service plan')
 param name string
 
-@description('SKU for the app service plan')
+@description('The SKU for the app service plan')
 param skuName string
 
-@description('SKU tier for the app service plan')
-param skuTier string
+@description('The SKU capacity for the app service plan')
+param skuCapacity int
 
 @description('The location of the app service plan')
 param location string
+
+@description('The kind of app service plan')
+@allowed([
+  'app'
+  'functionapp'
+  'linux'
+])
+param kind string
 
 @description('The target number of workers')
 param targetWorkerCount int = 0
@@ -45,20 +53,21 @@ param existingPlanResourceSubscriptionId string = subscription().subscriptionId
 targetScope = 'resourceGroup'
 
 
-resource existing_hosting_plan 'Microsoft.Web/serverfarms@2021-02-01' existing = if (useExisting) {
+resource existing_hosting_plan 'Microsoft.Web/serverfarms@2022-03-01' existing = if (useExisting) {
   name: name
   scope: resourceGroup(existingPlanResourceSubscriptionId, existingPlanResourceGroupName)
 }
 
-resource hosting_plan 'Microsoft.Web/serverfarms@2021-02-01' = if (!useExisting) {
+resource hosting_plan 'Microsoft.Web/serverfarms@2022-03-01' = if (!useExisting) {
   name: name
   location: location
   sku: {
     name: skuName
-    tier: skuTier
+    capacity: skuCapacity
   }
-  kind: 'string'
+  kind: kind
   properties: {
+    reserved: kind == 'linux' ? true : false
     elasticScaleEnabled: elasticScaleEnabled
     maximumElasticWorkerCount: maximumElasticWorkerCount
     targetWorkerCount: targetWorkerCount

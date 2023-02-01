@@ -13,9 +13,10 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 | Name                                 | Type     | Required | Description                                                                                                                  |
 | :----------------------------------- | :------: | :------: | :--------------------------------------------------------------------------------------------------------------------------- |
 | `name`                               | `string` | Yes      | The name of the app service plan                                                                                             |
-| `skuName`                            | `string` | Yes      | SKU for the app service plan                                                                                                 |
-| `skuTier`                            | `string` | Yes      | SKU tier for the app service plan                                                                                            |
+| `skuName`                            | `string` | Yes      | The SKU for the app service plan                                                                                             |
+| `skuCapacity`                        | `int`    | Yes      | The SKU capacity for the app service plan                                                                                    |
 | `location`                           | `string` | Yes      | The location of the app service plan                                                                                         |
+| `kind`                               | `string` | Yes      | The kind of app service plan                                                                                                 |
 | `targetWorkerCount`                  | `int`    | No       | The target number of workers                                                                                                 |
 | `targetWorkerSizeId`                 | `int`    | No       | The target size of the workers                                                                                               |
 | `elasticScaleEnabled`                | `bool`   | No       | When true, elastic scale is enabled                                                                                          |
@@ -36,12 +37,47 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Examples
 
-### Example 1
+### Windows App Service Plan
 
 ```bicep
+module appServicePlan '../main.bicep' = {
+  name: 'appServicePlan'
+  params: {
+    kind: 'app'
+    location: 'northeurope'
+    name: 'myappserviceplan'
+    skuName: 'S1'   // Standard Small
+    skuCapacity: 1
+  }
+}
 ```
 
-### Example 2
+### Windows FunctionApp Service Plan
 
 ```bicep
+module functionAppServicePlan '../main.bicep' = {
+  name: 'functionAppServicePlan'
+  params: {
+    kind: 'functionapp'
+    location: 'northeurope'
+    name: 'myappserviceplan'
+    skuName: 'Y1'   // Dynamic Small (aka Consumption plan)
+    skuCapacity: 1
+  }
+}
+```
+
+### Linux App Service Plan
+
+```bicep
+module linuxAppServicePlan '../main.bicep' = {
+  name: 'linuxAppServicePlan'
+  params: {
+    kind: 'linux'
+    location: 'northeurope'
+    name: 'myappserviceplan'
+    skuName: 'B2'   // Basic Medium
+    skuCapacity: 2
+  }
+}
 ```
