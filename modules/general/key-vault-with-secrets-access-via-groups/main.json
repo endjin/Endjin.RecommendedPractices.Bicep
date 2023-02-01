@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.11.1.770",
-      "templateHash": "5326432420576387653"
+      "templateHash": "14496973688496895959"
     }
   },
   "parameters": {
@@ -227,7 +227,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.11.1.770",
-              "templateHash": "14332771442205223118"
+              "templateHash": "6548570452889463336"
             }
           },
           "parameters": {
@@ -385,7 +385,7 @@
               "condition": "[parameters('enableDiagnostics')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "kvDiagnosticsDeploy",
+              "name": "[format('kvDiagnosticsDeploy-{0}', parameters('name'))]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"

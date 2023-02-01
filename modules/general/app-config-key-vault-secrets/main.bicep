@@ -21,11 +21,11 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = {
 module key_value_secrets '../app-config-key-vault-secret/main.bicep' = [for kvs in keyValueSecrets: {
   name: 'key_value_secret_${replace(kvs.secretName, ':', '--')}'
   params: {
-    appConfigStoreName: appConfigStoreName
+    appConfigStoreName: app_config_store.name
     appConfigKey: kvs.appConfigKey
     secretName: kvs.secretName
     secretValue: kvs.secretValue
-    keyVaultName: keyVaultName
+    keyVaultName: key_vault.name
     label: label
   }
 }]
