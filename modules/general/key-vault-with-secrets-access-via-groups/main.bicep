@@ -14,6 +14,7 @@ param name string
 param sku string = 'standard'
 
 @description('The AzureAD objectId for the group to be granted "get" access to secrets')
+#disable-next-line secure-secrets-in-params
 param secretsReadersGroupObjectId string
 
 @description('The list of secret permissions granted to the "reader" group')
@@ -21,6 +22,7 @@ param secretsReadersPermissions array = [
   'get'
 ]
 @description('The AzureAD objectId for the group to be granted "get" & "set" access to secrets')
+#disable-next-line secure-secrets-in-params
 param secretsContributorsGroupObjectId string
 
 @description('The list of secret permissions granted to the "contributors" group')
