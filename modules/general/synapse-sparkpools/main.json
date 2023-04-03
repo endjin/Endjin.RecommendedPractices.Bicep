@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "1610726784366336144"
+      "version": "0.15.31.15270",
+      "templateHash": "3544812075961529010"
     }
   },
   "parameters": {
@@ -63,11 +63,11 @@
       "tags": "[parameters('tagValues')]"
     },
     {
-      "condition": "[parameters('enableDiagnostics')]",
       "copy": {
         "name": "spark_pool_diagnostic_settings",
         "count": "[length(parameters('sparkPools'))]"
       },
+      "condition": "[parameters('enableDiagnostics')]",
       "type": "microsoft.insights/diagnosticSettings",
       "apiVersion": "2016-09-01",
       "scope": "[format('Microsoft.Synapse/workspaces/{0}/bigDataPools/{1}', parameters('workspaceName'), parameters('sparkPools')[copyIndex()].name)]",

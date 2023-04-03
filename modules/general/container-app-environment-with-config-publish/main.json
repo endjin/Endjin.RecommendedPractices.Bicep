@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "14337546871764459453"
+      "version": "0.15.31.15270",
+      "templateHash": "15204801666996176376"
     }
   },
   "parameters": {
@@ -128,8 +128,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "14973085335342024073"
+              "version": "0.15.31.15270",
+              "templateHash": "8551152373944770223"
             }
           },
           "parameters": {
@@ -322,8 +322,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "14478868845436771878"
+                      "version": "0.15.31.15270",
+                      "templateHash": "8260785473514042061"
                     }
                   },
                   "parameters": {
@@ -498,7 +498,7 @@
             "value": [
               {
                 "name": "ContainerAppEnvironmentResourceId",
-                "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.id.value]"
+                "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.id.value]"
               }
             ]
           }
@@ -509,8 +509,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "12897822316604470155"
+              "version": "0.15.31.15270",
+              "templateHash": "10813160333897422330"
             }
           },
           "parameters": {
@@ -571,7 +571,7 @@
             "value": "AppInsightsInstrumentationKey"
           },
           "contentValue": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.appinsights_instrumentation_key.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.appinsights_instrumentation_key.value]"
           },
           "contentType": {
             "value": "text/plain"
@@ -583,8 +583,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "2174283464875371780"
+              "version": "0.15.31.15270",
+              "templateHash": "16729986519206477407"
             }
           },
           "parameters": {
@@ -602,7 +602,7 @@
               }
             },
             "contentValue": {
-              "type": "secureString",
+              "type": "securestring",
               "defaultValue": "",
               "metadata": {
                 "description": "Value of the secret"
@@ -653,7 +653,7 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.id.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.id.value]",
       "metadata": {
         "description": "The resource ID of the container app environment"
       }
@@ -667,28 +667,28 @@
     },
     "appEnvironmentResource": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.appEnvironmentResource.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.appEnvironmentResource.value]",
       "metadata": {
         "description": "An object representing the container app environment resource"
       }
     },
     "acrId": {
       "type": "string",
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.acrId.value, '')]",
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.acrId.value, '')]",
       "metadata": {
         "description": "The resource ID of the container registry"
       }
     },
     "acrUsername": {
       "type": "string",
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.acrUsername.value, '')]",
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.acrUsername.value, '')]",
       "metadata": {
         "description": "The admin username for the container registry"
       }
     },
     "acrLoginServer": {
       "type": "string",
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv')).outputs.acrLoginServer.value, '')]",
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2020-10-01').outputs.acrLoginServer.value, '')]",
       "metadata": {
         "description": "The login server for the container registry"
       }

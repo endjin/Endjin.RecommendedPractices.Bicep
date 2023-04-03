@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "12873962763911514113"
+      "version": "0.15.31.15270",
+      "templateHash": "12057103437820456431"
     }
   },
   "parameters": {
@@ -133,9 +133,7 @@
           "secretName": {
             "value": "[parameters('keyVaultConnectionStringSecretName')]"
           },
-          "contentValue": {
-            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString, listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString)]"
-          }
+          "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString))]"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -143,8 +141,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "2174283464875371780"
+              "version": "0.15.31.15270",
+              "templateHash": "16729986519206477407"
             }
           },
           "parameters": {
@@ -162,7 +160,7 @@
               }
             },
             "contentValue": {
-              "type": "secureString",
+              "type": "securestring",
               "defaultValue": "",
               "metadata": {
                 "description": "Value of the secret"
@@ -228,9 +226,7 @@
           "secretName": {
             "value": "[parameters('keyVaultReadOnlyConnectionStringSecretName')]"
           },
-          "contentValue": {
-            "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString, listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString)]"
-          }
+          "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString))]"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -238,8 +234,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "2174283464875371780"
+              "version": "0.15.31.15270",
+              "templateHash": "16729986519206477407"
             }
           },
           "parameters": {
@@ -257,7 +253,7 @@
               }
             },
             "contentValue": {
-              "type": "secureString",
+              "type": "securestring",
               "defaultValue": "",
               "metadata": {
                 "description": "Value of the secret"

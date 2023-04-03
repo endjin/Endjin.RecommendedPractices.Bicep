@@ -16,7 +16,7 @@ This module allows for either using existing Key Vault secrets or for automatica
 | :------------------- | :------------: | :------: | :--------------------------------------------------------------------------------------------------------------------------- |
 | `appConfigKey`       | `string`       | No       | Optional value for the key in App Configuration. If left blank, the key will be set to the (sanitized) secret name.          |
 | `secretName`         | `string`       | Yes      | The name of the secret in Key Vault (either existing or to be created).                                                      |
-| `secretValue`        | `secureString` | No       | Optional value to set as the secret. If left blank, a secret with the provided `secretName` must already exist in Key Vault. |
+| `secretValue`        | `securestring` | No       | Optional value to set as the secret. If left blank, a secret with the provided `secretName` must already exist in Key Vault. |
 | `appConfigStoreName` | `string`       | Yes      | The name of the App Configuration Store.                                                                                     |
 | `keyVaultName`       | `string`       | Yes      | The name of the Key Vault instance.                                                                                          |
 | `label`              | `string`       | No       | Optional label attribute to apply to the App Configuration key-value.                                                        |

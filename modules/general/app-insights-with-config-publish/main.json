@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "2463627547573987846"
+      "version": "0.15.31.15270",
+      "templateHash": "13189411548288609539"
     }
   },
   "parameters": {
@@ -153,8 +153,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "6337660328246402065"
+              "version": "0.15.31.15270",
+              "templateHash": "14656863211449605096"
             }
           },
           "parameters": {
@@ -296,7 +296,7 @@
             "value": "AppInsightsInstrumentationKey"
           },
           "contentValue": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.appInsightsWorkspaceResource.value.properties.InstrumentationKey]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.appInsightsWorkspaceResource.value.properties.InstrumentationKey]"
           },
           "contentType": {
             "value": "text/plain"
@@ -308,8 +308,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "2174283464875371780"
+              "version": "0.15.31.15270",
+              "templateHash": "16729986519206477407"
             }
           },
           "parameters": {
@@ -327,7 +327,7 @@
               }
             },
             "contentValue": {
-              "type": "secureString",
+              "type": "securestring",
               "defaultValue": "",
               "metadata": {
                 "description": "Value of the secret"
@@ -378,21 +378,21 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.id.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.id.value]",
       "metadata": {
         "description": "The resource ID of the app insights workspace"
       }
     },
     "name": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.name.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.name.value]",
       "metadata": {
         "description": "The name of the app insights workspace"
       }
     },
     "appInsightsWorkspaceResource": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')).outputs.appInsightsWorkspaceResource.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.appInsightsWorkspaceResource.value]",
       "metadata": {
         "description": "An object representing the app insights workspace resource"
       }
