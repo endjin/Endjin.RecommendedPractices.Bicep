@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "2174283464875371780"
+      "version": "0.15.31.15270",
+      "templateHash": "16729986519206477407"
     }
   },
   "parameters": {
@@ -23,7 +23,7 @@
       }
     },
     "contentValue": {
-      "type": "secureString",
+      "type": "securestring",
       "defaultValue": "",
       "metadata": {
         "description": "Value of the secret"

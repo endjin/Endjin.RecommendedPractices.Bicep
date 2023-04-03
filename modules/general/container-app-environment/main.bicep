@@ -111,7 +111,7 @@ resource container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
         customerId: log_analytics.properties.customerId
-        sharedKey: listKeys(log_analytics.id, log_analytics.apiVersion).primarySharedKey
+        sharedKey: log_analytics.listKeys().primarySharedKey
       }
     }
     daprAIInstrumentationKey: app_insights.properties.InstrumentationKey

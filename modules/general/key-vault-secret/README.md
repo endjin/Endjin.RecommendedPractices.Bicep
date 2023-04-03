@@ -12,7 +12,7 @@ Deploys a secret to an existing Key Vault and returns its URI. If the secret is 
 | :------------- | :------------: | :------: | :------------------------------------------------ |
 | `secretName`   | `string`       | Yes      | Enter the secret name.                            |
 | `contentType`  | `string`       | No       | Type of the secret                                |
-| `contentValue` | `secureString` | No       | Value of the secret                               |
+| `contentValue` | `securestring` | No       | Value of the secret                               |
 | `keyVaultName` | `string`       | Yes      | Name of the vault                                 |
 | `useExisting`  | `bool`         | No       | When true, a pre-existing secret will be returned |
 

@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "4036681235479195564"
+      "version": "0.15.31.15270",
+      "templateHash": "8684345440871691591"
     }
   },
   "parameters": {
@@ -66,7 +66,7 @@
       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
       "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
       "properties": {
-        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))).outputs.roleDefinitionIds.value[parameters('role')]]",
+        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix'))), '2020-10-01').outputs.roleDefinitionIds.value[parameters('role')]]",
         "principalId": "[parameters('assigneeObjectId')]",
         "principalType": "[parameters('principalType')]"
       },
@@ -89,8 +89,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "1905522308987319707"
+              "version": "0.15.31.15270",
+              "templateHash": "8888954108819693081"
             }
           },
           "variables": {

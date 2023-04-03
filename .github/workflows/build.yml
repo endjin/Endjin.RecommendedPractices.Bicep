@@ -29,9 +29,9 @@ jobs:
     # Setup steps
     - uses: actions/setup-dotnet@v1
       if: ${{ github.actor != 'nektos/act' }}
-      name: Install .NET Core SDK 6.0.x
+      name: Install .NET Core SDK 7.0.x
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '7.0.x'
 
     # Build steps
     - uses: actions/checkout@v2

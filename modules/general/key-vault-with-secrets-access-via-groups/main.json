@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "14496973688496895959"
+      "version": "0.15.31.15270",
+      "templateHash": "1635926055936832735"
     }
   },
   "parameters": {
@@ -226,8 +226,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "6548570452889463336"
+              "version": "0.15.31.15270",
+              "templateHash": "3078269463228465308"
             }
           },
           "parameters": {
@@ -414,8 +414,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "16330708593051464444"
+                      "version": "0.15.31.15270",
+                      "templateHash": "306124377968744994"
                     }
                   },
                   "parameters": {
@@ -497,8 +497,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.11.1.770",
-                              "templateHash": "7788915153373651358"
+                              "version": "0.15.31.15270",
+                              "templateHash": "10799863284864906361"
                             }
                           },
                           "parameters": {
@@ -675,9 +675,7 @@
                                   "secretName": {
                                     "value": "[parameters('keyVaultAccessKeySecretName')]"
                                   },
-                                  "contentValue": {
-                                    "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value)]"
-                                  }
+                                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value), createObject('value', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
                                 },
                                 "template": {
                                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -685,8 +683,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.11.1.770",
-                                      "templateHash": "2174283464875371780"
+                                      "version": "0.15.31.15270",
+                                      "templateHash": "16729986519206477407"
                                     }
                                   },
                                   "parameters": {
@@ -704,7 +702,7 @@
                                       }
                                     },
                                     "contentValue": {
-                                      "type": "secureString",
+                                      "type": "securestring",
                                       "defaultValue": "",
                                       "metadata": {
                                         "description": "Value of the secret"
@@ -780,8 +778,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.11.1.770",
-                                      "templateHash": "2174283464875371780"
+                                      "version": "0.15.31.15270",
+                                      "templateHash": "16729986519206477407"
                                     }
                                   },
                                   "parameters": {
@@ -799,7 +797,7 @@
                                       }
                                     },
                                     "contentValue": {
-                                      "type": "secureString",
+                                      "type": "securestring",
                                       "defaultValue": "",
                                       "metadata": {
                                         "description": "Value of the secret"
@@ -908,21 +906,21 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name')))).outputs.id.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2020-10-01').outputs.id.value]",
       "metadata": {
         "description": "The objectId of the key vault"
       }
     },
     "name": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name')))).outputs.name.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2020-10-01').outputs.name.value]",
       "metadata": {
         "description": "The name of the key vault"
       }
     },
     "keyVaultResource": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name')))).outputs.keyVaultResource.value]",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2020-10-01').outputs.keyVaultResource.value]",
       "metadata": {
         "description": "An object representing the key vault resource"
       }
