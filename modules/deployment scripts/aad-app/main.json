@@ -1,0 +1,130 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "6317647380095677020"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location in which the deployment script will be ran"
+      }
+    },
+    "displayName": {
+      "type": "string",
+      "metadata": {
+        "description": "The display name of the AzureAD application"
+      }
+    },
+    "replyUrls": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "The reply application reply URLs"
+      }
+    },
+    "appUri": {
+      "type": "string",
+      "metadata": {
+        "description": "The URL to the application homepage"
+      }
+    },
+    "enableAccessTokenIssuance": {
+      "type": "bool",
+      "metadata": {
+        "description": "When true, allows the AzureAD application to issue access tokens (used for implicit flow)"
+      }
+    },
+    "enableIdTokenIssuance": {
+      "type": "bool",
+      "metadata": {
+        "description": "When true, allows the AzureAD application to issue ID tokens (used for implicit & hybrid flows)"
+      }
+    },
+    "managedIdentityResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource identifier of the managed identity used for the deployment script"
+      }
+    },
+    "microsoftGraphScopeIdsToGrant": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Microsoft Graph scope IDs to grant the AzureAD application"
+      }
+    },
+    "microsoftGraphAppRoleIdsToGrant": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Microsoft Graph role IDs to grant the AzureAD application"
+      }
+    }
+  },
+  "variables": {
+    "name": "AadAppScript",
+    "scriptPath": "./create-aad-app.ps1",
+    "scriptContent": "[CmdletBinding(SupportsShouldProcess)]\r\nparam (\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $DisplayName,\r\n\r\n    [Parameter()]\r\n    [string] $ReplyUrlsDelimited,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $AadTenantId,\r\n\r\n    [string] $Delimeter = \",\",\r\n\r\n    [Parameter()]\r\n    [string] $AppUri,\r\n\r\n    [Parameter()]\r\n    [bool] $EnableAccessTokenIssuance = $false,\r\n\r\n    [Parameter()]\r\n    [bool] $EnableIdTokenIssuance = $false,\r\n\r\n    [Parameter()]\r\n    [string] $MicrosoftGraphScopeIdsToGrantDelimited,\r\n\r\n    [Parameter()]\r\n    [string] $MicrosoftGraphAppRoleIdsToGrantDelimited,\r\n\r\n    [Parameter()]\r\n    [string] $CorvusModulePackageVersion = \"0.4.6\",\r\n\r\n    [Parameter()]\r\n    [bool] $CorvusModuleAllowPrerelase = $false\r\n)\r\n$ErrorActionPreference = \"Stop\"\r\nSet-StrictMode -Version Latest\r\n\r\n# Debug which Az PowerShell version is being used\r\nGet-Module Az -ListAvailable | select Name,Version | ft | out-string | write-host\r\nImport-Module Az.Resources -PassThru | select Name,Version | ft | out-string | write-host\r\n\r\nInstall-Module Corvus.Deployment -RequiredVersion $CorvusModulePackageVersion -AllowPrerelease:$CorvusModuleAllowPrerelase -Scope CurrentUser -Repository PSGallery -Force\r\nImport-Module Corvus.Deployment -Force -PassThru | select Name,Version | ft | out-string | write-host\r\nConnect-CorvusAzure -SkipAzureCli -AadTenantId $AadTenantId -TenantOnly\r\n\r\n# Parse the delimited parameter into arrays\r\n$splitReplyUrls = $ReplyUrlsDelimited -split $Delimeter\r\n$ReplyUrls = $splitReplyUrls[0] -eq \"\" ? @() : $splitReplyUrls\r\n\r\n$splitScopeIdGrants = $MicrosoftGraphScopeIdsToGrantDelimited -split $Delimeter\r\n$MicrosoftGraphScopeIdsToGrant = $splitScopeIdGrants[0] -eq \"\" ? @() : $splitScopeIdGrants\r\n\r\n$splitAppRoleIdGrants = $MicrosoftGraphAppRoleIdsToGrantDelimited -split $Delimeter\r\n$MicrosoftGraphAppRoleIdsToGrant = $splitAppRoleIdGrants[0] -eq \"\" ? @() : $splitAppRoleIdGrants\r\n\r\n# Configure the Azure App Registration\r\n$app = Assert-CorvusAzureAdApp `\r\n            -DisplayName $DisplayName `\r\n            -ReplyUrls $ReplyUrls `\r\n            -AppUri $AppUri `\r\n            -EnableAccessTokenIssuance:$EnableAccessTokenIssuance `\r\n            -EnableIdTokenIssuance:$EnableIdTokenIssuance `\r\n            -Verbose\r\n\r\n# Configure any required MS Graph API permissions\r\nif ($MicrosoftGraphScopeIdsToGrant -or $MicrosoftGraphAppRoleIdsToGrant) {\r\n    Write-Host \"Configuring API permissions\"\r\n    $msGraphAccessRequirements = @()\r\n    foreach ($scopeId in $MicrosoftGraphScopeIdsToGrant) {\r\n        $msGraphAccessRequirements += @{\r\n            Id = $scopeId\r\n            Type = \"Scope\"\r\n        }\r\n    }\r\n    foreach ($appRoleId in $MicrosoftGraphAppRoleIdsToGrant) {\r\n        $msGraphAccessRequirements += @{\r\n            Id = $appRoleId\r\n            Type = \"Role\"\r\n        }\r\n    }\r\n    Write-Verbose \"msGraphAccessRequirements: $($msGraphAccessRequirements | ConvertTo-Json -Depth 10)\"\r\n    \r\n    $app = $app | Assert-CorvusRequiredResourceAccessContains `\r\n                        -ResourceAppId \"00000003-0000-0000-c000-000000000000\" `\r\n                        -AccessRequirements $msGraphAccessRequirements \r\n}\r\n\r\nWrite-Host \"App Registration Details:\"\r\n$app | ConvertTo-Json -Depth 100 | Write-Host\r\n\r\n# Set the deployment script outputs\r\n$DeploymentScriptOutputs = @{\r\n    applicationId = $app.AppId\r\n    objectId      = $app.Id\r\n}",
+    "scriptArguments": [
+      "[format('-DisplayName \\\"{0}\\\"', parameters('displayName'))]",
+      "[format('-ReplyUrlsDelimited \\\"{0}\\\"', join(parameters('replyUrls'), ','))]",
+      "[format('-AadTenantId {0}', tenant().tenantId)]",
+      "[format('-AppUri \\\"{0}\\\"', parameters('appUri'))]",
+      "[format('-EnableAccessTokenIssuance ${0}', parameters('enableAccessTokenIssuance'))]",
+      "[format('-EnableIdTokenIssuance ${0}', parameters('enableIdTokenIssuance'))]",
+      "[format('-MicrosoftGraphScopeIdsToGrantDelimited \\\"{0}\\\"', join(parameters('microsoftGraphScopeIdsToGrant'), ','))]",
+      "[format('-MicrosoftGraphAppRoleIdsToGrantDelimited \\\"{0}\\\"', join(parameters('microsoftGraphAppRoleIdsToGrant'), ','))]"
+    ]
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "[variables('name')]",
+      "location": "[parameters('location')]",
+      "kind": "AzurePowerShell",
+      "properties": {
+        "azPowerShellVersion": "8.3",
+        "retentionInterval": "P1D",
+        "cleanupPreference": "Always",
+        "scriptContent": "[variables('scriptContent')]",
+        "arguments": "[join(variables('scriptArguments'), ' ')]"
+      },
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[format('{0}', parameters('managedIdentityResourceId'))]": {}
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "applicationId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.applicationId]",
+      "metadata": {
+        "description": "The ID of the AzureAD application"
+      }
+    },
+    "objectId": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.objectId]",
+      "metadata": {
+        "description": "The object ID of the AzureAD application"
+      }
+    },
+    "displayName": {
+      "type": "string",
+      "value": "[parameters('displayName')]",
+      "metadata": {
+        "description": "The display name of the AzureAD application"
+      }
+    }
+  }
+}
