@@ -30,9 +30,16 @@ Deploys a [deployment script resource](https://learn.microsoft.com/en-us/azure/t
 
 ## Examples
 
-### Example 1
+### Create an AzureAD app, using an existing managed identity
+
+
 
 ```bicep
+resource managed_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2021-09-30-preview' existing =  {
+  name: '<managed-identity-resource-name>'
+  scope: resourceGroup('<subscription-id>', '<resource-group-name>')
+}
+
 module aad_app '../main.bicep' = {
   name: 'aadAppDeploy'
   params: {
@@ -40,7 +47,7 @@ module aad_app '../main.bicep' = {
     location: location
     replyUrls: replyUrls
     appUri: appUri
-    managedIdentityResourceId: managedIdentityResourceId
+    managedIdentityResourceId: managed_identity.id
     enableAccessTokenIssuance: false
     enableIdTokenIssuance: true
     microsoftGraphScopeIdsToGrant: [
