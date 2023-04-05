@@ -25,7 +25,7 @@ param microsoftGraphScopeIdsToGrant array = []
 @description('Microsoft Graph role IDs to grant the AzureAD application')
 param microsoftGraphAppRoleIdsToGrant array = []
 
-var name = 'AadAppScript'
+var name = 'AadAppScript-${displayName}'
 var scriptPath = './create-aad-app.ps1'
 var scriptContent = loadTextContent(scriptPath)
 var scriptArguments = [
