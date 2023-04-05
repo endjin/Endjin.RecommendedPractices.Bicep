@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
+  "name": "aad-group-membership",
+  "summary": "Configures the membership of an Azure AD group",
+  "owner": "endjin"
+}

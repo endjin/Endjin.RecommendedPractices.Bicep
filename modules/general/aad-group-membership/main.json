@@ -1,0 +1,78 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "17879792285439943819"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location for the deployment script resource."
+      }
+    },
+    "managedIdentityResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource ID for the Managed Identity (MI) that the deployment script will run as. The MI must have permission to manage users in the target Azure AD group."
+      }
+    },
+    "groupName": {
+      "type": "string",
+      "metadata": {
+        "description": "The display name of the Azure AD group to assert membership on."
+      }
+    },
+    "requiredMembers": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "The list of Azure AD objects that should be members of the group. These can be specified using 'DisplayName', 'ObjectId', 'ApplicationId' or 'UserPrincipalName'."
+      }
+    },
+    "strictMode": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, existing group members not specified in the `requiredMembers` parameters will be removed from the group."
+      }
+    }
+  },
+  "variables": {
+    "name": "AadGroupMembershipScript",
+    "scriptPath": "./aad-group-membership.ps1",
+    "scriptContent": "[CmdletBinding(SupportsShouldProcess)]\r\nparam (\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $AadTenantId,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $GroupName,\r\n\r\n    [Parameter()]\r\n    [string] $RequiredMembersDelimited,\r\n\r\n    [string] $Delimeter = \",\",\r\n\r\n    [Parameter()]\r\n    [bool] $StrictMode,\r\n\r\n    [Parameter()]\r\n    [string] $CorvusModulePackageVersion = \"0.4.6\",\r\n\r\n    [Parameter()]\r\n    [bool] $CorvusModuleAllowPrerelase = $false\r\n)\r\n$ErrorActionPreference = \"Stop\"\r\nSet-StrictMode -Version Latest\r\n\r\n# Debug which Az PowerShell version is being used\r\nGet-Module Az -ListAvailable | select Name,Version | ft | out-string | write-host\r\nImport-Module Az.Resources -PassThru | select Name,Version | ft | out-string | write-host\r\n\r\nInstall-Module Corvus.Deployment -RequiredVersion $CorvusModulePackageVersion -AllowPrerelease:$CorvusModuleAllowPrerelase -Scope CurrentUser -Repository PSGallery -Force\r\nImport-Module Corvus.Deployment -Force -PassThru | select Name,Version | ft | out-string | write-host\r\nConnect-CorvusAzure -SkipAzureCli -AadTenantId $AadTenantId -TenantOnly\r\n\r\n# Parse the delimited parameter into arrays\r\n$splitRequiredMembers = $RequiredMembersDelimited -split $Delimeter\r\n$requiredMembers = $splitRequiredMembers[0] -eq \"\" ? @() : $splitRequiredMembers\r\n\r\n# Assert group membership\r\nAssert-CorvusAzureAdGroupMembership -Name $GroupName -RequiredMembers $requiredMembers -StrictMode $StrictMode",
+    "scriptArguments": [
+      "[format('-AadTenantId {0}', tenant().tenantId)]",
+      "[format('-GroupName {0}', parameters('groupName'))]",
+      "[format('-RequiredMembersDelimited \\\"{0}\\\"', join(parameters('requiredMembers'), ','))]",
+      "[format('-StrictMode ${0}', parameters('strictMode'))]"
+    ]
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "[variables('name')]",
+      "location": "[parameters('location')]",
+      "kind": "AzurePowerShell",
+      "properties": {
+        "azPowerShellVersion": "8.3",
+        "retentionInterval": "P1D",
+        "cleanupPreference": "Always",
+        "scriptContent": "[variables('scriptContent')]",
+        "arguments": "[join(variables('scriptArguments'), ' ')]"
+      },
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[format('{0}', parameters('managedIdentityResourceId'))]": {}
+        }
+      }
+    }
+  ]
+}
