@@ -12,8 +12,8 @@ var replyUrls = [
 // To run the test deployment, replace the placeholders with appropriate values.
 
 resource managed_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2021-09-30-preview' existing =  {
-  name: '<name>'
-  scope: resourceGroup('<subscription-id>', '<resource-group-name>')
+  name: 'ms-graph-deployment-mi'
+  scope: resourceGroup('9a1d877d-6acd-40d3-92a1-ee057e8dcda4', 'deployment-managed-identities')
 }
 
 module aad_app '../main.bicep' = {
