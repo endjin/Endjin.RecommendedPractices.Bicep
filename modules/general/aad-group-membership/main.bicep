@@ -17,7 +17,7 @@ param requiredMembers array = []
 @description('When true, existing group members not specified in the `requiredMembers` parameters will be removed from the group.')
 param strictMode bool = false
 
-var name = 'AadGroupMembershipScript'
+var name = 'AadGroupMembershipScript-${groupName}'
 var scriptPath = './aad-group-membership.ps1'
 var scriptContent = loadTextContent(scriptPath)
 var scriptArguments = [
