@@ -38,7 +38,7 @@ resource managed_identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2021
   scope: resourceGroup('<subscription-id>', '<resource-group-name>')
 }
 
-module aad_app 'br:endjin.azurecr.io/bicep/general/aad-app:1.0.0' = {
+module aad_app 'br:<registry-fqdn>/bicep/general/aad-app:<version>' = {
   name: 'aadAppDeploy'
   params: {
     displayName: aadAppDisplayName
