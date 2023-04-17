@@ -17,13 +17,14 @@ param requiredMembers array = []
 @description('When true, existing group members not specified in the `requiredMembers` parameters will be removed from the group.')
 param strictMode bool = false
 
-var name = 'AadGroupMembershipScript-${groupName}'
+var membersDelimited = join(requiredMembers, ',')
+var name = 'AadGroupMembershipScript-${groupName}-${guid(membersDelimited)}'
 var scriptPath = './aad-group-membership.ps1'
 var scriptContent = loadTextContent(scriptPath)
 var scriptArguments = [
   '-AadTenantId ${tenant().tenantId}'
   '-GroupName ${groupName}'
-  '-RequiredMembersDelimited \\"${join(requiredMembers, ',')}\\"'
+  '-RequiredMembersDelimited \\"${membersDelimited}\\"'
   '-StrictMode $${strictMode}'
 ]
 
