@@ -18,7 +18,7 @@ param requiredMembers array = []
 param strictMode bool = false
 
 var membersDelimited = join(requiredMembers, ',')
-var name = 'AadGroupMembershipScript-${groupName}-${guid(membersDelimited)}'
+var name = 'AadGroupMembershipScript-${guid(groupName, membersDelimited)}'
 var scriptPath = './aad-group-membership.ps1'
 var scriptContent = loadTextContent(scriptPath)
 var scriptArguments = [
