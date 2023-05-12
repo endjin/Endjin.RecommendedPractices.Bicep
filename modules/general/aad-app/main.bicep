@@ -29,7 +29,7 @@ param microsoftGraphAppRoleIdsToGrant array = []
 param appRoles array = []
 
 @description('Set this parameter to use a custom version of the Corvus.Deployment module')
-param corvusModulePackageVersion string = '0.3.8'
+param corvusModulePackageVersion string = '0.4.8'
 
 @description('Enable this if you need to use a pre-release version of the Corvus.Deployment module')
 param allowPrereleaseCorvusModuleVersion bool = false

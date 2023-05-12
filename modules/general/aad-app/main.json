@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "2362711919261646322"
+      "templateHash": "10973609607598572983"
     }
   },
   "parameters": {
@@ -75,7 +75,7 @@
     },
     "corvusModulePackageVersion": {
       "type": "string",
-      "defaultValue": "0.3.8",
+      "defaultValue": "0.4.8",
       "metadata": {
         "description": "Set this parameter to use a custom version of the Corvus.Deployment module"
       }
