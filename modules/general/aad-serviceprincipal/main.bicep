@@ -38,7 +38,7 @@ var scriptArguments = [
   '-CredentialDisplayName \\"${credentialDisplayName}\\"'
   '-UseApplicationCredential $${useApplicationCredential}'
   '-PasswordLifetimeDays ${passwordLifetimeDays}'
-  '-RotateSecret ${rotateSecret}'
+  '-RotateSecret $${rotateSecret}'
 ]
 
 resource aad_service_principal 'Microsoft.Resources/deploymentScripts@2020-10-01' = {

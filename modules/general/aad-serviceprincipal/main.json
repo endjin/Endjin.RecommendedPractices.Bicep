@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "11798326555272115216"
+      "templateHash": "18171841703258973186"
     }
   },
   "parameters": {
@@ -86,7 +86,7 @@
       "[format('-CredentialDisplayName \\\"{0}\\\"', parameters('credentialDisplayName'))]",
       "[format('-UseApplicationCredential ${0}', parameters('useApplicationCredential'))]",
       "[format('-PasswordLifetimeDays {0}', parameters('passwordLifetimeDays'))]",
-      "[format('-RotateSecret {0}', parameters('rotateSecret'))]"
+      "[format('-RotateSecret ${0}', parameters('rotateSecret'))]"
     ]
   },
   "resources": [
