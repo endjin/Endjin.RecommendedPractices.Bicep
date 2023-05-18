@@ -10,15 +10,20 @@ param (
     [Parameter(Mandatory = $true)]
     [string] $KeyVaultSecretName,
 
+    [Parameter()]
     [int] $PasswordLifetimeDays = 90,
 
+    [Parameter()]
     [string] $CredentialDisplayName = "Created by the 'aad-serviceprincipal' ARM deployment script",
 
-    [switch] $UseApplicationCredential,
+    [Parameter()]
+    [bool] $UseApplicationCredential = $false,
 
-    [switch] $RotateSecret,
+    [Parameter()]
+    [bool] $RotateSecret = $false,
 
-    $CorvusModulePath = $null
+    [Parameter()]
+    [string] $CorvusModulePath = $null
 )
  
 $ErrorActionPreference = 'Stop'
