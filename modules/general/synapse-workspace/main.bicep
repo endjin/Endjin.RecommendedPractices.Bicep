@@ -36,6 +36,9 @@ param workspaceFirewallRules array = []
 @description('If true, will ensure that all compute for this workspace is in a virtual network managed on behalf of the user.')
 param managedVirtualNetwork bool = false
 
+@description('SubscriptionId for existing virtual network to use when configuring private endpoints.')
+param virtualNetworkSubscriptionId string = subscription().subscriptionId
+
 @description('Resource group name for existing virtual network to use when configuring private endpoints.')
 param virtualNetworkResourceGroupName string = ''
 
@@ -216,6 +219,7 @@ module private_endpoints '../private-endpoint/main.bicep' = [ for service in ena
   params: {
     name: 'private-endpoint-synapse-${workspace.name}'
     location: location
+    virtualNetworkSubscriptionId: virtualNetworkSubscriptionId
     virtualNetworkResourceGroup: virtualNetworkResourceGroupName
     virtualNetworkName: virtualNetworkName
     subnetName: subnetName
@@ -238,7 +242,7 @@ module private_endpoints '../private-endpoint/main.bicep' = [ for service in ena
 //
 module sql_cname_records '../private-dns-cname/main.bicep' = if (contains(enabledSynapsePrivateEndpointServices, 'sql')) {
   name: 'sqlCNameDeploy'
-  scope: resourceGroup(virtualNetworkResourceGroupName)
+  scope: resourceGroup(virtualNetworkSubscriptionId, virtualNetworkResourceGroupName)
   params: {
     zoneName: 'privatelink${environment().suffixes.sqlServerHostname}'
     recordName: workspace.name
@@ -251,7 +255,7 @@ module sql_cname_records '../private-dns-cname/main.bicep' = if (contains(enable
 
 module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (contains(enabledSynapsePrivateEndpointServices, 'sqlOnDemand')) {
   name: 'sqlOnDemandCNameDeploy'
-  scope: resourceGroup(virtualNetworkResourceGroupName)
+  scope: resourceGroup(virtualNetworkSubscriptionId, virtualNetworkResourceGroupName)
   params: {
     zoneName: 'privatelink${environment().suffixes.sqlServerHostname}'
     recordName: '${workspace.name}-ondemand'
