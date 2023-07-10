@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "15626838539415264830"
+      "templateHash": "11341876715866713067"
     }
   },
   "parameters": {
@@ -126,6 +126,13 @@
       ],
       "metadata": {
         "description": "List of services to configure when enabling private endpoints. If not empty, virtual network related parameters must also be set."
+      }
+    },
+    "privateEndpointResourceGroupName": {
+      "type": "string",
+      "defaultValue": "[parameters('virtualNetworkResourceGroupName')]",
+      "metadata": {
+        "description": "The resource group name where private endpoints are provisioned. NOTE: Must be in the same subscription as the virtual network"
       }
     },
     "enablePrivateEndpointsPrivateDns": {
@@ -2007,6 +2014,8 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "[format('synapsePrivateEndpoints-{0}', parameters('enabledSynapsePrivateEndpointServices')[copyIndex()])]",
+      "subscriptionId": "[parameters('virtualNetworkSubscriptionId')]",
+      "resourceGroup": "[parameters('privateEndpointResourceGroupName')]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"

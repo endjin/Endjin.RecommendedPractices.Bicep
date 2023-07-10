@@ -55,6 +55,9 @@ param enabledSynapsePrivateEndpointServices array = [
   'sqlOnDemand'
 ]
 
+@description('The resource group name where private endpoints are provisioned. NOTE: Must be in the same subscription as the virtual network')
+param privateEndpointResourceGroupName string = virtualNetworkResourceGroupName
+
 @description('When true, the private endpoint sub-resources will be registered with the relevant PrivateDns zone.')
 param enablePrivateEndpointsPrivateDns bool
 
@@ -216,6 +219,7 @@ module default_datalake_rbac_group_reader '../storage-account-rbac/main.bicep' =
 
 module private_endpoints '../private-endpoint/main.bicep' = [ for service in enabledSynapsePrivateEndpointServices : if (length(enabledSynapsePrivateEndpointServices) > 0) {
   name: 'synapsePrivateEndpoints-${service}'
+  scope: resourceGroup(virtualNetworkSubscriptionId, privateEndpointResourceGroupName)
   params: {
     name: 'private-endpoint-synapse-${workspace.name}'
     location: location
