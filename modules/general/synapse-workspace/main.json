@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "11341876715866713067"
+      "templateHash": "889132120880867717"
     }
   },
   "parameters": {
@@ -2256,7 +2256,7 @@
       ]
     },
     {
-      "condition": "[contains(parameters('enabledSynapsePrivateEndpointServices'), 'sql')]",
+      "condition": "[and(parameters('enablePrivateEndpointsPrivateDns'), contains(parameters('enabledSynapsePrivateEndpointServices'), 'sql'))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "sqlCNameDeploy",
@@ -2348,7 +2348,7 @@
       ]
     },
     {
-      "condition": "[contains(parameters('enabledSynapsePrivateEndpointServices'), 'sqlOnDemand')]",
+      "condition": "[and(parameters('enablePrivateEndpointsPrivateDns'), contains(parameters('enabledSynapsePrivateEndpointServices'), 'sqlOnDemand'))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "sqlOnDemandCNameDeploy",
