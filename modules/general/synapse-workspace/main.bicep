@@ -244,7 +244,7 @@ module private_endpoints '../private-endpoint/main.bicep' = [ for service in ena
 // private endpoint as the Synapse SQL-related services seem unable to 
 // register themselves on that domain.
 //
-module sql_cname_records '../private-dns-cname/main.bicep' = if (contains(enabledSynapsePrivateEndpointServices, 'sql')) {
+module sql_cname_records '../private-dns-cname/main.bicep' = if (enablePrivateEndpointsPrivateDns && contains(enabledSynapsePrivateEndpointServices, 'sql')) {
   name: 'sqlCNameDeploy'
   scope: resourceGroup(virtualNetworkSubscriptionId, virtualNetworkResourceGroupName)
   params: {
@@ -257,7 +257,7 @@ module sql_cname_records '../private-dns-cname/main.bicep' = if (contains(enable
   }
 }
 
-module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (contains(enabledSynapsePrivateEndpointServices, 'sqlOnDemand')) {
+module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (enablePrivateEndpointsPrivateDns && contains(enabledSynapsePrivateEndpointServices, 'sqlOnDemand')) {
   name: 'sqlOnDemandCNameDeploy'
   scope: resourceGroup(virtualNetworkSubscriptionId, virtualNetworkResourceGroupName)
   params: {
