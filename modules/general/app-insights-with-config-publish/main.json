@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "13189411548288609539"
+      "templateHash": "11713654580158639840"
     }
   },
   "parameters": {
@@ -65,6 +65,20 @@
       "defaultValue": "[parameters('subscriptionId')]",
       "metadata": {
         "description": "The subscription of the key vault where the instrumentation key will be stored"
+      }
+    },
+    "applicationInsightsKeySecretName": {
+      "type": "string",
+      "defaultValue": "AppInsightsInstrumentationKey",
+      "metadata": {
+        "description": "The name of the key vault secret where the instrumentation key will be stored."
+      }
+    },
+    "applicationInsightsConnectionStringSecretName": {
+      "type": "string",
+      "defaultValue": "AppInsightsConnectionString",
+      "metadata": {
+        "description": "The name of the key vault secret where the connection string will be stored."
       }
     },
     "kind": {
@@ -293,10 +307,107 @@
             "value": "[parameters('keyVaultName')]"
           },
           "secretName": {
-            "value": "AppInsightsInstrumentationKey"
+            "value": "[parameters('applicationInsightsKeySecretName')]"
           },
           "contentValue": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.appInsightsWorkspaceResource.value.properties.InstrumentationKey]"
+          },
+          "contentType": {
+            "value": "text/plain"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.15.31.15270",
+              "templateHash": "16729986519206477407"
+            }
+          },
+          "parameters": {
+            "secretName": {
+              "type": "string",
+              "metadata": {
+                "description": "Enter the secret name."
+              }
+            },
+            "contentType": {
+              "type": "string",
+              "defaultValue": "text/plain",
+              "metadata": {
+                "description": "Type of the secret"
+              }
+            },
+            "contentValue": {
+              "type": "securestring",
+              "defaultValue": "",
+              "metadata": {
+                "description": "Value of the secret"
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "Name of the vault"
+              }
+            },
+            "useExisting": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, a pre-existing secret will be returned"
+              }
+            }
+          },
+          "resources": [
+            {
+              "condition": "[not(parameters('useExisting'))]",
+              "type": "Microsoft.KeyVault/vaults/secrets",
+              "apiVersion": "2021-06-01-preview",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+              "properties": {
+                "contentType": "[parameters('contentType')]",
+                "value": "[parameters('contentValue')]"
+              }
+            }
+          ],
+          "outputs": {
+            "secretUriWithVersion": {
+              "type": "string",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+              "metadata": {
+                "description": "The key vault URI linking to the new/updated secret"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "appInsightsConnectionStringSecret",
+      "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+      "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "[parameters('keyVaultName')]"
+          },
+          "secretName": {
+            "value": "[parameters('applicationInsightsConnectionStringSecretName')]"
+          },
+          "contentValue": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.appInsightsWorkspaceResource.value.properties.ConnectionString]"
           },
           "contentType": {
             "value": "text/plain"
@@ -395,6 +506,20 @@
       "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2020-10-01').outputs.appInsightsWorkspaceResource.value]",
       "metadata": {
         "description": "An object representing the app insights workspace resource"
+      }
+    },
+    "appInsightsKeySecretName": {
+      "type": "string",
+      "value": "[parameters('applicationInsightsKeySecretName')]",
+      "metadata": {
+        "description": "The name of the key vault secret where the instrumentation key will be stored."
+      }
+    },
+    "appInsightsConnectionStringSecretName": {
+      "type": "string",
+      "value": "[parameters('applicationInsightsConnectionStringSecretName')]",
+      "metadata": {
+        "description": "The name of the key vault secret where the connection string will be stored."
       }
     }
   }

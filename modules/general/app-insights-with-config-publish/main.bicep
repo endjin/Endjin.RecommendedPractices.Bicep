@@ -29,6 +29,12 @@ param keyVaultResourceGroupName string
 @description('The subscription of the key vault where the instrumentation key will be stored')
 param keyVaultSubscriptionId string = subscriptionId
 
+@description('The name of the key vault secret where the instrumentation key will be stored.')
+param applicationInsightsKeySecretName string = 'AppInsightsInstrumentationKey'
+
+@description('The name of the key vault secret where the connection string will be stored.')
+param applicationInsightsConnectionStringSecretName string = 'AppInsightsConnectionString'
+
 @description('The kind of application using the workspace')
 @allowed([
   'web'
@@ -77,8 +83,19 @@ module aikey_secret '../key-vault-secret/main.bicep' = {
   scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName)
   params: {
     keyVaultName: keyVaultName
-    secretName: 'AppInsightsInstrumentationKey'
+    secretName: applicationInsightsKeySecretName
     contentValue: app_insights.outputs.appInsightsWorkspaceResource.properties.InstrumentationKey
+    contentType: 'text/plain'
+  }
+}
+
+module aiconnectionstring_secret '../key-vault-secret/main.bicep' = {
+  name: 'appInsightsConnectionStringSecret'
+  scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName)
+  params: {
+    keyVaultName: keyVaultName
+    secretName: applicationInsightsConnectionStringSecretName
+    contentValue: app_insights.outputs.appInsightsWorkspaceResource.properties.ConnectionString
     contentType: 'text/plain'
   }
 }
@@ -92,3 +109,8 @@ output name string = app_insights.outputs.name
 // Returns the full AppInsights wWrkspace resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app insights workspace resource')
 output appInsightsWorkspaceResource object = app_insights.outputs.appInsightsWorkspaceResource
+
+@description('The name of the key vault secret where the instrumentation key will be stored.')
+output appInsightsKeySecretName string = applicationInsightsKeySecretName
+@description('The name of the key vault secret where the connection string will be stored.')
+output appInsightsConnectionStringSecretName string = applicationInsightsConnectionStringSecretName
