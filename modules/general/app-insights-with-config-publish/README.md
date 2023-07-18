@@ -10,29 +10,33 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Parameters
 
-| Name                                     | Type     | Required | Description                                                                                                                                |
-| :--------------------------------------- | :------: | :------: | :----------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`                                   | `string` | Yes      | The name of the app insights workspace                                                                                                     |
-| `subscriptionId`                         | `string` | No       | The subscription of the existing app insights workspace                                                                                    |
-| `location`                               | `string` | Yes      | The location of the app insights workspace                                                                                                 |
-| `logAnalyticsWorkspaceName`              | `string` | Yes      | The name of the existing Log Analytics workspace which the data will be ingested to.                                                       |
-| `disablePublicNetworkAccessForIngestion` | `bool`   | No       | When true, public network access is disabled for ingestion of data.                                                                        |
-| `disablePublicNetworkAccessForQuery`     | `bool`   | No       | When true, public network access is disabled for querying of data.                                                                         |
-| `keyVaultName`                           | `string` | Yes      | The key vault name where the instrumentation key will be stored                                                                            |
-| `keyVaultResourceGroupName`              | `string` | Yes      | The resource group of the key vault where the instrumentation key will be stored                                                           |
-| `keyVaultSubscriptionId`                 | `string` | No       | The subscription of the key vault where the instrumentation key will be stored                                                             |
-| `kind`                                   | `string` | No       | The kind of application using the workspace                                                                                                |
-| `applicationType`                        | `string` | No       | The type of application using the workspace                                                                                                |
-| `useExisting`                            | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated |
-| `resourceTags`                           | `object` | No       | The resource tags applied to resources                                                                                                     |
+| Name                                            | Type     | Required | Description                                                                                                                                |
+| :---------------------------------------------- | :------: | :------: | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                                          | `string` | Yes      | The name of the app insights workspace                                                                                                     |
+| `subscriptionId`                                | `string` | No       | The subscription of the existing app insights workspace                                                                                    |
+| `location`                                      | `string` | Yes      | The location of the app insights workspace                                                                                                 |
+| `logAnalyticsWorkspaceName`                     | `string` | Yes      | The name of the existing Log Analytics workspace which the data will be ingested to.                                                       |
+| `disablePublicNetworkAccessForIngestion`        | `bool`   | No       | When true, public network access is disabled for ingestion of data.                                                                        |
+| `disablePublicNetworkAccessForQuery`            | `bool`   | No       | When true, public network access is disabled for querying of data.                                                                         |
+| `keyVaultName`                                  | `string` | Yes      | The key vault name where the instrumentation key will be stored                                                                            |
+| `keyVaultResourceGroupName`                     | `string` | Yes      | The resource group of the key vault where the instrumentation key will be stored                                                           |
+| `keyVaultSubscriptionId`                        | `string` | No       | The subscription of the key vault where the instrumentation key will be stored                                                             |
+| `applicationInsightsKeySecretName`              | `string` | No       | The name of the key vault secret where the instrumentation key will be stored.                                                             |
+| `applicationInsightsConnectionStringSecretName` | `string` | No       | The name of the key vault secret where the connection string will be stored.                                                               |
+| `kind`                                          | `string` | No       | The kind of application using the workspace                                                                                                |
+| `applicationType`                               | `string` | No       | The type of application using the workspace                                                                                                |
+| `useExisting`                                   | `bool`   | No       | When true, the details of an existing app configuration store will be returned; When false, the app configuration store is created/updated |
+| `resourceTags`                                  | `object` | No       | The resource tags applied to resources                                                                                                     |
 
 ## Outputs
 
-| Name                         | Type   | Description                                                |
-| :--------------------------- | :----: | :--------------------------------------------------------- |
-| id                           | string | The resource ID of the app insights workspace              |
-| name                         | string | The name of the app insights workspace                     |
-| appInsightsWorkspaceResource | object | An object representing the app insights workspace resource |
+| Name                                  | Type   | Description                                                                    |
+| :------------------------------------ | :----: | :----------------------------------------------------------------------------- |
+| id                                    | string | The resource ID of the app insights workspace                                  |
+| name                                  | string | The name of the app insights workspace                                         |
+| appInsightsWorkspaceResource          | object | An object representing the app insights workspace resource                     |
+| appInsightsKeySecretName              | string | The name of the key vault secret where the instrumentation key will be stored. |
+| appInsightsConnectionStringSecretName | string | The name of the key vault secret where the connection string will be stored.   |
 
 ## Examples
 
