@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "889132120880867717"
+      "templateHash": "2096661161579829522"
     }
   },
   "parameters": {
@@ -73,6 +73,13 @@
       "defaultValue": false,
       "metadata": {
         "description": "When true, a single firewall rule is configured on the workspace allowing all IP addresses"
+      }
+    },
+    "allowAzureServices": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, Azure Services will have access to the Synapse workspace even when 'allowAllConnections' is false"
       }
     },
     "workspaceFirewallRules": {
@@ -194,7 +201,12 @@
       "startAddress": "0.0.0.0",
       "endAddress": "255.255.255.255"
     },
-    "firewallRules": "[if(parameters('allowAllConnections'), array(variables('allowAllFirewallRule')), parameters('workspaceFirewallRules'))]",
+    "allowAzureServicesFirewallRule": {
+      "name": "AllowAllWindowsAzureIps",
+      "startAddress": "0.0.0.0",
+      "endAddress": "0.0.0.0"
+    },
+    "firewallRules": "[if(parameters('allowAllConnections'), array(variables('allowAllFirewallRule')), concat(parameters('workspaceFirewallRules'), if(parameters('allowAzureServices'), array(variables('allowAzureServicesFirewallRule')), createArray())))]",
     "readerRoleId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
     "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
     "defaultDataLakeStorageAccountUrl": "[format('https://{0}.dfs.{1}', parameters('defaultDataLakeStorageAccountName'), environment().suffixes.storage)]",
@@ -222,6 +234,15 @@
       "tags": "[parameters('tagValues')]",
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy')]"
+      ]
+    },
+    {
+      "condition": "[parameters('allowAzureServices')]",
+      "type": "Microsoft.Synapse/workspaces/trustedServiceByPassConfiguration",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[format('{0}/{1}', parameters('workspaceName'), 'default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
       ]
     },
     {
