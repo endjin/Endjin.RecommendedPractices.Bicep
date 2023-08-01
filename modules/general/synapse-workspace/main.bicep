@@ -134,11 +134,6 @@ resource workspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
   tags: tagValues
 }
 
-resource allow_azure_services 'Microsoft.Synapse/workspaces/trustedServiceByPassConfiguration@2021-06-01-preview' = if (allowAzureServices) {
-  name: 'default'
-  parent: workspace
-}
-
 resource workspace_mi_sql_control 'Microsoft.Synapse/workspaces/managedIdentitySqlControlSettings@2021-06-01' = {
   name: 'default'
   parent: workspace
