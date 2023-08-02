@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.11.1.770",
-      "templateHash": "4402735899314997181"
+      "version": "0.15.31.15270",
+      "templateHash": "15369071813015895908"
     }
   },
   "parameters": {
@@ -81,8 +81,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "11649316981690118518"
+              "version": "0.15.31.15270",
+              "templateHash": "10799863284864906361"
             }
           },
           "parameters": {
@@ -139,6 +139,13 @@
               "defaultValue": false,
               "metadata": {
                 "description": "When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities"
+              }
+            },
+            "isSftpEnabled": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, enables SFTP feature. `isHnsEnabled` must also be set to true."
               }
             },
             "networkAcls": {
@@ -216,7 +223,7 @@
             {
               "condition": "[not(parameters('useExisting'))]",
               "type": "Microsoft.Storage/storageAccounts",
-              "apiVersion": "2021-06-01",
+              "apiVersion": "2022-05-01",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "sku": {
@@ -228,7 +235,8 @@
                 "supportsHttpsTrafficOnly": "[parameters('httpsOnly')]",
                 "accessTier": "[parameters('accessTier')]",
                 "isHnsEnabled": "[parameters('isHnsEnabled')]",
-                "networkAcls": "[parameters('networkAcls')]"
+                "networkAcls": "[parameters('networkAcls')]",
+                "isSftpEnabled": "[parameters('isSftpEnabled')]"
               },
               "tags": "[parameters('resource_tags')]"
             },
@@ -251,9 +259,7 @@
                   "secretName": {
                     "value": "[parameters('keyVaultAccessKeySecretName')]"
                   },
-                  "contentValue": {
-                    "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value)]"
-                  }
+                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value), createObject('value', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
                 },
                 "template": {
                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -261,8 +267,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "2174283464875371780"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16729986519206477407"
                     }
                   },
                   "parameters": {
@@ -280,7 +286,7 @@
                       }
                     },
                     "contentValue": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "defaultValue": "",
                       "metadata": {
                         "description": "Value of the secret"
@@ -347,7 +353,7 @@
                     "value": "[parameters('keyVaultConnectionStringSecretName')]"
                   },
                   "contentValue": {
-                    "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value))]"
+                    "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
                   }
                 },
                 "template": {
@@ -356,8 +362,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "2174283464875371780"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16729986519206477407"
                     }
                   },
                   "parameters": {
@@ -375,7 +381,7 @@
                       }
                     },
                     "contentValue": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "defaultValue": "",
                       "metadata": {
                         "description": "Value of the secret"
@@ -440,7 +446,7 @@
             },
             "storageAccountResource": {
               "type": "object",
-              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]",
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'))]",
               "metadata": {
                 "description": "An object representing the storage account resource"
               }
@@ -487,8 +493,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "2445380437615115914"
+              "version": "0.15.31.15270",
+              "templateHash": "15713671226951049904"
             }
           },
           "parameters": {
@@ -641,8 +647,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "5176081360994299258"
+              "version": "0.15.31.15270",
+              "templateHash": "5309974143975151849"
             }
           },
           "parameters": {
@@ -717,7 +723,7 @@
             "value": "[format('synapse{0}', parameters('suffix'))]"
           },
           "defaultDataLakeStorageAccountName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageDeploy')).outputs.name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'storageDeploy'), '2020-10-01').outputs.name.value]"
           },
           "defaultDataLakeStorageFilesystemName": {
             "value": "default"
@@ -726,7 +732,7 @@
             "value": true
           },
           "logAnalyticsWorkspaceId": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'logAnalyticsDeploy')).outputs.id.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'logAnalyticsDeploy'), '2020-10-01').outputs.id.value]"
           },
           "managedVirtualNetwork": {
             "value": true
@@ -735,7 +741,7 @@
             "value": true
           },
           "sqlAdministratorPrincipalId": {
-            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('mi{0}', parameters('suffix')))).principalId]"
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', format('mi{0}', parameters('suffix'))), '2021-09-30-preview').principalId]"
           },
           "sqlAdministratorPrincipalName": {
             "value": "[format('mi{0}', parameters('suffix'))]"
@@ -761,6 +767,9 @@
               }
             ]
           },
+          "allowAzureServices": {
+            "value": true
+          },
           "grantWorkspaceIdentityControlForSql": {
             "value": true
           },
@@ -777,8 +786,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.11.1.770",
-              "templateHash": "3605088910074408392"
+              "version": "0.15.31.15270",
+              "templateHash": "2096661161579829522"
             }
           },
           "parameters": {
@@ -848,6 +857,13 @@
                 "description": "When true, a single firewall rule is configured on the workspace allowing all IP addresses"
               }
             },
+            "allowAzureServices": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, Azure Services will have access to the Synapse workspace even when 'allowAllConnections' is false"
+              }
+            },
             "workspaceFirewallRules": {
               "type": "array",
               "defaultValue": [],
@@ -860,6 +876,13 @@
               "defaultValue": false,
               "metadata": {
                 "description": "If true, will ensure that all compute for this workspace is in a virtual network managed on behalf of the user."
+              }
+            },
+            "virtualNetworkSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "SubscriptionId for existing virtual network to use when configuring private endpoints."
               }
             },
             "virtualNetworkResourceGroupName": {
@@ -892,6 +915,13 @@
               ],
               "metadata": {
                 "description": "List of services to configure when enabling private endpoints. If not empty, virtual network related parameters must also be set."
+              }
+            },
+            "privateEndpointResourceGroupName": {
+              "type": "string",
+              "defaultValue": "[parameters('virtualNetworkResourceGroupName')]",
+              "metadata": {
+                "description": "The resource group name where private endpoints are provisioned. NOTE: Must be in the same subscription as the virtual network"
               }
             },
             "enablePrivateEndpointsPrivateDns": {
@@ -953,7 +983,12 @@
               "startAddress": "0.0.0.0",
               "endAddress": "255.255.255.255"
             },
-            "firewallRules": "[if(parameters('allowAllConnections'), array(variables('allowAllFirewallRule')), parameters('workspaceFirewallRules'))]",
+            "allowAzureServicesFirewallRule": {
+              "name": "AllowAllWindowsAzureIps",
+              "startAddress": "0.0.0.0",
+              "endAddress": "0.0.0.0"
+            },
+            "firewallRules": "[if(parameters('allowAllConnections'), array(variables('allowAllFirewallRule')), concat(parameters('workspaceFirewallRules'), if(parameters('allowAzureServices'), array(variables('allowAzureServicesFirewallRule')), createArray())))]",
             "readerRoleId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
             "storageBlobDataContributorRoleID": "ba92f5b4-2d11-453d-a403-e96b0029c9fe",
             "defaultDataLakeStorageAccountUrl": "[format('https://{0}.dfs.{1}', parameters('defaultDataLakeStorageAccountName'), environment().suffixes.storage)]",
@@ -973,7 +1008,7 @@
               "properties": {
                 "defaultDataLakeStorage": {
                   "accountUrl": "[variables('defaultDataLakeStorageAccountUrl')]",
-                  "filesystem": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy')).outputs.name.value]"
+                  "filesystem": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy'), '2020-10-01').outputs.name.value]"
                 },
                 "managedVirtualNetwork": "[if(parameters('managedVirtualNetwork'), 'default', '')]",
                 "workspaceRepositoryConfiguration": "[parameters('workspaceRepositoryConfiguration')]"
@@ -981,6 +1016,15 @@
               "tags": "[parameters('tagValues')]",
               "dependsOn": [
                 "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy')]"
+              ]
+            },
+            {
+              "condition": "[parameters('allowAzureServices')]",
+              "type": "Microsoft.Synapse/workspaces/trustedServiceByPassConfiguration",
+              "apiVersion": "2021-06-01-preview",
+              "name": "[format('{0}/{1}', parameters('workspaceName'), 'default')]",
+              "dependsOn": [
+                "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
               ]
             },
             {
@@ -1066,8 +1110,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "16472321920316390226"
+                      "version": "0.15.31.15270",
+                      "templateHash": "9792412686398644502"
                     }
                   },
                   "parameters": {
@@ -1136,8 +1180,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "9832080006855761602"
+                      "version": "0.15.31.15270",
+                      "templateHash": "13334629218098616892"
                     }
                   },
                   "parameters": {
@@ -1206,8 +1250,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "14571549217707018219"
+                      "version": "0.15.31.15270",
+                      "templateHash": "8684345440871691591"
                     }
                   },
                   "parameters": {
@@ -1257,6 +1301,7 @@
                     }
                   },
                   "variables": {
+                    "uniqueSuffix": "[uniqueString(parameters('storageAccountName'), parameters('role'), parameters('assigneeObjectId'), parameters('principalType'), parameters('roleAssignmentId'))]",
                     "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
                     "generatedRoleAssignmentId": "[guid(variables('storageAccountId'), toLower(parameters('role')), parameters('assigneeObjectId'))]"
                   },
@@ -1267,18 +1312,18 @@
                       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
                       "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
                       "properties": {
-                        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
+                        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix'))), '2020-10-01').outputs.roleDefinitionIds.value[parameters('role')]]",
                         "principalId": "[parameters('assigneeObjectId')]",
                         "principalType": "[parameters('principalType')]"
                       },
                       "dependsOn": [
-                        "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+                        "[resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))]"
                       ]
                     },
                     {
                       "type": "Microsoft.Resources/deployments",
                       "apiVersion": "2020-10-01",
-                      "name": "roleDefinitions",
+                      "name": "[format('roleDefinitions-{0}', variables('uniqueSuffix'))]",
                       "properties": {
                         "expressionEvaluationOptions": {
                           "scope": "inner"
@@ -1290,8 +1335,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.11.1.770",
-                              "templateHash": "1905522308987319707"
+                              "version": "0.15.31.15270",
+                              "templateHash": "8888954108819693081"
                             }
                           },
                           "variables": {
@@ -1738,8 +1783,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "14571549217707018219"
+                      "version": "0.15.31.15270",
+                      "templateHash": "8684345440871691591"
                     }
                   },
                   "parameters": {
@@ -1789,6 +1834,7 @@
                     }
                   },
                   "variables": {
+                    "uniqueSuffix": "[uniqueString(parameters('storageAccountName'), parameters('role'), parameters('assigneeObjectId'), parameters('principalType'), parameters('roleAssignmentId'))]",
                     "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
                     "generatedRoleAssignmentId": "[guid(variables('storageAccountId'), toLower(parameters('role')), parameters('assigneeObjectId'))]"
                   },
@@ -1799,18 +1845,18 @@
                       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
                       "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
                       "properties": {
-                        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
+                        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix'))), '2020-10-01').outputs.roleDefinitionIds.value[parameters('role')]]",
                         "principalId": "[parameters('assigneeObjectId')]",
                         "principalType": "[parameters('principalType')]"
                       },
                       "dependsOn": [
-                        "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+                        "[resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))]"
                       ]
                     },
                     {
                       "type": "Microsoft.Resources/deployments",
                       "apiVersion": "2020-10-01",
-                      "name": "roleDefinitions",
+                      "name": "[format('roleDefinitions-{0}', variables('uniqueSuffix'))]",
                       "properties": {
                         "expressionEvaluationOptions": {
                           "scope": "inner"
@@ -1822,8 +1868,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.11.1.770",
-                              "templateHash": "1905522308987319707"
+                              "version": "0.15.31.15270",
+                              "templateHash": "8888954108819693081"
                             }
                           },
                           "variables": {
@@ -2267,8 +2313,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "14571549217707018219"
+                      "version": "0.15.31.15270",
+                      "templateHash": "8684345440871691591"
                     }
                   },
                   "parameters": {
@@ -2318,6 +2364,7 @@
                     }
                   },
                   "variables": {
+                    "uniqueSuffix": "[uniqueString(parameters('storageAccountName'), parameters('role'), parameters('assigneeObjectId'), parameters('principalType'), parameters('roleAssignmentId'))]",
                     "storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]",
                     "generatedRoleAssignmentId": "[guid(variables('storageAccountId'), toLower(parameters('role')), parameters('assigneeObjectId'))]"
                   },
@@ -2328,18 +2375,18 @@
                       "scope": "[format('Microsoft.Storage/storageAccounts/{0}', parameters('storageAccountName'))]",
                       "name": "[if(empty(parameters('roleAssignmentId')), variables('generatedRoleAssignmentId'), parameters('roleAssignmentId'))]",
                       "properties": {
-                        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', 'roleDefinitions')).outputs.roleDefinitionIds.value[parameters('role')]]",
+                        "roleDefinitionId": "[reference(resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix'))), '2020-10-01').outputs.roleDefinitionIds.value[parameters('role')]]",
                         "principalId": "[parameters('assigneeObjectId')]",
                         "principalType": "[parameters('principalType')]"
                       },
                       "dependsOn": [
-                        "[resourceId('Microsoft.Resources/deployments', 'roleDefinitions')]"
+                        "[resourceId('Microsoft.Resources/deployments', format('roleDefinitions-{0}', variables('uniqueSuffix')))]"
                       ]
                     },
                     {
                       "type": "Microsoft.Resources/deployments",
                       "apiVersion": "2020-10-01",
-                      "name": "roleDefinitions",
+                      "name": "[format('roleDefinitions-{0}', variables('uniqueSuffix'))]",
                       "properties": {
                         "expressionEvaluationOptions": {
                           "scope": "inner"
@@ -2351,8 +2398,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.11.1.770",
-                              "templateHash": "1905522308987319707"
+                              "version": "0.15.31.15270",
+                              "templateHash": "8888954108819693081"
                             }
                           },
                           "variables": {
@@ -2762,14 +2809,16 @@
               }
             },
             {
-              "condition": "[greater(length(parameters('enabledSynapsePrivateEndpointServices')), 0)]",
               "copy": {
                 "name": "private_endpoints",
                 "count": "[length(parameters('enabledSynapsePrivateEndpointServices'))]"
               },
+              "condition": "[greater(length(parameters('enabledSynapsePrivateEndpointServices')), 0)]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "[format('synapsePrivateEndpoints-{0}', parameters('enabledSynapsePrivateEndpointServices')[copyIndex()])]",
+              "subscriptionId": "[parameters('virtualNetworkSubscriptionId')]",
+              "resourceGroup": "[parameters('privateEndpointResourceGroupName')]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -2781,6 +2830,9 @@
                   },
                   "location": {
                     "value": "[parameters('location')]"
+                  },
+                  "virtualNetworkSubscriptionId": {
+                    "value": "[parameters('virtualNetworkSubscriptionId')]"
                   },
                   "virtualNetworkResourceGroup": {
                     "value": "[parameters('virtualNetworkResourceGroupName')]"
@@ -2810,8 +2862,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "9434438130031722347"
+                      "version": "0.15.31.15270",
+                      "templateHash": "10037941283393424683"
                     }
                   },
                   "parameters": {
@@ -3007,10 +3059,11 @@
               ]
             },
             {
-              "condition": "[contains(parameters('enabledSynapsePrivateEndpointServices'), 'sql')]",
+              "condition": "[and(parameters('enablePrivateEndpointsPrivateDns'), contains(parameters('enabledSynapsePrivateEndpointServices'), 'sql'))]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "sqlCNameDeploy",
+              "subscriptionId": "[parameters('virtualNetworkSubscriptionId')]",
               "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -3039,8 +3092,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "566614068718339305"
+                      "version": "0.15.31.15270",
+                      "templateHash": "5792046387144222354"
                     }
                   },
                   "parameters": {
@@ -3098,10 +3151,11 @@
               ]
             },
             {
-              "condition": "[contains(parameters('enabledSynapsePrivateEndpointServices'), 'sqlOnDemand')]",
+              "condition": "[and(parameters('enablePrivateEndpointsPrivateDns'), contains(parameters('enabledSynapsePrivateEndpointServices'), 'sqlOnDemand'))]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "sqlOnDemandCNameDeploy",
+              "subscriptionId": "[parameters('virtualNetworkSubscriptionId')]",
               "resourceGroup": "[parameters('virtualNetworkResourceGroupName')]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -3130,8 +3184,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.11.1.770",
-                      "templateHash": "566614068718339305"
+                      "version": "0.15.31.15270",
+                      "templateHash": "5792046387144222354"
                     }
                   },
                   "parameters": {

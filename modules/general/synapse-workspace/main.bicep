@@ -30,6 +30,9 @@ param tagValues object = {}
 @description('When true, a single firewall rule is configured on the workspace allowing all IP addresses')
 param allowAllConnections bool = false
 
+@description('When true, Azure Services will have access to the Synapse workspace even when \'allowAllConnections\' is false')
+param allowAzureServices bool = false
+
 @description('An array of objects defining firewall rules with the structure {name: "rule_name", startAddress: "a.b.c.d", endAddress: "w.x.y.z"}')
 param workspaceFirewallRules array = []
 
@@ -90,7 +93,15 @@ var allowAllFirewallRule = {
   startAddress: '0.0.0.0'
   endAddress: '255.255.255.255'
 }
-var firewallRules = allowAllConnections ? array(allowAllFirewallRule) : workspaceFirewallRules
+// NOTE: The documented 'trustedServiceBypassEnabled' property and child resource 'Microsoft.Synapse/workspaces/trustedServiceByPassConfiguration'
+//       does not work as intended, this is the workaround.
+// Ref: https://github.com/Azure/bicep/issues/8958
+var allowAzureServicesFirewallRule = {
+  name: 'AllowAllWindowsAzureIps'
+  startAddress: '0.0.0.0'
+  endAddress: '0.0.0.0'
+}
+var firewallRules = allowAllConnections ? array(allowAllFirewallRule) : concat(workspaceFirewallRules, (allowAzureServices ? array(allowAzureServicesFirewallRule) : []))
 var readerRoleId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
 var storageBlobDataContributorRoleID = 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'
 var defaultDataLakeStorageAccountUrl = 'https://${defaultDataLakeStorageAccountName}.dfs.${environment().suffixes.storage}'

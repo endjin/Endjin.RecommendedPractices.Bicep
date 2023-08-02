@@ -91,6 +91,7 @@ module synapse '../main.bicep' = {
         endAddress: '86.134.37.29'
       }
     ]
+    allowAzureServices: true
     grantWorkspaceIdentityControlForSql: true
     enabledSynapsePrivateEndpointServices: [
       'dev'

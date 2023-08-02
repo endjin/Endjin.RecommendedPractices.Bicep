@@ -26,6 +26,7 @@ Deploys an Azure Synapse workspace. The following features are also supported vi
 | `logAnalyticsWorkspaceId`                  | `string` | No       | When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs.                                    |
 | `tagValues`                                | `object` | No       | The resource tags applied to resources.                                                                                                                                                                         |
 | `allowAllConnections`                      | `bool`   | No       | When true, a single firewall rule is configured on the workspace allowing all IP addresses                                                                                                                      |
+| `allowAzureServices`                       | `bool`   | No       | When true, Azure Services will have access to the Synapse workspace even when 'allowAllConnections' is false                                                                                                    |
 | `workspaceFirewallRules`                   | `array`  | No       | An array of objects defining firewall rules with the structure {name: "rule_name", startAddress: "a.b.c.d", endAddress: "w.x.y.z"}                                                                              |
 | `managedVirtualNetwork`                    | `bool`   | No       | If true, will ensure that all compute for this workspace is in a virtual network managed on behalf of the user.                                                                                                 |
 | `virtualNetworkSubscriptionId`             | `string` | No       | SubscriptionId for existing virtual network to use when configuring private endpoints.                                                                                                                          |
@@ -79,6 +80,7 @@ module synapse 'br:<registry-fqdn>/bicep/general/synapse-workspace:<version>' = 
         endAddress: '1.2.3.4'
       }
     ]
+    allowAzureServices: true
     grantWorkspaceIdentityControlForSql: true
     workspaceRepositoryConfiguration: {
         accountName: 'MyADOAccount'
