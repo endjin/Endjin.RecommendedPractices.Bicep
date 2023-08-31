@@ -1,0 +1,123 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "12544218465128506969"
+    }
+  },
+  "parameters": {
+    "communicationServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Azure Communication Service resource."
+      }
+    },
+    "emailServiceName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the Email Communication Service resource."
+      }
+    },
+    "dataLocation": {
+      "type": "string",
+      "allowedValues": [
+        "Africa",
+        "Asia Pacific",
+        "Australia",
+        "Brazil",
+        "Canada",
+        "Europe",
+        "France",
+        "Germany",
+        "India",
+        "Japan",
+        "Korea",
+        "Norway",
+        "Switzerland",
+        "United Arab Emirates",
+        "UK",
+        "United States"
+      ],
+      "metadata": {
+        "description": "The location where the communication and email service stores its data at rest."
+      }
+    },
+    "senderUsername": {
+      "type": "string",
+      "defaultValue": "DoNotReply",
+      "metadata": {
+        "description": "The username for the sender email address. Defaults to \"DoNotReply\"."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Communication/emailServices/domains/senderUsernames",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[format('{0}/{1}/{2}', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername'))]",
+      "properties": {
+        "username": "[parameters('senderUsername')]",
+        "displayName": "[parameters('senderUsername')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Communication/emailServices/domains",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[format('{0}/{1}', parameters('emailServiceName'), 'AzureManagedDomain')]",
+      "location": "global",
+      "properties": {
+        "domainManagement": "AzureManaged",
+        "userEngagementTracking": "Disabled"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Communication/emailServices', parameters('emailServiceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Communication/communicationServices",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[parameters('communicationServiceName')]",
+      "location": "global",
+      "properties": {
+        "dataLocation": "[parameters('dataLocation')]",
+        "linkedDomains": [
+          "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Communication/emailServices",
+      "apiVersion": "2023-04-01-preview",
+      "name": "[parameters('emailServiceName')]",
+      "location": "global",
+      "properties": {
+        "dataLocation": "[parameters('dataLocation')]"
+      }
+    }
+  ],
+  "outputs": {
+    "domain": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain]",
+      "metadata": {
+        "description": "The Azure managed domain."
+      }
+    },
+    "sendFromEmailAddress": {
+      "type": "string",
+      "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]",
+      "metadata": {
+        "description": "The send-from email address for the Azure managed domain."
+      }
+    }
+  }
+}
