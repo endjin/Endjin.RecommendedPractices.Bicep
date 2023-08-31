@@ -25,6 +25,8 @@ param emailServiceName string
 ])
 param dataLocation string
 
+@description('The username for the sender email address. Defaults to "DoNotReply".')
+param senderUsername string = 'DoNotReply'
 
 resource communication_service 'Microsoft.Communication/communicationServices@2023-04-01-preview' = {
   name: communicationServiceName
@@ -53,10 +55,10 @@ resource email_service 'Microsoft.Communication/emailServices@2023-04-01-preview
     }
 
     resource sender_username_azure_managed_domain 'senderUsernames@2023-04-01-preview' = {
-      name: 'DoNotReply'
+      name: senderUsername
       properties: {
-        username: 'DoNotReply'
-        displayName: 'DoNotReply'
+        username: senderUsername
+        displayName: senderUsername
       }
     }
   }
@@ -65,5 +67,5 @@ resource email_service 'Microsoft.Communication/emailServices@2023-04-01-preview
 @description('The Azure managed domain.')
 output domain string = email_service::azure_managed_domain.properties.mailFromSenderDomain
 
-@description('The "DoNotReply" email address for the Azure managed domain.')
-output doNotReplyEmailAddress string = '${email_service::azure_managed_domain::sender_username_azure_managed_domain.properties.username}@${email_service::azure_managed_domain.properties.mailFromSenderDomain}'
+@description('The send-from email address for the Azure managed domain.')
+output sendFromEmailAddress string = '${email_service::azure_managed_domain::sender_username_azure_managed_domain.properties.username}@${email_service::azure_managed_domain.properties.mailFromSenderDomain}'

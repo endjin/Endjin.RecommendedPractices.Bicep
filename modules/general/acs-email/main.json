@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "16261129840782263991"
+      "templateHash": "12544218465128506969"
     }
   },
   "parameters": {
@@ -44,16 +44,23 @@
       "metadata": {
         "description": "The location where the communication and email service stores its data at rest."
       }
+    },
+    "senderUsername": {
+      "type": "string",
+      "defaultValue": "DoNotReply",
+      "metadata": {
+        "description": "The username for the sender email address. Defaults to \"DoNotReply\"."
+      }
     }
   },
   "resources": [
     {
       "type": "Microsoft.Communication/emailServices/domains/senderUsernames",
       "apiVersion": "2023-04-01-preview",
-      "name": "[format('{0}/{1}/{2}', parameters('emailServiceName'), 'AzureManagedDomain', 'DoNotReply')]",
+      "name": "[format('{0}/{1}/{2}', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername'))]",
       "properties": {
-        "username": "DoNotReply",
-        "displayName": "DoNotReply"
+        "username": "[parameters('senderUsername')]",
+        "displayName": "[parameters('senderUsername')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
@@ -105,11 +112,11 @@
         "description": "The Azure managed domain."
       }
     },
-    "doNotReplyEmailAddress": {
+    "sendFromEmailAddress": {
       "type": "string",
-      "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', 'DoNotReply'), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]",
+      "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]",
       "metadata": {
-        "description": "The \"DoNotReply\" email address for the Azure managed domain."
+        "description": "The send-from email address for the Azure managed domain."
       }
     }
   }
