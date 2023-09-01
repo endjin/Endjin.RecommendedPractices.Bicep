@@ -49,9 +49,6 @@ module set_secrets './set-secrets.bicep' = {
     domain: acs_email.outputs.domain
     sendFromEmailAddress: acs_email.outputs.sendFromEmailAddress
   }
-  dependsOn: [
-    acs_email
-  ]
 }
 
 @description('The Azure managed domain.')
