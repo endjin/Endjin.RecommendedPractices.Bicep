@@ -28,7 +28,7 @@ param dataLocation string
 @description('The username for the sender email address. Defaults to "DoNotReply".')
 param senderUsername string = 'DoNotReply'
 
-@description('The name of the key vault where the communication service key and connection string will be published')
+@description('The name of the key vault where the configuration will be published')
 param keyVaultName string
 
 module acs_email '../acs-email/main.bicep' = {

@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "11118280592566014093"
+      "templateHash": "15590762678673895215"
     }
   },
   "parameters": {
@@ -55,7 +55,7 @@
     "keyVaultName": {
       "type": "string",
       "metadata": {
-        "description": "The name of the key vault where the communication service key and connection string will be published"
+        "description": "The name of the key vault where the configuration will be published"
       }
     }
   },
