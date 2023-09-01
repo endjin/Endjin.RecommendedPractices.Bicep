@@ -27,15 +27,16 @@ The ACS key, ACS connection string, the email domain, and the send-from email ad
 
 ## Examples
 
-### Deploy ACS email service with data storage in the UK
+### Deploy ACS email service with data storage in the UK and publish config to Key Vault
 
 ```bicep
-module acs_email 'br:<registry-fqdn>/bicep/general/acs-email:<version>' = {
+module acs_email_with_config_publish 'br:<registry-fqdn>/bicep/general/acs-email-with-config-publish:<version>' = {
   name: 'acsEmailDeploy'
   params: {
     communicationServiceName: 'myacsservice'
     emailServiceName: 'myacsemailservice'
     dataLocation: 'UK'
+    keyVaultName: 'mykeyvault'
   }
 }
 ```
