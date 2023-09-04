@@ -1,0 +1,719 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "9530892832683290607"
+    }
+  },
+  "parameters": {
+    "suffix": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-11-01-preview",
+      "name": "[format('kv{0}', parameters('suffix'))]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        },
+        "tenantId": "[tenant().tenantId]",
+        "accessPolicies": []
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "acsEmailWithConfigPublishDeploy",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "communicationServiceName": {
+            "value": "[format('acs-{0}', parameters('suffix'))]"
+          },
+          "emailServiceName": {
+            "value": "[format('acs-email-{0}', parameters('suffix'))]"
+          },
+          "dataLocation": {
+            "value": "Switzerland"
+          },
+          "senderUsername": {
+            "value": "FooBar"
+          },
+          "keyVaultName": {
+            "value": "[format('kv{0}', parameters('suffix'))]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.15.31.15270",
+              "templateHash": "11118280592566014093"
+            }
+          },
+          "parameters": {
+            "communicationServiceName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the Azure Communication Service resource."
+              }
+            },
+            "emailServiceName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the Email Communication Service resource."
+              }
+            },
+            "dataLocation": {
+              "type": "string",
+              "allowedValues": [
+                "Africa",
+                "Asia Pacific",
+                "Australia",
+                "Brazil",
+                "Canada",
+                "Europe",
+                "France",
+                "Germany",
+                "India",
+                "Japan",
+                "Korea",
+                "Norway",
+                "Switzerland",
+                "United Arab Emirates",
+                "UK",
+                "United States"
+              ],
+              "metadata": {
+                "description": "The location where the communication and email service stores its data at rest."
+              }
+            },
+            "senderUsername": {
+              "type": "string",
+              "defaultValue": "DoNotReply",
+              "metadata": {
+                "description": "The username for the sender email address. Defaults to \"DoNotReply\"."
+              }
+            },
+            "keyVaultName": {
+              "type": "string",
+              "metadata": {
+                "description": "The name of the key vault where the communication service key and connection string will be published"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "AcsEmailDeploy",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "communicationServiceName": {
+                    "value": "[parameters('communicationServiceName')]"
+                  },
+                  "dataLocation": {
+                    "value": "[parameters('dataLocation')]"
+                  },
+                  "emailServiceName": {
+                    "value": "[parameters('emailServiceName')]"
+                  },
+                  "senderUsername": {
+                    "value": "[parameters('senderUsername')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.15.31.15270",
+                      "templateHash": "12544218465128506969"
+                    }
+                  },
+                  "parameters": {
+                    "communicationServiceName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the Azure Communication Service resource."
+                      }
+                    },
+                    "emailServiceName": {
+                      "type": "string",
+                      "metadata": {
+                        "description": "The name of the Email Communication Service resource."
+                      }
+                    },
+                    "dataLocation": {
+                      "type": "string",
+                      "allowedValues": [
+                        "Africa",
+                        "Asia Pacific",
+                        "Australia",
+                        "Brazil",
+                        "Canada",
+                        "Europe",
+                        "France",
+                        "Germany",
+                        "India",
+                        "Japan",
+                        "Korea",
+                        "Norway",
+                        "Switzerland",
+                        "United Arab Emirates",
+                        "UK",
+                        "United States"
+                      ],
+                      "metadata": {
+                        "description": "The location where the communication and email service stores its data at rest."
+                      }
+                    },
+                    "senderUsername": {
+                      "type": "string",
+                      "defaultValue": "DoNotReply",
+                      "metadata": {
+                        "description": "The username for the sender email address. Defaults to \"DoNotReply\"."
+                      }
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Communication/emailServices/domains/senderUsernames",
+                      "apiVersion": "2023-04-01-preview",
+                      "name": "[format('{0}/{1}/{2}', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername'))]",
+                      "properties": {
+                        "username": "[parameters('senderUsername')]",
+                        "displayName": "[parameters('senderUsername')]"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Communication/emailServices/domains",
+                      "apiVersion": "2023-04-01-preview",
+                      "name": "[format('{0}/{1}', parameters('emailServiceName'), 'AzureManagedDomain')]",
+                      "location": "global",
+                      "properties": {
+                        "domainManagement": "AzureManaged",
+                        "userEngagementTracking": "Disabled"
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Communication/emailServices', parameters('emailServiceName'))]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Communication/communicationServices",
+                      "apiVersion": "2023-04-01-preview",
+                      "name": "[parameters('communicationServiceName')]",
+                      "location": "global",
+                      "properties": {
+                        "dataLocation": "[parameters('dataLocation')]",
+                        "linkedDomains": [
+                          "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
+                        ]
+                      },
+                      "dependsOn": [
+                        "[resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain')]"
+                      ]
+                    },
+                    {
+                      "type": "Microsoft.Communication/emailServices",
+                      "apiVersion": "2023-04-01-preview",
+                      "name": "[parameters('emailServiceName')]",
+                      "location": "global",
+                      "properties": {
+                        "dataLocation": "[parameters('dataLocation')]"
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "domain": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain]",
+                      "metadata": {
+                        "description": "The Azure managed domain."
+                      }
+                    },
+                    "sendFromEmailAddress": {
+                      "type": "string",
+                      "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]",
+                      "metadata": {
+                        "description": "The send-from email address for the Azure managed domain."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2020-10-01",
+              "name": "acsEmailSetSecretsDeploy",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "keyVaultName": {
+                    "value": "[parameters('keyVaultName')]"
+                  },
+                  "communicationServiceName": {
+                    "value": "[parameters('communicationServiceName')]"
+                  },
+                  "domain": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.domain.value]"
+                  },
+                  "sendFromEmailAddress": {
+                    "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.sendFromEmailAddress.value]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.15.31.15270",
+                      "templateHash": "13841039646157215711"
+                    }
+                  },
+                  "parameters": {
+                    "keyVaultName": {
+                      "type": "string"
+                    },
+                    "communicationServiceName": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    },
+                    "sendFromEmailAddress": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "communicationServiceKeySecretDeploy",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "keyVaultName": {
+                            "value": "[parameters('keyVaultName')]"
+                          },
+                          "secretName": {
+                            "value": "CommunicationServiceKey"
+                          },
+                          "contentValue": {
+                            "value": "[listKeys(resourceId('Microsoft.Communication/communicationServices', parameters('communicationServiceName')), '2023-04-01-preview').primaryKey]"
+                          },
+                          "contentType": {
+                            "value": "text/plain"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.15.31.15270",
+                              "templateHash": "16729986519206477407"
+                            }
+                          },
+                          "parameters": {
+                            "secretName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Enter the secret name."
+                              }
+                            },
+                            "contentType": {
+                              "type": "string",
+                              "defaultValue": "text/plain",
+                              "metadata": {
+                                "description": "Type of the secret"
+                              }
+                            },
+                            "contentValue": {
+                              "type": "securestring",
+                              "defaultValue": "",
+                              "metadata": {
+                                "description": "Value of the secret"
+                              }
+                            },
+                            "keyVaultName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Name of the vault"
+                              }
+                            },
+                            "useExisting": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, a pre-existing secret will be returned"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "condition": "[not(parameters('useExisting'))]",
+                              "type": "Microsoft.KeyVault/vaults/secrets",
+                              "apiVersion": "2021-06-01-preview",
+                              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                              "properties": {
+                                "contentType": "[parameters('contentType')]",
+                                "value": "[parameters('contentValue')]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "secretUriWithVersion": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                              "metadata": {
+                                "description": "The key vault URI linking to the new/updated secret"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "communicationServiceConnectionStringSecretDeploy",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "keyVaultName": {
+                            "value": "[parameters('keyVaultName')]"
+                          },
+                          "secretName": {
+                            "value": "CommunicationServiceConnectionString"
+                          },
+                          "contentValue": {
+                            "value": "[listKeys(resourceId('Microsoft.Communication/communicationServices', parameters('communicationServiceName')), '2023-04-01-preview').primaryConnectionString]"
+                          },
+                          "contentType": {
+                            "value": "text/plain"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.15.31.15270",
+                              "templateHash": "16729986519206477407"
+                            }
+                          },
+                          "parameters": {
+                            "secretName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Enter the secret name."
+                              }
+                            },
+                            "contentType": {
+                              "type": "string",
+                              "defaultValue": "text/plain",
+                              "metadata": {
+                                "description": "Type of the secret"
+                              }
+                            },
+                            "contentValue": {
+                              "type": "securestring",
+                              "defaultValue": "",
+                              "metadata": {
+                                "description": "Value of the secret"
+                              }
+                            },
+                            "keyVaultName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Name of the vault"
+                              }
+                            },
+                            "useExisting": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, a pre-existing secret will be returned"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "condition": "[not(parameters('useExisting'))]",
+                              "type": "Microsoft.KeyVault/vaults/secrets",
+                              "apiVersion": "2021-06-01-preview",
+                              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                              "properties": {
+                                "contentType": "[parameters('contentType')]",
+                                "value": "[parameters('contentValue')]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "secretUriWithVersion": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                              "metadata": {
+                                "description": "The key vault URI linking to the new/updated secret"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "emailServiceDomainSecretDeploy",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "keyVaultName": {
+                            "value": "[parameters('keyVaultName')]"
+                          },
+                          "secretName": {
+                            "value": "EmailServiceDomain"
+                          },
+                          "contentValue": {
+                            "value": "[parameters('domain')]"
+                          },
+                          "contentType": {
+                            "value": "text/plain"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.15.31.15270",
+                              "templateHash": "16729986519206477407"
+                            }
+                          },
+                          "parameters": {
+                            "secretName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Enter the secret name."
+                              }
+                            },
+                            "contentType": {
+                              "type": "string",
+                              "defaultValue": "text/plain",
+                              "metadata": {
+                                "description": "Type of the secret"
+                              }
+                            },
+                            "contentValue": {
+                              "type": "securestring",
+                              "defaultValue": "",
+                              "metadata": {
+                                "description": "Value of the secret"
+                              }
+                            },
+                            "keyVaultName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Name of the vault"
+                              }
+                            },
+                            "useExisting": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, a pre-existing secret will be returned"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "condition": "[not(parameters('useExisting'))]",
+                              "type": "Microsoft.KeyVault/vaults/secrets",
+                              "apiVersion": "2021-06-01-preview",
+                              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                              "properties": {
+                                "contentType": "[parameters('contentType')]",
+                                "value": "[parameters('contentValue')]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "secretUriWithVersion": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                              "metadata": {
+                                "description": "The key vault URI linking to the new/updated secret"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "Microsoft.Resources/deployments",
+                      "apiVersion": "2020-10-01",
+                      "name": "emailServiceSendFromEmailAddressSecretDeploy",
+                      "properties": {
+                        "expressionEvaluationOptions": {
+                          "scope": "inner"
+                        },
+                        "mode": "Incremental",
+                        "parameters": {
+                          "keyVaultName": {
+                            "value": "[parameters('keyVaultName')]"
+                          },
+                          "secretName": {
+                            "value": "EmailServiceSendFromEmailAddress"
+                          },
+                          "contentValue": {
+                            "value": "[parameters('sendFromEmailAddress')]"
+                          },
+                          "contentType": {
+                            "value": "text/plain"
+                          }
+                        },
+                        "template": {
+                          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "metadata": {
+                            "_generator": {
+                              "name": "bicep",
+                              "version": "0.15.31.15270",
+                              "templateHash": "16729986519206477407"
+                            }
+                          },
+                          "parameters": {
+                            "secretName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Enter the secret name."
+                              }
+                            },
+                            "contentType": {
+                              "type": "string",
+                              "defaultValue": "text/plain",
+                              "metadata": {
+                                "description": "Type of the secret"
+                              }
+                            },
+                            "contentValue": {
+                              "type": "securestring",
+                              "defaultValue": "",
+                              "metadata": {
+                                "description": "Value of the secret"
+                              }
+                            },
+                            "keyVaultName": {
+                              "type": "string",
+                              "metadata": {
+                                "description": "Name of the vault"
+                              }
+                            },
+                            "useExisting": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, a pre-existing secret will be returned"
+                              }
+                            }
+                          },
+                          "resources": [
+                            {
+                              "condition": "[not(parameters('useExisting'))]",
+                              "type": "Microsoft.KeyVault/vaults/secrets",
+                              "apiVersion": "2021-06-01-preview",
+                              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('secretName'))]",
+                              "properties": {
+                                "contentType": "[parameters('contentType')]",
+                                "value": "[parameters('contentValue')]"
+                              }
+                            }
+                          ],
+                          "outputs": {
+                            "secretUriWithVersion": {
+                              "type": "string",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
+                              "metadata": {
+                                "description": "The key vault URI linking to the new/updated secret"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy')]"
+              ]
+            }
+          ],
+          "outputs": {
+            "domain": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.domain.value]",
+              "metadata": {
+                "description": "The Azure managed domain."
+              }
+            },
+            "sendFromEmailAddress": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.sendFromEmailAddress.value]",
+              "metadata": {
+                "description": "The send-from email address for the Azure managed domain."
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', format('kv{0}', parameters('suffix')))]"
+      ]
+    }
+  ]
+}
