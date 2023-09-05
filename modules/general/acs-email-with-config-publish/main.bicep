@@ -32,7 +32,10 @@ param senderUsername string = 'DoNotReply'
 param keyVaultName string
 
 @description('The resource group of the key vault where the configuration will be published')
-param keyVaultResourceGroup string = resourceGroup().name
+param keyVaultResourceGroupName string = resourceGroup().name
+
+@description('The subscription of the key vault where the configuration will be published')
+param keyVaultSubscriptionId string = subscription().subscriptionId
 
 module acs_email '../acs-email/main.bicep' = {
   name: 'AcsEmailDeploy'
@@ -46,7 +49,7 @@ module acs_email '../acs-email/main.bicep' = {
 
 module set_secrets './set-secrets.bicep' = {
   name: 'acsEmailSetSecretsDeploy'
-  scope: resourceGroup(keyVaultResourceGroup)
+  scope: resourceGroup(keyVaultSubscriptionId, keyVaultResourceGroupName)
   params: {
     keyVaultName: keyVaultName
     communicationServiceName: communicationServiceName
