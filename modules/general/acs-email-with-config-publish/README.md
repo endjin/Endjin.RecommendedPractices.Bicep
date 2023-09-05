@@ -17,6 +17,7 @@ The ACS key, ACS connection string, the email domain, and the send-from email ad
 | `dataLocation`             | `string` | Yes      | The location where the communication and email service stores its data at rest. |
 | `senderUsername`           | `string` | No       | The username for the sender email address. Defaults to "DoNotReply".            |
 | `keyVaultName`             | `string` | Yes      | The name of the key vault where the configuration will be published             |
+| `keyVaultResourceGroup`    | `string` | No       | The resource group of the key vault where the configuration will be published   |
 
 ## Outputs
 

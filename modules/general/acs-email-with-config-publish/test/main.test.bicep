@@ -22,5 +22,6 @@ module acs_email_with_config_publish '../main.bicep' = {
     dataLocation: 'Switzerland'
     senderUsername: 'FooBar'
     keyVaultName: key_vault.name
+    keyVaultResourceGroup: resourceGroup().name
   }
 }

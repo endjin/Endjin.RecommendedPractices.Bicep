@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "15590762678673895215"
+      "templateHash": "3718966479303664471"
     }
   },
   "parameters": {
@@ -56,6 +56,13 @@
       "type": "string",
       "metadata": {
         "description": "The name of the key vault where the configuration will be published"
+      }
+    },
+    "keyVaultResourceGroup": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "The resource group of the key vault where the configuration will be published"
       }
     }
   },
@@ -212,6 +219,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "acsEmailSetSecretsDeploy",
+      "resourceGroup": "[parameters('keyVaultResourceGroup')]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
