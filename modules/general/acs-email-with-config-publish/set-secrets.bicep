@@ -2,8 +2,11 @@ param keyVaultName string
 param communicationServiceName string
 param domain string
 param sendFromEmailAddress string
+param communicationServiceResourceGroupName string
+param communicationServiceSubscriptionId string
 
 resource communication_service 'Microsoft.Communication/communicationServices@2023-04-01-preview' existing = {
+  scope: resourceGroup(communicationServiceSubscriptionId, communicationServiceResourceGroupName)
   name: communicationServiceName
 }
 

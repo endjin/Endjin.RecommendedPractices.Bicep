@@ -55,6 +55,8 @@ module set_secrets './set-secrets.bicep' = {
     communicationServiceName: communicationServiceName
     domain: acs_email.outputs.domain
     sendFromEmailAddress: acs_email.outputs.sendFromEmailAddress
+    communicationServiceResourceGroupName: resourceGroup().name
+    communicationServiceSubscriptionId: subscription().subscriptionId
   }
 }
 
