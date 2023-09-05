@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "1001923526117672616"
+      "templateHash": "10440218840162817015"
     }
   },
   "parameters": {
@@ -58,7 +58,7 @@
           "keyVaultName": {
             "value": "[format('kv{0}', parameters('suffix'))]"
           },
-          "keyVaultResourceGroup": {
+          "keyVaultResourceGroupName": {
             "value": "[resourceGroup().name]"
           }
         },
@@ -69,7 +69,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "3718966479303664471"
+              "templateHash": "5308871892065237437"
             }
           },
           "parameters": {
@@ -122,11 +122,18 @@
                 "description": "The name of the key vault where the configuration will be published"
               }
             },
-            "keyVaultResourceGroup": {
+            "keyVaultResourceGroupName": {
               "type": "string",
               "defaultValue": "[resourceGroup().name]",
               "metadata": {
                 "description": "The resource group of the key vault where the configuration will be published"
+              }
+            },
+            "keyVaultSubscriptionId": {
+              "type": "string",
+              "defaultValue": "[subscription().subscriptionId]",
+              "metadata": {
+                "description": "The subscription of the key vault where the configuration will be published"
               }
             }
           },
@@ -283,7 +290,8 @@
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
               "name": "acsEmailSetSecretsDeploy",
-              "resourceGroup": "[parameters('keyVaultResourceGroup')]",
+              "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
+              "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
