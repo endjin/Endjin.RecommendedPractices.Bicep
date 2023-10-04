@@ -1,0 +1,6 @@
+{
+  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
+  "name": "Azure Metric Alert",
+  "summary": "Deploys an alert based on an Azure Monitor or AppInsights metric",
+  "owner": "endjin"
+}

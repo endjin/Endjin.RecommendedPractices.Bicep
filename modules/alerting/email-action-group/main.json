@@ -1,0 +1,97 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "4215599251728897843"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the action group"
+      }
+    },
+    "shortName": {
+      "type": "string",
+      "metadata": {
+        "description": "The short name of the action group"
+      }
+    },
+    "enabled": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "When true, the action group is enabled and will send notifications"
+      }
+    },
+    "notifyEmailAddresses": {
+      "type": "array",
+      "metadata": {
+        "description": "The email addresses to notify"
+      }
+    }
+  },
+  "variables": {
+    "copy": [
+      {
+        "name": "emailReceivers",
+        "count": "[length(parameters('notifyEmailAddresses'))]",
+        "input": {
+          "name": "[format('{0}-email', parameters('shortName'))]",
+          "emailAddress": "[parameters('notifyEmailAddresses')[copyIndex('emailReceivers')]]",
+          "useCommonAlertSchema": false
+        }
+      }
+    ]
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/actionGroups",
+      "apiVersion": "2022-06-01",
+      "name": "[parameters('name')]",
+      "location": "global",
+      "properties": {
+        "enabled": "[parameters('enabled')]",
+        "groupShortName": "[parameters('shortName')]",
+        "emailReceivers": "[variables('emailReceivers')]",
+        "smsReceivers": [],
+        "webhookReceivers": [],
+        "eventHubReceivers": [],
+        "itsmReceivers": [],
+        "azureAppPushReceivers": [],
+        "automationRunbookReceivers": [],
+        "voiceReceivers": [],
+        "logicAppReceivers": [],
+        "azureFunctionReceivers": [],
+        "armRoleReceivers": []
+      }
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Insights/actionGroups', parameters('name'))]",
+      "metadata": {
+        "description": "The resource ID of the action group"
+      }
+    },
+    "name": {
+      "type": "string",
+      "value": "[parameters('name')]",
+      "metadata": {
+        "description": "The name of the action group"
+      }
+    },
+    "resource": {
+      "type": "object",
+      "value": "[reference(resourceId('Microsoft.Insights/actionGroups', parameters('name')), '2022-06-01', 'full')]",
+      "metadata": {
+        "description": "An object representing the action group resource"
+      }
+    }
+  }
+}
