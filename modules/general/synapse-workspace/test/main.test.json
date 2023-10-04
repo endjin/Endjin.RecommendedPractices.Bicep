@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "15369071813015895908"
+      "templateHash": "410226495846329006"
     }
   },
   "parameters": {
@@ -471,7 +471,7 @@
           "dailyQuotaGb": {
             "value": 1
           },
-          "enableLogAccessUsingOnlyResourcePermisions": {
+          "enableLogAccessUsingOnlyResourcePermissions": {
             "value": false
           },
           "name": {
@@ -494,7 +494,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "15713671226951049904"
+              "templateHash": "9781072933712379631"
             }
           },
           "parameters": {
@@ -524,7 +524,7 @@
                 "description": "The daily ingestion quota (in GB) of the log analytics workspace - use \"-1\" for no limit"
               }
             },
-            "enableLogAccessUsingOnlyResourcePermisions": {
+            "enableLogAccessUsingOnlyResourcePermissions": {
               "type": "bool",
               "metadata": {
                 "description": "When true, the log analytics workspace will only be accessible by using resource permissions"
@@ -577,7 +577,7 @@
                   "name": "[parameters('skuName')]"
                 },
                 "features": {
-                  "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermisions')]"
+                  "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermissions')]"
                 },
                 "workspaceCapping": {
                   "dailyQuotaGb": "[parameters('dailyQuotaGb')]"
@@ -787,7 +787,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "2096661161579829522"
+              "templateHash": "15731726474855226216"
             }
           },
           "parameters": {
@@ -1016,15 +1016,6 @@
               "tags": "[parameters('tagValues')]",
               "dependsOn": [
                 "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy')]"
-              ]
-            },
-            {
-              "condition": "[parameters('allowAzureServices')]",
-              "type": "Microsoft.Synapse/workspaces/trustedServiceByPassConfiguration",
-              "apiVersion": "2021-06-01-preview",
-              "name": "[format('{0}/{1}', parameters('workspaceName'), 'default')]",
-              "dependsOn": [
-                "[resourceId('Microsoft.Synapse/workspaces', parameters('workspaceName'))]"
               ]
             },
             {
