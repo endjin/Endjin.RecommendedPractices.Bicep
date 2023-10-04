@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "15713671226951049904"
+      "templateHash": "9781072933712379631"
     }
   },
   "parameters": {
@@ -35,7 +35,7 @@
         "description": "The daily ingestion quota (in GB) of the log analytics workspace - use \"-1\" for no limit"
       }
     },
-    "enableLogAccessUsingOnlyResourcePermisions": {
+    "enableLogAccessUsingOnlyResourcePermissions": {
       "type": "bool",
       "metadata": {
         "description": "When true, the log analytics workspace will only be accessible by using resource permissions"
@@ -88,7 +88,7 @@
           "name": "[parameters('skuName')]"
         },
         "features": {
-          "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermisions')]"
+          "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermissions')]"
         },
         "workspaceCapping": {
           "dailyQuotaGb": "[parameters('dailyQuotaGb')]"

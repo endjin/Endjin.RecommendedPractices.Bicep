@@ -4,14 +4,14 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.8.9.13224",
-      "templateHash": "16991501462604597430"
+      "version": "0.15.31.15270",
+      "templateHash": "17584360224994820929"
     }
   },
   "parameters": {
-    "name": {
+    "prefix": {
       "type": "string",
-      "defaultValue": "logAnalyticsResourceName"
+      "defaultValue": "[uniqueString(resourceGroup().id)]"
     },
     "location": {
       "type": "string",
@@ -19,13 +19,13 @@
     },
     "skuName": {
       "type": "string",
-      "defaultValue": "skuName"
+      "defaultValue": "Standard"
     },
     "dailyQuotaGb": {
       "type": "int",
       "defaultValue": 2
     },
-    "enableLogAccessUsingOnlyResourcePermisions": {
+    "enableLogAccessUsingOnlyResourcePermissions": {
       "type": "bool",
       "defaultValue": true
     },
@@ -50,7 +50,7 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "[parameters('name')]"
+            "value": "[format('{0}la', parameters('prefix'))]"
           },
           "location": {
             "value": "[parameters('location')]"
@@ -61,8 +61,8 @@
           "dailyQuotaGb": {
             "value": "[parameters('dailyQuotaGb')]"
           },
-          "enableLogAccessUsingOnlyResourcePermisions": {
-            "value": "[parameters('enableLogAccessUsingOnlyResourcePermisions')]"
+          "enableLogAccessUsingOnlyResourcePermissions": {
+            "value": "[parameters('enableLogAccessUsingOnlyResourcePermissions')]"
           },
           "publicNetworkAccessForIngestion": {
             "value": "[parameters('publicNetworkAccessForIngestion')]"
@@ -77,8 +77,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.8.9.13224",
-              "templateHash": "4659859060864874271"
+              "version": "0.15.31.15270",
+              "templateHash": "9781072933712379631"
             }
           },
           "parameters": {
@@ -90,12 +90,14 @@
             },
             "location": {
               "type": "string",
+              "defaultValue": "[resourceGroup().location]",
               "metadata": {
                 "description": "The location of the log analytics workspace"
               }
             },
             "skuName": {
               "type": "string",
+              "defaultValue": "Standard",
               "metadata": {
                 "description": "The SKU of the log analytics workspace"
               }
@@ -106,7 +108,7 @@
                 "description": "The daily ingestion quota (in GB) of the log analytics workspace - use \"-1\" for no limit"
               }
             },
-            "enableLogAccessUsingOnlyResourcePermisions": {
+            "enableLogAccessUsingOnlyResourcePermissions": {
               "type": "bool",
               "metadata": {
                 "description": "When true, the log analytics workspace will only be accessible by using resource permissions"
@@ -149,6 +151,7 @@
           },
           "resources": [
             {
+              "condition": "[not(parameters('useExisting'))]",
               "type": "Microsoft.OperationalInsights/workspaces",
               "apiVersion": "2020-10-01",
               "name": "[parameters('name')]",
@@ -158,7 +161,7 @@
                   "name": "[parameters('skuName')]"
                 },
                 "features": {
-                  "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermisions')]"
+                  "enableLogAccessUsingOnlyResourcePermissions": "[parameters('enableLogAccessUsingOnlyResourcePermissions')]"
                 },
                 "workspaceCapping": {
                   "dailyQuotaGb": "[parameters('dailyQuotaGb')]"
