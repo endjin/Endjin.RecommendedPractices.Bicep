@@ -4,7 +4,7 @@ Deploys an alert based on an Azure Monitor or AppInsights metric
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Provides a simplified wrapper around the `Microsoft.Insights/metricAlerts` resource used to configure alerts based on Azure Monitor metrics exposed by a given resource, or using metrics available via an Application Insights workspace.
 
 ## Parameters
 

@@ -4,7 +4,7 @@ Azure Action Group for sending email notifications
 
 ## Description
 
-{{ Add detailed description for the module. }}
+Deploys an Azure Action Group that can be used to send alerts to one or more e-mail addresses.
 
 ## Parameters
 
