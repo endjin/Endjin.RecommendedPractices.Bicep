@@ -16,11 +16,11 @@ param evaluationWindowSizeMinutes int = evaluationFrequencyMinutes
 
 
 var severityLookup = {
-  critical: 0
-  error: 1
-  warning: 2
-  informational: 3
-  verbose: 4
+  Critical: 0
+  Error: 1
+  Warning: 2
+  Informational: 3
+  Verbose: 4
 }
 
 @description('The numeric representation of the specified severity level')
