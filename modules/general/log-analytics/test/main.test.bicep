@@ -2,7 +2,7 @@ param prefix string = uniqueString(resourceGroup().id)
 param location string = resourceGroup().location
 param skuName string = 'Standard'
 param dailyQuotaGb int = 2
-param enableLogAccessUsingOnlyResourcePermisions bool = true
+param enableLogAccessUsingOnlyResourcePermissions bool = true
 param publicNetworkAccessForIngestion string = 'Enabled'
 param publicNetworkAccessForQuery string = 'Enabled'
 
@@ -13,7 +13,7 @@ module loganalytics '../main.bicep' = {
     location: location
     skuName: skuName
     dailyQuotaGb: dailyQuotaGb
-    enableLogAccessUsingOnlyResourcePermisions: enableLogAccessUsingOnlyResourcePermisions
+    enableLogAccessUsingOnlyResourcePermissions: enableLogAccessUsingOnlyResourcePermissions
     publicNetworkAccessForIngestion: publicNetworkAccessForIngestion
     publicNetworkAccessForQuery: publicNetworkAccessForQuery
   }

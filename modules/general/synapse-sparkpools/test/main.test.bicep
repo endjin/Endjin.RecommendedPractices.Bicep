@@ -15,7 +15,7 @@ module log_analytics '../../log-analytics/main.bicep' = {
   params: {
     location: location
     dailyQuotaGb: 1
-    enableLogAccessUsingOnlyResourcePermisions: false
+    enableLogAccessUsingOnlyResourcePermissions: false
     name: 'la${suffix}'
     publicNetworkAccessForIngestion: 'Enabled'
     publicNetworkAccessForQuery: 'Enabled'

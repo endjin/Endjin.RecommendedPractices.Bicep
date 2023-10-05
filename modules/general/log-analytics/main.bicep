@@ -7,7 +7,7 @@ param skuName string = 'Standard'
 @description('The daily ingestion quota (in GB) of the log analytics workspace - use "-1" for no limit')
 param dailyQuotaGb int
 @description('When true, the log analytics workspace will only be accessible by using resource permissions')
-param enableLogAccessUsingOnlyResourcePermisions bool
+param enableLogAccessUsingOnlyResourcePermissions bool
 @description('Indicates whether the public network access for ingestion is enabled or disabled')
 @allowed([
   'Enabled'
@@ -40,7 +40,7 @@ resource log_analytics_workspace 'Microsoft.OperationalInsights/workspaces@2020-
       name: skuName
     }
     features: {
-      enableLogAccessUsingOnlyResourcePermissions: enableLogAccessUsingOnlyResourcePermisions
+      enableLogAccessUsingOnlyResourcePermissions: enableLogAccessUsingOnlyResourcePermissions
     }
     workspaceCapping: {
       dailyQuotaGb: dailyQuotaGb

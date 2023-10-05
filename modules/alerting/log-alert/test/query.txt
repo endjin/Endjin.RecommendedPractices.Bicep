@@ -1,0 +1,4 @@
+requests
+| where success == false
+| summarize failedCount=sum(itemCount), impactedUsers=dcount(user_Id) by operation_Name
+| order by failedCount desc

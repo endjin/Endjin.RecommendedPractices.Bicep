@@ -1,0 +1,294 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.15.31.15270",
+      "templateHash": "16351627810577274303"
+    }
+  },
+  "parameters": {
+    "name": {
+      "type": "string",
+      "metadata": {
+        "description": "The Alert resource name."
+      }
+    },
+    "displayName": {
+      "type": "string",
+      "metadata": {
+        "description": "The display name of the Alert rule."
+      }
+    },
+    "alertDescription": {
+      "type": "string",
+      "metadata": {
+        "description": "The description of the alert"
+      }
+    },
+    "actionGroupId": {
+      "type": "string",
+      "metadata": {
+        "description": "Action Group resource Id to invoke when the Alert fires."
+      }
+    },
+    "enabled": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "The flag which indicates whether this Alert query is enabled"
+      }
+    },
+    "evaluationFrequencyMinutes": {
+      "type": "int",
+      "metadata": {
+        "description": "How often the Alert query is evaluated, in minutes."
+      }
+    },
+    "evaluationWindowSizeMinutes": {
+      "type": "int",
+      "defaultValue": "[parameters('evaluationFrequencyMinutes')]",
+      "metadata": {
+        "description": "The period of time on which the Alert query will be executed, in minutes."
+      }
+    },
+    "targetScopes": {
+      "type": "array",
+      "metadata": {
+        "description": "The list of resource id's that this Alert query is scoped to."
+      }
+    },
+    "targetResourceTypes": {
+      "type": "array",
+      "defaultValue": [
+        "microsoft.insights/components"
+      ],
+      "metadata": {
+        "description": "List of resource type of the target resource(s) on which the alert is created/updated. For example if the scope is a resource group and targetResourceTypes is Microsoft.Compute/virtualMachines, then a different alert will be fired for each virtual machine in the resource group which meet the alert criteria."
+      }
+    },
+    "severity": {
+      "type": "string",
+      "allowedValues": [
+        "Critical",
+        "Error",
+        "Warning",
+        "Informational",
+        "Verbose"
+      ],
+      "metadata": {
+        "description": "The severity of the alert."
+      }
+    },
+    "query": {
+      "type": "string",
+      "metadata": {
+        "description": "Log query alert"
+      }
+    },
+    "queryThreshold": {
+      "type": "int",
+      "metadata": {
+        "description": "The criteria threshold value that activates the alert."
+      }
+    },
+    "queryTimeAggregation": {
+      "type": "string",
+      "metadata": {
+        "description": "Aggregation type."
+      },
+      "allowedValues": [
+        "Average",
+        "Count",
+        "Maximum",
+        "Minimum",
+        "Total"
+      ]
+    },
+    "queryThresholdOperator": {
+      "type": "string",
+      "metadata": {
+        "description": "The criteria operator."
+      },
+      "allowedValues": [
+        "GreatorOrLessThan",
+        "GreaterThan",
+        "LessThan"
+      ]
+    },
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "The location of the deployed resources"
+      }
+    },
+    "numberOfEvaluationPeriods": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The number of aggregated lookback points. The lookback time window is calculated based on the aggregation granularity (windowSize) and the selected number of aggregated points."
+      }
+    },
+    "minFailingPeriodsToAlert": {
+      "type": "int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "The number of violations to trigger an alert. Should be smaller or equal to numberOfEvaluationPeriods."
+      }
+    },
+    "autoMitigate": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "The flag that indicates whether the alert should be auto resolved or not. The default is true."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/scheduledQueryRules",
+      "apiVersion": "2021-08-01",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "displayName": "[parameters('displayName')]",
+        "description": "[parameters('alertDescription')]",
+        "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.severity.value]",
+        "enabled": "[parameters('enabled')]",
+        "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.evaluationFrequency.value]",
+        "scopes": "[parameters('targetScopes')]",
+        "targetResourceTypes": "[parameters('targetResourceTypes')]",
+        "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.evaluationWindowSize.value]",
+        "criteria": {
+          "allOf": [
+            {
+              "query": "[parameters('query')]",
+              "timeAggregation": "[parameters('queryTimeAggregation')]",
+              "dimensions": [],
+              "operator": "[parameters('queryThresholdOperator')]",
+              "threshold": "[parameters('queryThreshold')]",
+              "failingPeriods": {
+                "numberOfEvaluationPeriods": "[parameters('numberOfEvaluationPeriods')]",
+                "minFailingPeriodsToAlert": "[parameters('minFailingPeriodsToAlert')]"
+              }
+            }
+          ]
+        },
+        "actions": {
+          "actionGroups": [
+            "[parameters('actionGroupId')]"
+          ],
+          "customProperties": {}
+        },
+        "autoMitigate": "[parameters('autoMitigate')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "[format('alertUtils_{0}', parameters('severity'))]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "severity": {
+            "value": "[parameters('severity')]"
+          },
+          "evaluationFrequencyMinutes": {
+            "value": "[parameters('evaluationFrequencyMinutes')]"
+          },
+          "evaluationWindowSizeMinutes": {
+            "value": "[parameters('evaluationWindowSizeMinutes')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.15.31.15270",
+              "templateHash": "9994439745399304463"
+            }
+          },
+          "parameters": {
+            "severity": {
+              "type": "string",
+              "allowedValues": [
+                "Critical",
+                "Error",
+                "Warning",
+                "Informational",
+                "Verbose"
+              ],
+              "metadata": {
+                "description": "The severity level of the alert"
+              }
+            },
+            "evaluationFrequencyMinutes": {
+              "type": "int",
+              "metadata": {
+                "description": "The frequency at which the alert is evaluated, in minutes"
+              }
+            },
+            "evaluationWindowSizeMinutes": {
+              "type": "int",
+              "defaultValue": "[parameters('evaluationFrequencyMinutes')]",
+              "metadata": {
+                "description": "The window size used to evaluate the alert, in minutes"
+              }
+            }
+          },
+          "variables": {
+            "severityLookup": {
+              "Critical": 0,
+              "Error": 1,
+              "Warning": 2,
+              "Informational": 3,
+              "Verbose": 4
+            }
+          },
+          "resources": [],
+          "outputs": {
+            "severity": {
+              "type": "int",
+              "value": "[variables('severityLookup')[parameters('severity')]]",
+              "metadata": {
+                "description": "The numeric representation of the specified severity level"
+              }
+            },
+            "evaluationFrequency": {
+              "type": "string",
+              "value": "[format('PT{0}M', parameters('evaluationFrequencyMinutes'))]",
+              "metadata": {
+                "description": "The 'evaluationFrequency' in ISO 8601 duration format"
+              }
+            },
+            "evaluationWindowSize": {
+              "type": "string",
+              "value": "[format('PT{0}M', parameters('evaluationWindowSizeMinutes'))]",
+              "metadata": {
+                "description": "The 'evaluationWindowSize' in ISO 8601 duration format"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Insights/scheduledQueryRules', parameters('name'))]",
+      "metadata": {
+        "description": "The resource ID of the alert"
+      }
+    }
+  }
+}
