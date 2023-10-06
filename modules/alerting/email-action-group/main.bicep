@@ -12,7 +12,7 @@ param notifyEmailAddresses array
 
 
 var emailReceivers = [for email in notifyEmailAddresses: {
-  name: '${shortName}-email'
+  name: email
   emailAddress: email
   useCommonAlertSchema: false
 }]
