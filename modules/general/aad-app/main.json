@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "12024536656193318278"
+      "templateHash": "10973609607598572983"
     }
   },
   "parameters": {
@@ -65,12 +65,33 @@
       "metadata": {
         "description": "Microsoft Graph role IDs to grant the AzureAD application"
       }
+    },
+    "appRoles": {
+      "type": "array",
+      "defaultValue": [],
+      "metadata": {
+        "description": "Microsoft Graph AppRoles exposed by the AzureAD application"
+      }
+    },
+    "corvusModulePackageVersion": {
+      "type": "string",
+      "defaultValue": "0.4.8",
+      "metadata": {
+        "description": "Set this parameter to use a custom version of the Corvus.Deployment module"
+      }
+    },
+    "allowPrereleaseCorvusModuleVersion": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Enable this if you need to use a pre-release version of the Corvus.Deployment module"
+      }
     }
   },
   "variables": {
     "name": "[format('AadAppScript-{0}', parameters('displayName'))]",
     "scriptPath": "./create-aad-app.ps1",
-    "scriptContent": "[CmdletBinding(SupportsShouldProcess)]\r\nparam (\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $DisplayName,\r\n\r\n    [Parameter()]\r\n    [string] $ReplyUrlsDelimited,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $AadTenantId,\r\n\r\n    [string] $Delimeter = \",\",\r\n\r\n    [Parameter()]\r\n    [string] $AppUri,\r\n\r\n    [Parameter()]\r\n    [bool] $EnableAccessTokenIssuance = $false,\r\n\r\n    [Parameter()]\r\n    [bool] $EnableIdTokenIssuance = $false,\r\n\r\n    [Parameter()]\r\n    [string] $MicrosoftGraphScopeIdsToGrantDelimited,\r\n\r\n    [Parameter()]\r\n    [string] $MicrosoftGraphAppRoleIdsToGrantDelimited,\r\n\r\n    [Parameter()]\r\n    [string] $CorvusModulePackageVersion = \"0.4.6\",\r\n\r\n    [Parameter()]\r\n    [bool] $CorvusModuleAllowPrerelase = $false\r\n)\r\n$ErrorActionPreference = \"Stop\"\r\nSet-StrictMode -Version Latest\r\n\r\n# Debug which Az PowerShell version is being used\r\nGet-Module Az -ListAvailable | select Name,Version | ft | out-string | write-host\r\nImport-Module Az.Resources -PassThru | select Name,Version | ft | out-string | write-host\r\n\r\nInstall-Module Corvus.Deployment -RequiredVersion $CorvusModulePackageVersion -AllowPrerelease:$CorvusModuleAllowPrerelase -Scope CurrentUser -Repository PSGallery -Force\r\nImport-Module Corvus.Deployment -Force -PassThru | select Name,Version | ft | out-string | write-host\r\nConnect-CorvusAzure -SkipAzureCli -AadTenantId $AadTenantId -TenantOnly\r\n\r\n# Parse the delimited parameter into arrays\r\n$splitReplyUrls = $ReplyUrlsDelimited -split $Delimeter\r\n$ReplyUrls = $splitReplyUrls[0] -eq \"\" ? @() : $splitReplyUrls\r\n\r\n$splitScopeIdGrants = $MicrosoftGraphScopeIdsToGrantDelimited -split $Delimeter\r\n$MicrosoftGraphScopeIdsToGrant = $splitScopeIdGrants[0] -eq \"\" ? @() : $splitScopeIdGrants\r\n\r\n$splitAppRoleIdGrants = $MicrosoftGraphAppRoleIdsToGrantDelimited -split $Delimeter\r\n$MicrosoftGraphAppRoleIdsToGrant = $splitAppRoleIdGrants[0] -eq \"\" ? @() : $splitAppRoleIdGrants\r\n\r\n# Configure the Azure App Registration\r\n$app = Assert-CorvusAzureAdApp `\r\n            -DisplayName $DisplayName `\r\n            -ReplyUrls $ReplyUrls `\r\n            -AppUri $AppUri `\r\n            -EnableAccessTokenIssuance:$EnableAccessTokenIssuance `\r\n            -EnableIdTokenIssuance:$EnableIdTokenIssuance `\r\n            -Verbose\r\n\r\n# Configure any required MS Graph API permissions\r\nif ($MicrosoftGraphScopeIdsToGrant -or $MicrosoftGraphAppRoleIdsToGrant) {\r\n    Write-Host \"Configuring API permissions\"\r\n    $msGraphAccessRequirements = @()\r\n    foreach ($scopeId in $MicrosoftGraphScopeIdsToGrant) {\r\n        $msGraphAccessRequirements += @{\r\n            Id = $scopeId\r\n            Type = \"Scope\"\r\n        }\r\n    }\r\n    foreach ($appRoleId in $MicrosoftGraphAppRoleIdsToGrant) {\r\n        $msGraphAccessRequirements += @{\r\n            Id = $appRoleId\r\n            Type = \"Role\"\r\n        }\r\n    }\r\n    Write-Verbose \"msGraphAccessRequirements: $($msGraphAccessRequirements | ConvertTo-Json -Depth 10)\"\r\n    \r\n    $app = $app | Assert-CorvusRequiredResourceAccessContains `\r\n                        -ResourceAppId \"00000003-0000-0000-c000-000000000000\" `\r\n                        -AccessRequirements $msGraphAccessRequirements \r\n}\r\n\r\nWrite-Host \"App Registration Details:\"\r\n$app | ConvertTo-Json -Depth 100 | Write-Host\r\n\r\n# Set the deployment script outputs\r\n$DeploymentScriptOutputs = @{\r\n    applicationId = $app.AppId\r\n    objectId      = $app.Id\r\n}",
+    "scriptContent": "[CmdletBinding(SupportsShouldProcess)]\r\nparam (\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $DisplayName,\r\n\r\n    [Parameter()]\r\n    [string] $ReplyUrlsDelimited,\r\n\r\n    [Parameter(Mandatory = $true)]\r\n    [string] $AadTenantId,\r\n\r\n    [string] $Delimeter = \",\",\r\n\r\n    [Parameter()]\r\n    [string] $AppUri,\r\n\r\n    [Parameter()]\r\n    [bool] $EnableAccessTokenIssuance = $false,\r\n\r\n    [Parameter()]\r\n    [bool] $EnableIdTokenIssuance = $false,\r\n\r\n    [Parameter()]\r\n    [string] $MicrosoftGraphScopeIdsToGrantDelimited,\r\n\r\n    [Parameter()]\r\n    [string] $MicrosoftGraphAppRoleIdsToGrantDelimited,\r\n\r\n    [Parameter()]\r\n    [string] $AppRolesJson,\r\n\r\n    [Parameter()]\r\n    [string] $CorvusModulePackageVersion = \"0.4.8\",\r\n\r\n    [Parameter()]\r\n    [bool] $CorvusModuleAllowPrerelease = $false\r\n)\r\n$ErrorActionPreference = \"Stop\"\r\nSet-StrictMode -Version Latest\r\n\r\n# Debug which Az PowerShell version is being used\r\nGet-Module Az -ListAvailable | select Name,Version | ft | out-string | write-host\r\nImport-Module Az.Resources -PassThru | select Name,Version | ft | out-string | write-host\r\n\r\nInstall-Module Corvus.Deployment -RequiredVersion $CorvusModulePackageVersion -AllowPrerelease:$CorvusModuleAllowPrerelease -Scope CurrentUser -Repository PSGallery -Force\r\nImport-Module Corvus.Deployment -Force -PassThru | select Name,Version | ft | out-string | write-host\r\nConnect-CorvusAzure -SkipAzureCli -AadTenantId $AadTenantId -TenantOnly\r\n\r\n# Parse the delimited parameter into arrays\r\n$splitReplyUrls = $ReplyUrlsDelimited -split $Delimeter\r\n$ReplyUrls = $splitReplyUrls[0] -eq \"\" ? @() : $splitReplyUrls\r\n\r\n$splitScopeIdGrants = $MicrosoftGraphScopeIdsToGrantDelimited -split $Delimeter\r\n$MicrosoftGraphScopeIdsToGrant = $splitScopeIdGrants[0] -eq \"\" ? @() : $splitScopeIdGrants\r\n\r\n$splitAppRoleIdGrants = $MicrosoftGraphAppRoleIdsToGrantDelimited -split $Delimeter\r\n$MicrosoftGraphAppRoleIdsToGrant = $splitAppRoleIdGrants[0] -eq \"\" ? @() : $splitAppRoleIdGrants\r\n\r\n$requiredAppRoles = $AppRolesJson ? (ConvertFrom-Json $AppRolesJson -Depth 3) : @()\r\n\r\n\r\n# Configure the Azure App Registration\r\n$app = Assert-CorvusAzureAdApp `\r\n            -DisplayName $DisplayName `\r\n            -ReplyUrls $ReplyUrls `\r\n            -AppUri $AppUri `\r\n            -EnableAccessTokenIssuance:$EnableAccessTokenIssuance `\r\n            -EnableIdTokenIssuance:$EnableIdTokenIssuance `\r\n            -Verbose\r\n\r\n# Configure any required MS Graph API permissions\r\nif ($MicrosoftGraphScopeIdsToGrant -or $MicrosoftGraphAppRoleIdsToGrant) {\r\n    Write-Host \"Configuring API permissions\"\r\n    $msGraphAccessRequirements = @()\r\n    foreach ($scopeId in $MicrosoftGraphScopeIdsToGrant) {\r\n        $msGraphAccessRequirements += @{\r\n            Id = $scopeId\r\n            Type = \"Scope\"\r\n        }\r\n    }\r\n    foreach ($appRoleId in $MicrosoftGraphAppRoleIdsToGrant) {\r\n        $msGraphAccessRequirements += @{\r\n            Id = $appRoleId\r\n            Type = \"Role\"\r\n        }\r\n    }\r\n    Write-Verbose \"msGraphAccessRequirements: $($msGraphAccessRequirements | ConvertTo-Json -Depth 10)\"\r\n    \r\n    $app = $app | Assert-CorvusRequiredResourceAccessContains `\r\n                        -ResourceAppId \"00000003-0000-0000-c000-000000000000\" `\r\n                        -AccessRequirements $msGraphAccessRequirements\r\n}\r\n\r\n# Configure any AppRoles exposed by this App registration\r\nif ($requiredAppRoles) {\r\n    foreach ($appRole in $requiredAppRoles) {\r\n        $appRoleParams = @{\r\n            AppObjectId = $app.Id\r\n            AppRoleId = $appRole.RoleId\r\n            DisplayName = $appRole.DisplayName\r\n            Description = $appRole.Description\r\n            Value = $appRole.Value\r\n            AllowedMemberTypes = $appRole.AllowedMemberTypes\r\n        }\r\n\r\n        $app = Assert-CorvusAzureAdAppRole @appRoleParams -Verbose\r\n    }\r\n}\r\n\r\nWrite-Host \"`nApp Registration Details:\"\r\n$app | ConvertTo-Json -Depth 100 | Write-Host\r\n\r\n# Set the deployment script outputs\r\n$DeploymentScriptOutputs = @{\r\n    applicationId = $app.AppId\r\n    objectId      = $app.Id\r\n}",
     "scriptArguments": [
       "[format('-DisplayName \\\"{0}\\\"', parameters('displayName'))]",
       "[format('-ReplyUrlsDelimited \\\"{0}\\\"', join(parameters('replyUrls'), ','))]",
@@ -79,7 +100,10 @@
       "[format('-EnableAccessTokenIssuance ${0}', parameters('enableAccessTokenIssuance'))]",
       "[format('-EnableIdTokenIssuance ${0}', parameters('enableIdTokenIssuance'))]",
       "[format('-MicrosoftGraphScopeIdsToGrantDelimited \\\"{0}\\\"', join(parameters('microsoftGraphScopeIdsToGrant'), ','))]",
-      "[format('-MicrosoftGraphAppRoleIdsToGrantDelimited \\\"{0}\\\"', join(parameters('microsoftGraphAppRoleIdsToGrant'), ','))]"
+      "[format('-MicrosoftGraphAppRoleIdsToGrantDelimited \\\"{0}\\\"', join(parameters('microsoftGraphAppRoleIdsToGrant'), ','))]",
+      "[format('-AppRolesJson \\\"{0}\\\"', parameters('appRoles'))]",
+      "[format('-CorvusModulePackageVersion \\\"{0}\\\"', parameters('corvusModulePackageVersion'))]",
+      "[format('-CorvusModuleAllowPrerelease ${0}', parameters('allowPrereleaseCorvusModuleVersion'))]"
     ]
   },
   "resources": [

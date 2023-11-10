@@ -25,6 +25,15 @@ param microsoftGraphScopeIdsToGrant array = []
 @description('Microsoft Graph role IDs to grant the AzureAD application')
 param microsoftGraphAppRoleIdsToGrant array = []
 
+@description('Microsoft Graph AppRoles exposed by the AzureAD application')
+param appRoles array = []
+
+@description('Set this parameter to use a custom version of the Corvus.Deployment module')
+param corvusModulePackageVersion string = '0.4.8'
+
+@description('Enable this if you need to use a pre-release version of the Corvus.Deployment module')
+param allowPrereleaseCorvusModuleVersion bool = false
+
 var name = 'AadAppScript-${displayName}'
 var scriptPath = './create-aad-app.ps1'
 var scriptContent = loadTextContent(scriptPath)
@@ -37,6 +46,9 @@ var scriptArguments = [
   '-EnableIdTokenIssuance $${enableIdTokenIssuance}'
   '-MicrosoftGraphScopeIdsToGrantDelimited \\"${join(microsoftGraphScopeIdsToGrant, ',')}\\"'
   '-MicrosoftGraphAppRoleIdsToGrantDelimited \\"${join(microsoftGraphAppRoleIdsToGrant, ',')}\\"'
+  '-AppRolesJson \\"${appRoles}\\"'
+  '-CorvusModulePackageVersion \\"${corvusModulePackageVersion}\\"'
+  '-CorvusModuleAllowPrerelease $${allowPrereleaseCorvusModuleVersion}'
 ]
 
 resource aad_app 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
