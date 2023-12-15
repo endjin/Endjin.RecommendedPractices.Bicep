@@ -37,6 +37,12 @@ param keyVaultResourceGroupName string = resourceGroup().name
 @description('The subscription of the key vault where the configuration will be published')
 param keyVaultSubscriptionId string = subscription().subscriptionId
 
+@description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')
+param enableDiagnostics bool = false
+
+@description('When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs.')
+param logAnalyticsWorkspaceId string = ''
+
 module acs_email '../acs-email/main.bicep' = {
   name: 'AcsEmailDeploy'
   params: {
@@ -44,6 +50,8 @@ module acs_email '../acs-email/main.bicep' = {
     dataLocation: dataLocation
     emailServiceName: emailServiceName
     senderUsername: senderUsername
+    enableDiagnostics: enableDiagnostics
+    logAnalyticsWorkspaceId: logAnalyticsWorkspaceId
   }
 }
 

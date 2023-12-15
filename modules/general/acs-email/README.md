@@ -8,12 +8,14 @@ This module provisions a top-level Azure Communication Service (ACS) resource an
 
 ## Parameters
 
-| Name                       | Type     | Required | Description                                                                     |
-| :------------------------- | :------: | :------: | :------------------------------------------------------------------------------ |
-| `communicationServiceName` | `string` | Yes      | The name of the Azure Communication Service resource.                           |
-| `emailServiceName`         | `string` | Yes      | The name of the Email Communication Service resource.                           |
-| `dataLocation`             | `string` | Yes      | The location where the communication and email service stores its data at rest. |
-| `senderUsername`           | `string` | No       | The username for the sender email address. Defaults to "DoNotReply".            |
+| Name                       | Type     | Required | Description                                                                                                                                                                  |
+| :------------------------- | :------: | :------: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `communicationServiceName` | `string` | Yes      | The name of the Azure Communication Service resource.                                                                                                                        |
+| `emailServiceName`         | `string` | Yes      | The name of the Email Communication Service resource.                                                                                                                        |
+| `dataLocation`             | `string` | Yes      | The location where the communication and email service stores its data at rest.                                                                                              |
+| `senderUsername`           | `string` | No       | The username for the sender email address. Defaults to "DoNotReply".                                                                                                         |
+| `enableDiagnostics`        | `bool`   | No       | If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).                                                                                   |
+| `logAnalyticsWorkspaceId`  | `string` | No       | When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs. |
 
 ## Outputs
 

@@ -28,6 +28,12 @@ param dataLocation string
 @description('The username for the sender email address. Defaults to "DoNotReply".')
 param senderUsername string = 'DoNotReply'
 
+@description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')
+param enableDiagnostics bool = false
+
+@description('When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs.')
+param logAnalyticsWorkspaceId string = ''
+
 resource communication_service 'Microsoft.Communication/communicationServices@2023-04-01-preview' = {
   name: communicationServiceName
   location: 'global'
@@ -61,6 +67,29 @@ resource email_service 'Microsoft.Communication/emailServices@2023-04-01-preview
         displayName: senderUsername
       }
     }
+  }
+}
+
+resource acs_diagnostic_settings 'microsoft.insights/diagnosticSettings@2016-09-01' = if (enableDiagnostics) {
+  name: 'service'
+  scope: communication_service
+  location: dataLocation
+  properties: {
+    workspaceId: logAnalyticsWorkspaceId
+    logs: [
+      {
+        category: 'EmailSendMailOperational'
+        enabled: true
+      }
+      {
+        category: 'EmailStatusUpdateOperational'
+        enabled: true
+      }
+      {
+        category: 'EmailUserEngagementOperational'
+        enabled: true
+      }
+    ]
   }
 }
 
