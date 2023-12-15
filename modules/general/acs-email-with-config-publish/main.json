@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "15087560913511792251"
+      "templateHash": "11742709169919955004"
     }
   },
   "parameters": {
@@ -71,6 +71,20 @@
       "metadata": {
         "description": "The subscription of the key vault where the configuration will be published"
       }
+    },
+    "enableDiagnostics": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set)."
+      }
+    },
+    "logAnalyticsWorkspaceId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs."
+      }
     }
   },
   "resources": [
@@ -95,6 +109,12 @@
           },
           "senderUsername": {
             "value": "[parameters('senderUsername')]"
+          },
+          "enableDiagnostics": {
+            "value": "[parameters('enableDiagnostics')]"
+          },
+          "logAnalyticsWorkspaceId": {
+            "value": "[parameters('logAnalyticsWorkspaceId')]"
           }
         },
         "template": {
@@ -104,7 +124,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "12544218465128506969"
+              "templateHash": "9555343672426662132"
             }
           },
           "parameters": {
@@ -149,6 +169,20 @@
               "defaultValue": "DoNotReply",
               "metadata": {
                 "description": "The username for the sender email address. Defaults to \"DoNotReply\"."
+              }
+            },
+            "enableDiagnostics": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set)."
+              }
+            },
+            "logAnalyticsWorkspaceId": {
+              "type": "string",
+              "defaultValue": "",
+              "metadata": {
+                "description": "When `enableDiagnostics` is true, the workspace ID (resource ID of a Log Analytics workspace) for a Log Analytics workspace to which you would like to send Diagnostic Logs."
               }
             }
           },
@@ -201,6 +235,34 @@
               "properties": {
                 "dataLocation": "[parameters('dataLocation')]"
               }
+            },
+            {
+              "condition": "[parameters('enableDiagnostics')]",
+              "type": "microsoft.insights/diagnosticSettings",
+              "apiVersion": "2016-09-01",
+              "scope": "[format('Microsoft.Communication/communicationServices/{0}', parameters('communicationServiceName'))]",
+              "name": "service",
+              "location": "[parameters('dataLocation')]",
+              "properties": {
+                "workspaceId": "[parameters('logAnalyticsWorkspaceId')]",
+                "logs": [
+                  {
+                    "category": "EmailSendMailOperational",
+                    "enabled": true
+                  },
+                  {
+                    "category": "EmailStatusUpdateOperational",
+                    "enabled": true
+                  },
+                  {
+                    "category": "EmailUserEngagementOperational",
+                    "enabled": true
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Communication/communicationServices', parameters('communicationServiceName'))]"
+              ]
             }
           ],
           "outputs": {
