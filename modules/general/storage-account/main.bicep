@@ -17,6 +17,9 @@ param kind string = 'StorageV2'
 @description('The minimum TLS version required by the storage account')
 param tlsVersion string = 'TLS1_2'
 
+@description('When false, access to the storage account is only possible via Azure AD authentication')
+param allowSharedKeyAccess bool = true
+
 @description('When true, disables access to the storage account via unencrypted HTTP connections')
 param httpsOnly bool = true
 
@@ -81,6 +84,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' = if (!u
     isHnsEnabled: isHnsEnabled
     networkAcls: networkAcls
     isSftpEnabled: isSftpEnabled
+    allowSharedKeyAccess: allowSharedKeyAccess
   }
   tags: resource_tags
 }
