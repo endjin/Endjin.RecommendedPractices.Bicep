@@ -49,7 +49,7 @@ $here = Split-Path -Parent $PSCommandPath
 
 #region InvokeBuild setup
 if (!(Get-Module -ListAvailable InvokeBuild)) {
-    Install-Module InvokeBuild -RequiredVersion 5.7.1 -Scope CurrentUser -Force -Repository PSGallery
+    Install-Module InvokeBuild -RequiredVersion 5.10.3 -Scope CurrentUser -Force -Repository PSGallery
 }
 Import-Module InvokeBuild
 # This handles calling the build engine when this file is run like a normal PowerShell script

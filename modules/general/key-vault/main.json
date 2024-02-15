@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "3078269463228465308"
+      "templateHash": "1172577725288387828"
     }
   },
   "parameters": {
@@ -193,7 +193,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "306124377968744994"
+              "templateHash": "12905386824950242792"
             }
           },
           "parameters": {
@@ -276,7 +276,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.15.31.15270",
-                      "templateHash": "10799863284864906361"
+                      "templateHash": "3055943862015689972"
                     }
                   },
                   "parameters": {
@@ -312,6 +312,13 @@
                       "defaultValue": "TLS1_2",
                       "metadata": {
                         "description": "The minimum TLS version required by the storage account"
+                      }
+                    },
+                    "allowSharedKeyAccess": {
+                      "type": "bool",
+                      "defaultValue": true,
+                      "metadata": {
+                        "description": "When false, access to the storage account is only possible via Azure AD authentication"
                       }
                     },
                     "httpsOnly": {
@@ -430,7 +437,8 @@
                         "accessTier": "[parameters('accessTier')]",
                         "isHnsEnabled": "[parameters('isHnsEnabled')]",
                         "networkAcls": "[parameters('networkAcls')]",
-                        "isSftpEnabled": "[parameters('isSftpEnabled')]"
+                        "isSftpEnabled": "[parameters('isSftpEnabled')]",
+                        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]"
                       },
                       "tags": "[parameters('resource_tags')]"
                     },
