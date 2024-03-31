@@ -108,7 +108,7 @@ $OverwriteTag = $false                             # when true, existing git tag
 $AlwaysTag = $false                                # when true, overrides default behaviour of only tagging stable version numbers
 
 # Synopsis: Build and Validate modules, regenerate module documentation
-task . LocalBicepBuild
+task . GenerateRolesJson,LocalBicepBuild
 
 # build extensibility tasks
 task RunFirst {}
@@ -125,3 +125,18 @@ task PostPackage {}
 task PrePublish {}
 task PostPublish {}
 task RunLast {}
+
+# Synopsis: Generate a JSON file containing an up-to-date list of built-in roles in Azure
+task GenerateRolesJson {
+    Write-Build Green "Re-generating the list of built-in roles in Azure Tenant '$((Get-AzContext).Tenant.Id)'"
+
+    $availableRoles = [ordered]@{}
+    Get-AzRoleDefinition |
+        Where-Object { $_.IsCustom -eq $false } |
+        Sort-Object Name |
+        ForEach-Object { $availableRoles.Add($_.Name, $_.Id) }
+    
+    $availableRoles |
+        ConvertTo-Json |
+        Set-Content $here/modules/general/rbac-built-in-roles/arm-roles.json
+}
