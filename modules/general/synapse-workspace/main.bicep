@@ -64,6 +64,12 @@ param privateEndpointResourceGroupName string = virtualNetworkResourceGroupName
 @description('When true, the private endpoint sub-resources will be registered with the relevant PrivateDns zone.')
 param enablePrivateEndpointsPrivateDns bool
 
+@description('The resource group where PrivateDNs zones will be created or existing zones found.')
+param privateDnsZonesResourceGroupName string = virtualNetworkResourceGroupName
+
+@description('The subscriptionId of the PrivateDNs zones.')
+param privateDnsZonesSubscriptionId string = subscription().subscriptionId
+
 // Storage parameters
 
 @description('The name of the existing storage account that the default data lake file system will be created in.')
@@ -241,6 +247,8 @@ module private_endpoints '../private-endpoint/main.bicep' = [ for service in ena
     serviceGroupId: service
     serviceResourceId: workspace.id
     enablePrivateDns: enablePrivateEndpointsPrivateDns
+    privateDnsZonesResourceGroup: privateDnsZonesResourceGroupName
+    privateDnsZonesSubscriptionId: privateDnsZonesSubscriptionId
     tagValues: tagValues
   }
 }]
