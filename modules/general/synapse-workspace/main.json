@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "7520969596392964030"
+      "templateHash": "4152087168993634870"
     }
   },
   "parameters": {
@@ -80,6 +80,13 @@
       "defaultValue": false,
       "metadata": {
         "description": "When true, Azure Services will have access to the Synapse workspace even when 'allowAllConnections' is false"
+      }
+    },
+    "enablePublicAccess": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "When false, the vault will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
       }
     },
     "workspaceFirewallRules": {
@@ -243,7 +250,8 @@
           "filesystem": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('storageSubscriptionID'), parameters('storageResourceGroupName')), 'Microsoft.Resources/deployments', 'defaultDataLakeStorageFilesystemDeploy'), '2020-10-01').outputs.name.value]"
         },
         "managedVirtualNetwork": "[if(parameters('managedVirtualNetwork'), 'default', '')]",
-        "workspaceRepositoryConfiguration": "[parameters('workspaceRepositoryConfiguration')]"
+        "workspaceRepositoryConfiguration": "[parameters('workspaceRepositoryConfiguration')]",
+        "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]"
       },
       "tags": "[parameters('tagValues')]",
       "dependsOn": [
