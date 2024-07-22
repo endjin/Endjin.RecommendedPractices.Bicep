@@ -7,6 +7,8 @@ module keyvault_no_groups '../main.bicep' = {
   name: 'keyVaultDeploy'
   params: {
     enableDiagnostics: false
+    enablePublicAccess: true
+    enablePurgeProtection: false
     name: '${prefix}kv'
     secretsContributorsGroupObjectId: '00000000-0000-0000-0000-000000000000'
     secretsReadersGroupObjectId: '00000000-0000-0000-0000-000000000000'
@@ -54,6 +56,8 @@ module keyvault_with_networkacls '../main.bicep' = {
     secretsReadersGroupObjectId: '00000000-0000-0000-0000-000000000000'
     tenantId: '00000000-0000-0000-0000-000000000000'
     location: location
+    enablePublicAccess: true
+    enablePurgeProtection: false
     enableSoftDelete: false
     networkAcls: {
       bypass: 'AzureServices'

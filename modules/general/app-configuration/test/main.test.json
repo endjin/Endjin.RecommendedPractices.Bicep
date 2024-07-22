@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.8.9.13224",
-      "templateHash": "10284489504802512087"
+      "version": "0.15.31.15270",
+      "templateHash": "15707228375708018280"
     }
   },
   "parameters": {
@@ -42,8 +42,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.8.9.13224",
-              "templateHash": "14232187135720442599"
+              "version": "0.15.31.15270",
+              "templateHash": "12057103437820456431"
             }
           },
           "parameters": {
@@ -171,9 +171,7 @@
                   "secretName": {
                     "value": "[parameters('keyVaultConnectionStringSecretName')]"
                   },
-                  "contentValue": {
-                    "value": "[listKeys(parameters('name'), '2020-06-01').value[0].connectionString]"
-                  }
+                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString))]"
                 },
                 "template": {
                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -181,8 +179,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.8.9.13224",
-                      "templateHash": "12015994460177070841"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16729986519206477407"
                     }
                   },
                   "parameters": {
@@ -200,7 +198,7 @@
                       }
                     },
                     "contentValue": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "defaultValue": "",
                       "metadata": {
                         "description": "Value of the secret"
@@ -242,7 +240,10 @@
                     }
                   }
                 }
-              }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+              ]
             },
             {
               "condition": "[parameters('saveConnectionStringsToKeyVault')]",
@@ -263,9 +264,7 @@
                   "secretName": {
                     "value": "[parameters('keyVaultReadOnlyConnectionStringSecretName')]"
                   },
-                  "contentValue": {
-                    "value": "[listKeys(parameters('name'), '2020-06-01').value[2].connectionString]"
-                  }
+                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString))]"
                 },
                 "template": {
                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -273,8 +272,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.8.9.13224",
-                      "templateHash": "12015994460177070841"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16729986519206477407"
                     }
                   },
                   "parameters": {
@@ -292,7 +291,7 @@
                       }
                     },
                     "contentValue": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "defaultValue": "",
                       "metadata": {
                         "description": "Value of the secret"
@@ -334,7 +333,10 @@
                     }
                   }
                 }
-              }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+              ]
             }
           ],
           "outputs": {
@@ -376,6 +378,12 @@
           "enableDiagnostics": {
             "value": false
           },
+          "enablePublicAccess": {
+            "value": true
+          },
+          "enablePurgeProtection": {
+            "value": false
+          },
           "enableSoftDelete": {
             "value": false
           },
@@ -395,8 +403,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.8.9.13224",
-              "templateHash": "9001380199960923662"
+              "version": "0.15.31.15270",
+              "templateHash": "16744302091813529427"
             }
           },
           "parameters": {
@@ -490,6 +498,19 @@
                 "description": "When true, diagnostics settings will be enabled for the key vault"
               }
             },
+            "enablePublicAccess": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "When false, the vault will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
+              }
+            },
+            "enablePurgeProtection": {
+              "type": "bool",
+              "metadata": {
+                "description": "When true, the key vault will have purge protection enabled"
+              }
+            },
             "diagnosticsStorageAccountName": {
               "type": "string",
               "defaultValue": "",
@@ -541,11 +562,13 @@
                 "enabledForDeployment": "[parameters('enabledForDeployment')]",
                 "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
                 "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+                "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]",
                 "tenantId": "[parameters('tenantId')]",
                 "accessPolicies": "[if(parameters('enableRbacAuthorization'), createArray(), parameters('accessPolicies'))]",
                 "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
                 "enableSoftDelete": "[parameters('enableSoftDelete')]",
                 "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]",
+                "enablePurgeProtection": "[parameters('enablePurgeProtection')]",
                 "networkAcls": "[parameters('networkAcls')]"
               },
               "tags": "[parameters('resourceTags')]"
@@ -554,7 +577,7 @@
               "condition": "[parameters('enableDiagnostics')]",
               "type": "Microsoft.Resources/deployments",
               "apiVersion": "2020-10-01",
-              "name": "kvDiagnosticsDeploy",
+              "name": "[format('kvDiagnosticsDeploy-{0}', parameters('name'))]",
               "properties": {
                 "expressionEvaluationOptions": {
                   "scope": "inner"
@@ -575,6 +598,9 @@
                   },
                   "useExistingStorageAccount": {
                     "value": "[parameters('useExistingStorageAccount')]"
+                  },
+                  "enablePublicAccess": {
+                    "value": "[parameters('enablePublicAccess')]"
                   }
                 },
                 "template": {
@@ -583,8 +609,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.8.9.13224",
-                      "templateHash": "5185582683761430897"
+                      "version": "0.15.31.15270",
+                      "templateHash": "9884676421728708139"
                     }
                   },
                   "parameters": {
@@ -613,6 +639,12 @@
                       "defaultValue": 30,
                       "metadata": {
                         "description": "Sets the retention policy for diagnostics settings data, in days"
+                      }
+                    },
+                    "enablePublicAccess": {
+                      "type": "bool",
+                      "metadata": {
+                        "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
                       }
                     }
                   },
@@ -658,6 +690,9 @@
                           },
                           "location": {
                             "value": "[parameters('location')]"
+                          },
+                          "enablePublicAccess": {
+                            "value": "[parameters('enablePublicAccess')]"
                           }
                         },
                         "template": {
@@ -666,8 +701,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.8.9.13224",
-                              "templateHash": "5043884413033308242"
+                              "version": "0.15.31.15270",
+                              "templateHash": "4862270876339960965"
                             }
                           },
                           "parameters": {
@@ -705,6 +740,13 @@
                                 "description": "The minimum TLS version required by the storage account"
                               }
                             },
+                            "allowSharedKeyAccess": {
+                              "type": "bool",
+                              "defaultValue": true,
+                              "metadata": {
+                                "description": "When false, access to the storage account is only possible via Azure AD authentication"
+                              }
+                            },
                             "httpsOnly": {
                               "type": "bool",
                               "defaultValue": true,
@@ -719,11 +761,25 @@
                                 "description": "The access tier of the storage account"
                               }
                             },
+                            "enablePublicAccess": {
+                              "type": "bool",
+                              "defaultValue": true,
+                              "metadata": {
+                                "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
+                              }
+                            },
                             "isHnsEnabled": {
                               "type": "bool",
                               "defaultValue": false,
                               "metadata": {
                                 "description": "When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities"
+                              }
+                            },
+                            "isSftpEnabled": {
+                              "type": "bool",
+                              "defaultValue": false,
+                              "metadata": {
+                                "description": "When true, enables SFTP feature. `isHnsEnabled` must also be set to true."
                               }
                             },
                             "networkAcls": {
@@ -801,7 +857,7 @@
                             {
                               "condition": "[not(parameters('useExisting'))]",
                               "type": "Microsoft.Storage/storageAccounts",
-                              "apiVersion": "2021-06-01",
+                              "apiVersion": "2022-05-01",
                               "name": "[parameters('name')]",
                               "location": "[parameters('location')]",
                               "sku": {
@@ -813,7 +869,10 @@
                                 "supportsHttpsTrafficOnly": "[parameters('httpsOnly')]",
                                 "accessTier": "[parameters('accessTier')]",
                                 "isHnsEnabled": "[parameters('isHnsEnabled')]",
-                                "networkAcls": "[parameters('networkAcls')]"
+                                "networkAcls": "[parameters('networkAcls')]",
+                                "isSftpEnabled": "[parameters('isSftpEnabled')]",
+                                "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+                                "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]"
                               },
                               "tags": "[parameters('resource_tags')]"
                             },
@@ -836,9 +895,7 @@
                                   "secretName": {
                                     "value": "[parameters('keyVaultAccessKeySecretName')]"
                                   },
-                                  "contentValue": {
-                                    "value": "[if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value)]"
-                                  }
+                                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value), createObject('value', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
                                 },
                                 "template": {
                                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -846,8 +903,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.8.9.13224",
-                                      "templateHash": "12015994460177070841"
+                                      "version": "0.15.31.15270",
+                                      "templateHash": "16729986519206477407"
                                     }
                                   },
                                   "parameters": {
@@ -865,7 +922,7 @@
                                       }
                                     },
                                     "contentValue": {
-                                      "type": "secureString",
+                                      "type": "securestring",
                                       "defaultValue": "",
                                       "metadata": {
                                         "description": "Value of the secret"
@@ -932,7 +989,7 @@
                                     "value": "[parameters('keyVaultConnectionStringSecretName')]"
                                   },
                                   "contentValue": {
-                                    "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01').keys[0].value))]"
+                                    "value": "[format('DefaultEndpointsProtocol=https;AccountName={0};EndpointSuffix={1};AccountKey={2}', parameters('name'), environment().suffixes.storage, if(parameters('useExisting'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value, listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01').keys[0].value))]"
                                   }
                                 },
                                 "template": {
@@ -941,8 +998,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.8.9.13224",
-                                      "templateHash": "12015994460177070841"
+                                      "version": "0.15.31.15270",
+                                      "templateHash": "16729986519206477407"
                                     }
                                   },
                                   "parameters": {
@@ -960,7 +1017,7 @@
                                       }
                                     },
                                     "contentValue": {
-                                      "type": "secureString",
+                                      "type": "securestring",
                                       "defaultValue": "",
                                       "metadata": {
                                         "description": "Value of the secret"
@@ -1025,7 +1082,7 @@
                             },
                             "storageAccountResource": {
                               "type": "object",
-                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2021-06-01', 'full'))]",
+                              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'), reference(resourceId('Microsoft.Storage/storageAccounts', parameters('name')), '2022-05-01', 'full'))]",
                               "metadata": {
                                 "description": "An object representing the storage account resource"
                               }
@@ -1091,7 +1148,7 @@
             "value": "[resourceGroup().name]"
           },
           "keyVaultName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyVaultDeploy')).outputs.name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyVaultDeploy'), '2020-10-01').outputs.name.value]"
           },
           "keyVaultConnectionStringSecretName": {
             "value": "AppConfigConnectionString"
@@ -1106,8 +1163,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.8.9.13224",
-              "templateHash": "14232187135720442599"
+              "version": "0.15.31.15270",
+              "templateHash": "12057103437820456431"
             }
           },
           "parameters": {
@@ -1235,9 +1292,7 @@
                   "secretName": {
                     "value": "[parameters('keyVaultConnectionStringSecretName')]"
                   },
-                  "contentValue": {
-                    "value": "[listKeys(parameters('name'), '2020-06-01').value[0].connectionString]"
-                  }
+                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[0].connectionString))]"
                 },
                 "template": {
                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -1245,8 +1300,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.8.9.13224",
-                      "templateHash": "12015994460177070841"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16729986519206477407"
                     }
                   },
                   "parameters": {
@@ -1264,7 +1319,7 @@
                       }
                     },
                     "contentValue": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "defaultValue": "",
                       "metadata": {
                         "description": "Value of the secret"
@@ -1306,7 +1361,10 @@
                     }
                   }
                 }
-              }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+              ]
             },
             {
               "condition": "[parameters('saveConnectionStringsToKeyVault')]",
@@ -1327,9 +1385,7 @@
                   "secretName": {
                     "value": "[parameters('keyVaultReadOnlyConnectionStringSecretName')]"
                   },
-                  "contentValue": {
-                    "value": "[listKeys(parameters('name'), '2020-06-01').value[2].connectionString]"
-                  }
+                  "contentValue": "[if(parameters('useExisting'), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString), createObject('value', listKeys(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01').value[2].connectionString))]"
                 },
                 "template": {
                   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -1337,8 +1393,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.8.9.13224",
-                      "templateHash": "12015994460177070841"
+                      "version": "0.15.31.15270",
+                      "templateHash": "16729986519206477407"
                     }
                   },
                   "parameters": {
@@ -1356,7 +1412,7 @@
                       }
                     },
                     "contentValue": {
-                      "type": "secureString",
+                      "type": "securestring",
                       "defaultValue": "",
                       "metadata": {
                         "description": "Value of the secret"
@@ -1398,7 +1454,10 @@
                     }
                   }
                 }
-              }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name'))]"
+              ]
             }
           ],
           "outputs": {

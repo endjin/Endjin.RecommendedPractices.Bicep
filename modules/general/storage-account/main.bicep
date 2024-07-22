@@ -26,6 +26,9 @@ param httpsOnly bool = true
 @description('The access tier of the storage account')
 param accessTier string = 'Hot'
 
+@description('When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
+param enablePublicAccess bool = true
+
 @description('When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities')
 param isHnsEnabled bool = false
 
@@ -85,6 +88,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' = if (!u
     networkAcls: networkAcls
     isSftpEnabled: isSftpEnabled
     allowSharedKeyAccess: allowSharedKeyAccess
+    publicNetworkAccess: enablePublicAccess ? 'Enabled' : 'Disabled'
   }
   tags: resource_tags
 }

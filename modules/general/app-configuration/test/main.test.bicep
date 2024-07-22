@@ -14,6 +14,8 @@ module key_vault '../../key-vault/main.bicep' = {
   name: 'keyVaultDeploy'
   params: {
     enableDiagnostics: false
+    enablePublicAccess: true
+    enablePurgeProtection: false
     enableSoftDelete: false
     location: location
     name: '${prefix}kv'

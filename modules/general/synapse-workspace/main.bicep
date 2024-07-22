@@ -33,6 +33,9 @@ param allowAllConnections bool = false
 @description('When true, Azure Services will have access to the Synapse workspace even when \'allowAllConnections\' is false')
 param allowAzureServices bool = false
 
+@description('When false, the vault will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
+param enablePublicAccess bool = true
+
 @description('An array of objects defining firewall rules with the structure {name: "rule_name", startAddress: "a.b.c.d", endAddress: "w.x.y.z"}')
 param workspaceFirewallRules array = []
 
@@ -136,6 +139,7 @@ resource workspace 'Microsoft.Synapse/workspaces@2021-06-01' = {
     }
     managedVirtualNetwork: managedVirtualNetwork ? 'default' : ''
     workspaceRepositoryConfiguration: workspaceRepositoryConfiguration
+    publicNetworkAccess: enablePublicAccess ? 'Enabled' : 'Disabled'
   }
   tags: tagValues
 }
