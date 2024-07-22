@@ -8,6 +8,8 @@ module keyvault_with_diagnostics '../main.bicep' = {
     name: '${prefix}kv'
     tenantId: tenant().tenantId
     location: location
+    enablePublicAccess: true
+    enablePurgeProtection: false
     enableSoftDelete: false
   }
 }
@@ -48,6 +50,8 @@ module keyvault_with_networkacls '../main.bicep' = {
     name: '${prefix}aclskv'
     tenantId: tenant().tenantId
     location: location
+    enablePublicAccess: true
+    enablePurgeProtection: false
     enableSoftDelete: false
     enableRbacAuthorization: false
     networkAcls: {
