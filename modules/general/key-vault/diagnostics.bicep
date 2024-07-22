@@ -12,6 +12,8 @@ param useExistingStorageAccount bool = false
 @description('Sets the retention policy for diagnostics settings data, in days')
 param diagnosticsRetentionDays int = 30
 
+@description('When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
+param enablePublicAccess bool
 
 resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = {
   name: keyVaultName
@@ -29,6 +31,7 @@ module diagnostics_storage '../storage-account/main.bicep' = if (!useExistingSto
   params: {
     name: _diagnosticsStorageAccountName
     location: location
+    enablePublicAccess: enablePublicAccess
   }
 }
 
