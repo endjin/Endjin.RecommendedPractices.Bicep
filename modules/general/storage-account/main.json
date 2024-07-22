@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "3055943862015689972"
+      "templateHash": "4862270876339960965"
     }
   },
   "parameters": {
@@ -62,6 +62,13 @@
       "defaultValue": "Hot",
       "metadata": {
         "description": "The access tier of the storage account"
+      }
+    },
+    "enablePublicAccess": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
       }
     },
     "isHnsEnabled": {
@@ -167,7 +174,8 @@
         "isHnsEnabled": "[parameters('isHnsEnabled')]",
         "networkAcls": "[parameters('networkAcls')]",
         "isSftpEnabled": "[parameters('isSftpEnabled')]",
-        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]"
+        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+        "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]"
       },
       "tags": "[parameters('resource_tags')]"
     },

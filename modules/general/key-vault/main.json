@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "1172577725288387828"
+      "templateHash": "16744302091813529427"
     }
   },
   "parameters": {
@@ -99,6 +99,19 @@
         "description": "When true, diagnostics settings will be enabled for the key vault"
       }
     },
+    "enablePublicAccess": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "When false, the vault will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
+      }
+    },
+    "enablePurgeProtection": {
+      "type": "bool",
+      "metadata": {
+        "description": "When true, the key vault will have purge protection enabled"
+      }
+    },
     "diagnosticsStorageAccountName": {
       "type": "string",
       "defaultValue": "",
@@ -150,11 +163,13 @@
         "enabledForDeployment": "[parameters('enabledForDeployment')]",
         "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
         "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+        "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]",
         "tenantId": "[parameters('tenantId')]",
         "accessPolicies": "[if(parameters('enableRbacAuthorization'), createArray(), parameters('accessPolicies'))]",
         "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
         "enableSoftDelete": "[parameters('enableSoftDelete')]",
         "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]",
+        "enablePurgeProtection": "[parameters('enablePurgeProtection')]",
         "networkAcls": "[parameters('networkAcls')]"
       },
       "tags": "[parameters('resourceTags')]"
@@ -184,6 +199,9 @@
           },
           "useExistingStorageAccount": {
             "value": "[parameters('useExistingStorageAccount')]"
+          },
+          "enablePublicAccess": {
+            "value": "[parameters('enablePublicAccess')]"
           }
         },
         "template": {
@@ -193,7 +211,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "12905386824950242792"
+              "templateHash": "9884676421728708139"
             }
           },
           "parameters": {
@@ -222,6 +240,12 @@
               "defaultValue": 30,
               "metadata": {
                 "description": "Sets the retention policy for diagnostics settings data, in days"
+              }
+            },
+            "enablePublicAccess": {
+              "type": "bool",
+              "metadata": {
+                "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
               }
             }
           },
@@ -267,6 +291,9 @@
                   },
                   "location": {
                     "value": "[parameters('location')]"
+                  },
+                  "enablePublicAccess": {
+                    "value": "[parameters('enablePublicAccess')]"
                   }
                 },
                 "template": {
@@ -276,7 +303,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.15.31.15270",
-                      "templateHash": "3055943862015689972"
+                      "templateHash": "4862270876339960965"
                     }
                   },
                   "parameters": {
@@ -333,6 +360,13 @@
                       "defaultValue": "Hot",
                       "metadata": {
                         "description": "The access tier of the storage account"
+                      }
+                    },
+                    "enablePublicAccess": {
+                      "type": "bool",
+                      "defaultValue": true,
+                      "metadata": {
+                        "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
                       }
                     },
                     "isHnsEnabled": {
@@ -438,7 +472,8 @@
                         "isHnsEnabled": "[parameters('isHnsEnabled')]",
                         "networkAcls": "[parameters('networkAcls')]",
                         "isSftpEnabled": "[parameters('isSftpEnabled')]",
-                        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]"
+                        "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
+                        "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]"
                       },
                       "tags": "[parameters('resource_tags')]"
                     },
