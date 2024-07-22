@@ -56,6 +56,12 @@ param softDeleteRetentionInDays int = 7
 param enableDiagnostics bool
 // TODO: Support shipping diagnostics to log analytics?
 
+@description('When false, the vault will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
+param enablePublicAccess bool = true
+
+@description('When true, the key vault will have purge protection enabled')
+param enablePurgeProtection bool
+
 @description('The storage account name to be used for key vault diagnostic settings')
 param diagnosticsStorageAccountName string = ''
 
@@ -115,6 +121,8 @@ module key_vault '../key-vault/main.bicep' = {
     enabledForDeployment: enabledForDeployment
     enabledForDiskEncryption: enabledForDiskEncryption
     enabledForTemplateDeployment: enabledForTemplateDeployment
+    enablePublicAccess: enablePublicAccess
+    enablePurgeProtection: enablePurgeProtection
     tenantId: tenantId
     useExisting: false
     location: location
