@@ -49,6 +49,9 @@ param enableDiagnostics bool
 @description('When false, the vault will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
 param enablePublicAccess bool = true
 
+@description('When true, the key vault will have purge protection enabled')
+param enablePurgeProtection bool
+
 @description('The storage account name to be used for key vault diagnostic settings')
 param diagnosticsStorageAccountName string = ''
 
@@ -89,6 +92,7 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExis
     enableRbacAuthorization: enableRbacAuthorization
     enableSoftDelete: enableSoftDelete
     softDeleteRetentionInDays: softDeleteRetentionInDays
+    enablePurgeProtection: enablePurgeProtection
     networkAcls: networkAcls
   }
   tags: resourceTags
