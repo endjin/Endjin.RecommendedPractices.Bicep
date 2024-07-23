@@ -165,7 +165,7 @@ resource workspace_sql_admin 'Microsoft.Synapse/workspaces/administrators@2021-0
   }
 }
 
-module workspace_firewall_rules './synapse-firewall-rule.bicep' = if (length(firewallRules) > 0) {
+module workspace_firewall_rules './synapse-firewall-rule.bicep' = if (enablePublicAccess && length(firewallRules) > 0) {
   name: 'firewallRulesDeploy'
   params: {
     firewallRules: firewallRules
