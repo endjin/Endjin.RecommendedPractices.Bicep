@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "4152087168993634870"
+      "templateHash": "16158966237616527840"
     }
   },
   "parameters": {
@@ -388,7 +388,7 @@
       }
     },
     {
-      "condition": "[greater(length(variables('firewallRules')), 0)]",
+      "condition": "[and(parameters('enablePublicAccess'), greater(length(variables('firewallRules')), 0))]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-10-01",
       "name": "firewallRulesDeploy",
