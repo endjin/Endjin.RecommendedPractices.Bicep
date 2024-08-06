@@ -269,7 +269,7 @@ module private_endpoints '../private-endpoint/main.bicep' = [ for service in ena
 //
 module sql_cname_records '../private-dns-cname/main.bicep' = if (enablePrivateEndpointsPrivateDns && contains(enabledSynapsePrivateEndpointServices, 'sql')) {
   name: 'sqlCNameDeploy'
-  scope: resourceGroup(virtualNetworkSubscriptionId, virtualNetworkResourceGroupName)
+  scope: resourceGroup(privateDnsZonesSubscriptionId, privateDnsZonesResourceGroupName)
   params: {
     zoneName: 'privatelink${environment().suffixes.sqlServerHostname}'
     recordName: workspace.name
@@ -282,7 +282,7 @@ module sql_cname_records '../private-dns-cname/main.bicep' = if (enablePrivateEn
 
 module sqlondemand_cname_records '../private-dns-cname/main.bicep' = if (enablePrivateEndpointsPrivateDns && contains(enabledSynapsePrivateEndpointServices, 'sqlOnDemand')) {
   name: 'sqlOnDemandCNameDeploy'
-  scope: resourceGroup(virtualNetworkSubscriptionId, virtualNetworkResourceGroupName)
+  scope: resourceGroup(privateDnsZonesSubscriptionId, privateDnsZonesResourceGroupName)
   params: {
     zoneName: 'privatelink${environment().suffixes.sqlServerHostname}'
     recordName: '${workspace.name}-ondemand'
