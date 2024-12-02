@@ -2,7 +2,7 @@
 
 Adds or updates a Key Vault secret
 
-## Description
+## Details
 
 Deploys a secret to an existing Key Vault and returns its URI. If the secret is expected to already exist, the `useExisting` flag can be used to obtain the URI without modifying the underlying secret.
 
@@ -18,9 +18,9 @@ Deploys a secret to an existing Key Vault and returns its URI. If the secret is 
 
 ## Outputs
 
-| Name                 | Type   | Description                                         |
-| :------------------- | :----: | :-------------------------------------------------- |
-| secretUriWithVersion | string | The key vault URI linking to the new/updated secret |
+| Name                   | Type     | Description                                         |
+| :--------------------- | :------: | :-------------------------------------------------- |
+| `secretUriWithVersion` | `string` | The key vault URI linking to the new/updated secret |
 
 ## Examples
 

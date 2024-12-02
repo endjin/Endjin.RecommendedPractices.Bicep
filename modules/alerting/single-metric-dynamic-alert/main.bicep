@@ -1,3 +1,11 @@
+// <copyright file="single-metric-dynamic-alert/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Single Metric Dynamic Alert'
+metadata description = 'Deploys an dynamic Alert based on a single Azure Monitor or AppInsights metric'
+metadata owner = 'endjin'
+
 @description('The metric Alert resource name.')
 param name string
 

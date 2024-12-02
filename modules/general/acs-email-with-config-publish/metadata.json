@@ -1,6 +1,0 @@
-{
-  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
-  "name": "acs-email-managed-domain-with-published-config",
-  "summary": "Azure Communication Email Service with managed Azure domain, with published configuration",
-  "owner": "endjin"
-}

@@ -2,7 +2,7 @@
 
 Creates an AAD service principal
 
-## Description
+## Details
 
 Deploys a [deployment script resource](https://learn.microsoft.com/en-us/azure/templates/microsoft.resources/deploymentscripts?pivots=deployment-language-bicep) that runs a PowerShell script that creates an [Azure Active Directory service principal](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#application-object).
 
@@ -23,10 +23,10 @@ Deploys a [deployment script resource](https://learn.microsoft.com/en-us/azure/t
 
 ## Outputs
 
-| Name      | Type   | Description                                                |
-| :-------- | :----: | :--------------------------------------------------------- |
-| app_id    | string | The application/client ID of the AzureAD service principal |
-| object_id | string | The object/principal ID of the AzureAD service principal   |
+| Name        | Type     | Description                                                |
+| :---------- | :------: | :--------------------------------------------------------- |
+| `app_id`    | `string` | The application/client ID of the AzureAD service principal |
+| `object_id` | `string` | The object/principal ID of the AzureAD service principal   |
 
 ## Examples
 

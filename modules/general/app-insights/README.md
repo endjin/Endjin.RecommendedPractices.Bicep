@@ -2,7 +2,7 @@
 
 Azure Application Insights
 
-## Description
+## Details
 
 Deploys or updates an [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) resource backed by an existing Log Analytics workspace for data ingestion.
 
@@ -24,11 +24,11 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name                         | Type   | Description                                                |
-| :--------------------------- | :----: | :--------------------------------------------------------- |
-| id                           | string | The resource ID of the app insights workspace              |
-| name                         | string | The name of the app insights workspace                     |
-| appInsightsWorkspaceResource | object | An object representing the app insights workspace resource |
+| Name                           | Type     | Description                                                |
+| :----------------------------- | :------: | :--------------------------------------------------------- |
+| `id`                           | `string` | The resource ID of the app insights workspace              |
+| `name`                         | `string` | The name of the app insights workspace                     |
+| `appInsightsWorkspaceResource` | `object` | An object representing the app insights workspace resource |
 
 ## Examples
 

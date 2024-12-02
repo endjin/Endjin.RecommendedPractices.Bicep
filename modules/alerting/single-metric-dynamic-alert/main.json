@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "4427302893284083052"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "13645589444613341850"
+    },
+    "name": "Single Metric Dynamic Alert",
+    "description": "Deploys an dynamic Alert based on a single Azure Monitor or AppInsights metric",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -131,7 +134,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "[format('deployMetricAlert-{0}', parameters('name'))]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -190,9 +193,12 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "5724846633413350010"
-            }
+              "version": "0.31.92.45157",
+              "templateHash": "735523483712782807"
+            },
+            "name": "Azure Metric Alert",
+            "description": "Deploys an alert based on an Azure Monitor or AppInsights metric",
+            "owner": "endjin"
           },
           "parameters": {
             "name": {
@@ -290,10 +296,10 @@
                 },
                 "description": "[parameters('alertDescription')]",
                 "enabled": "[parameters('enabled')]",
-                "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.evaluationFrequency.value]",
+                "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.evaluationFrequency.value]",
                 "scopes": "[parameters('targetScopes')]",
-                "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.severity.value]",
-                "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.evaluationWindowSize.value]",
+                "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.severity.value]",
+                "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.evaluationWindowSize.value]",
                 "actions": [
                   {
                     "actionGroupId": "[parameters('actionGroupId')]"
@@ -307,7 +313,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-10-01",
+              "apiVersion": "2022-09-01",
               "name": "[format('alertUtils_{0}', parameters('severity'))]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -331,8 +337,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.15.31.15270",
-                      "templateHash": "9994439745399304463"
+                      "version": "0.31.92.45157",
+                      "templateHash": "5821703039425751297"
                     }
                   },
                   "parameters": {
@@ -376,24 +382,24 @@
                   "outputs": {
                     "severity": {
                       "type": "int",
-                      "value": "[variables('severityLookup')[parameters('severity')]]",
                       "metadata": {
                         "description": "The numeric representation of the specified severity level"
-                      }
+                      },
+                      "value": "[variables('severityLookup')[parameters('severity')]]"
                     },
                     "evaluationFrequency": {
                       "type": "string",
-                      "value": "[format('PT{0}M', parameters('evaluationFrequencyMinutes'))]",
                       "metadata": {
                         "description": "The 'evaluationFrequency' in ISO 8601 duration format"
-                      }
+                      },
+                      "value": "[format('PT{0}M', parameters('evaluationFrequencyMinutes'))]"
                     },
                     "evaluationWindowSize": {
                       "type": "string",
-                      "value": "[format('PT{0}M', parameters('evaluationWindowSizeMinutes'))]",
                       "metadata": {
                         "description": "The 'evaluationWindowSize' in ISO 8601 duration format"
-                      }
+                      },
+                      "value": "[format('PT{0}M', parameters('evaluationWindowSizeMinutes'))]"
                     }
                   }
                 }
@@ -403,10 +409,10 @@
           "outputs": {
             "id": {
               "type": "string",
-              "value": "[resourceId('Microsoft.Insights/metricAlerts', parameters('name'))]",
               "metadata": {
                 "description": "The resource ID of the alert"
-              }
+              },
+              "value": "[resourceId('Microsoft.Insights/metricAlerts', parameters('name'))]"
             }
           }
         }

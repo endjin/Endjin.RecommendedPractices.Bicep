@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "10037941283393424683"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "2417483019979139567"
+    },
+    "name": "Private Endpoint",
+    "description": "Deploys a private endpoint for the specified resource",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -174,24 +177,24 @@
   "outputs": {
     "privateEndpointId": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]",
       "metadata": {
         "description": "The resource ID of the private endpoint"
-      }
+      },
+      "value": "[resourceId('Microsoft.Network/privateEndpoints', variables('endpointName'))]"
     },
     "privateDnsZoneId": {
       "type": "string",
-      "value": "[if(parameters('enablePrivateDns'), resourceId('Microsoft.Network/privateEndpoints/privateDnsZoneGroups', variables('endpointName'), variables('endpointName')), '')]",
       "metadata": {
         "description": "The resource ID of the PrivateDns zone"
-      }
+      },
+      "value": "[if(parameters('enablePrivateDns'), resourceId('Microsoft.Network/privateEndpoints/privateDnsZoneGroups', variables('endpointName'), variables('endpointName')), '')]"
     },
     "privateEndpointResource": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpointName')), '2021-08-01', 'full')]",
       "metadata": {
         "description": "An object representing the private endpoint resource"
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Network/privateEndpoints', variables('endpointName')), '2021-08-01', 'full')]"
     }
   }
 }

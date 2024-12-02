@@ -1,3 +1,7 @@
+metadata name = 'acs-email-managed-domain-with-published-config'
+metadata description = 'Azure Communication Email Service with managed Azure domain, with published configuration'
+metadata owner = 'endjin'
+
 @description('The name of the Azure Communication Service resource.')
 param communicationServiceName string
 
@@ -73,3 +77,4 @@ output domain string = acs_email.outputs.domain
 
 @description('The send-from email address for the Azure managed domain.')
 output sendFromEmailAddress string = acs_email.outputs.sendFromEmailAddress
+

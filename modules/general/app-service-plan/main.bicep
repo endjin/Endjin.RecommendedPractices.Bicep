@@ -1,6 +1,10 @@
-// <copyright file="app-service-plan.bicep" company="Endjin Limited">
+// <copyright file="app-service-plan/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'App Service Plan'
+metadata description = 'Deploys an App Service Plan'
+metadata owner = 'endjin'
 
 @description('The name of the app service plan')
 param name string
@@ -86,3 +90,4 @@ output name string = useExisting ? existing_hosting_plan.name : hosting_plan.nam
 // Returns the full App Service Plan resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app configuration store resource')
 output appServicePlanResource object = useExisting ? existing_hosting_plan : hosting_plan
+

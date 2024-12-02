@@ -1,3 +1,11 @@
+// <copyright file="log-analytics/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Adds or updates log analytics workspace'
+metadata description = 'Adds or updates log analytics workspace'
+metadata owner = 'endjin'
+
 @description('The name of the log analytics workspace')
 param name string
 @description('The location of the log analytics workspace')
@@ -60,3 +68,4 @@ output name string =  useExisting ? existing_log_analytics_workspace.name : log_
 
 @description('The workspace resource ID')
 output id string = useExisting ? existing_log_analytics_workspace.id : log_analytics_workspace.id
+

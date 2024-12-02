@@ -2,7 +2,7 @@
 
 Deploys a Container App hosting environment
 
-## Description
+## Details
 
 Deploys or updates a [Container Apps Environment](https://learn.microsoft.com/en-us/azure/container-apps/environment) resource which can then be used to deploy Container Apps.
 
@@ -29,15 +29,15 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name                            | Type   | Description                                                   |
-| :------------------------------ | :----: | :------------------------------------------------------------ |
-| id                              | string | The resource ID of the container app environment              |
-| name                            | string | The name of the container app environment                     |
-| appEnvironmentResource          | object | An object representing the container app environment resource |
-| appinsights_instrumentation_key | string | The app insights workspace instrumentation key                |
-| acrId                           | string | The resource ID of the container registry                     |
-| acrUsername                     | string | The admin username for the container registry                 |
-| acrLoginServer                  | string | The login server for the container registry                   |
+| Name                              | Type     | Description                                                   |
+| :-------------------------------- | :------: | :------------------------------------------------------------ |
+| `id`                              | `string` | The resource ID of the container app environment              |
+| `name`                            | `string` | The name of the container app environment                     |
+| `appEnvironmentResource`          | `object` | An object representing the container app environment resource |
+| `appinsights_instrumentation_key` | `string` | The app insights workspace instrumentation key                |
+| `acrId`                           | `string` | The resource ID of the container registry                     |
+| `acrUsername`                     | `string` | The admin username for the container registry                 |
+| `acrLoginServer`                  | `string` | The login server for the container registry                   |
 
 ## Examples
 

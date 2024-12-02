@@ -1,6 +1,10 @@
-// <copyright file="app-configuration.bicep" company="Endjin Limited">
+// <copyright file="app-configuration/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'App Configuration'
+metadata description = 'Azure App Configuration'
+metadata owner = 'endjin'
 
 @description('The name of the app configuration store')
 param name string
@@ -96,3 +100,4 @@ output name string = useExisting ? existing_app_config_store.name : app_config_s
 // Returns the full AppConfig Store resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app configuration store resource')
 output appConfigStoreResource object = useExisting ? existing_app_config_store : app_config_store
+

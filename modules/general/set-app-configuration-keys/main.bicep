@@ -1,6 +1,10 @@
-// <copyright file="set_app_configuration_keys.bicep" company="Endjin Limited">
+// <copyright file="set_app_configuration_keys/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'Adds or updates a list of App Configuration keys'
+metadata description = 'Adds or updates a list of App Configuration keys'
+metadata owner = 'endjin'
 
 @description('The app configuration instance where the keys will be stored')
 param appConfigStoreName string
@@ -27,3 +31,4 @@ resource app_config_entry 'Microsoft.AppConfiguration/configurationStores/keyVal
     value: entry.value
   }
 }]
+

@@ -1,3 +1,11 @@
+// <copyright file="email-action-group/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Email Action Group'
+metadata description = 'Azure Action Group for sending email notifications'
+metadata owner = 'endjin'
+
 @description('The name of the action group')
 param name string
 

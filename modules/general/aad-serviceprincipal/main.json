@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "5026647349466886113"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "7881249330196649905"
+    },
+    "name": "AAD Service Principal",
+    "description": "Creates an AAD service principal",
+    "owner": "endjin"
   },
   "parameters": {
     "displayName": {
@@ -115,17 +118,17 @@
   "outputs": {
     "app_id": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.appId]",
       "metadata": {
         "description": "The application/client ID of the AzureAD service principal"
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.appId]"
     },
     "object_id": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.objectId]",
       "metadata": {
         "description": "The object/principal ID of the AzureAD service principal"
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.objectId]"
     }
   }
 }

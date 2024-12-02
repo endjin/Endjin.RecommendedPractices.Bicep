@@ -2,7 +2,7 @@
 
 Deploys a private endpoint for the specified resource
 
-## Description
+## Details
 
 Deploys a [Private Endpoint](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview) that allows connecting to PaaS resources that support Private Link.
 
@@ -29,11 +29,11 @@ The module also optionally registers the Private Endpoint with the appropriate [
 
 ## Outputs
 
-| Name                    | Type   | Description                                          |
-| :---------------------- | :----: | :--------------------------------------------------- |
-| privateEndpointId       | string | The resource ID of the private endpoint              |
-| privateDnsZoneId        | string | The resource ID of the PrivateDns zone               |
-| privateEndpointResource | object | An object representing the private endpoint resource |
+| Name                      | Type     | Description                                          |
+| :------------------------ | :------: | :--------------------------------------------------- |
+| `privateEndpointId`       | `string` | The resource ID of the private endpoint              |
+| `privateDnsZoneId`        | `string` | The resource ID of the PrivateDns zone               |
+| `privateEndpointResource` | `object` | An object representing the private endpoint resource |
 
 ## Examples
 

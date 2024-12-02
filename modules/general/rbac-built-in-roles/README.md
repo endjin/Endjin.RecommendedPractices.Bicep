@@ -2,7 +2,7 @@
 
 Provides a dictionary of role name to role definition ID for built-in RBAC roles.
 
-## Description
+## Details
 
 Azure RBAC has several Azure built-in roles that you can assign to users, groups, service principals, and managed identities. The full list can be viewed [here](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles).
 
@@ -17,9 +17,9 @@ It contains all built-in roles as of October 2022.
 
 ## Outputs
 
-| Name              | Type   | Description                                    |
-| :---------------- | :----: | :--------------------------------------------- |
-| roleDefinitionIds | object | Dictionary of role name to role definition ID. |
+| Name                | Type     | Description                                    |
+| :------------------ | :------: | :--------------------------------------------- |
+| `roleDefinitionIds` | `object` | Dictionary of role name to role definition ID. |
 
 ## Examples
 

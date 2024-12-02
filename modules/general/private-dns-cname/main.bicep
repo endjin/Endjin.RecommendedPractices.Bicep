@@ -1,3 +1,11 @@
+// <copyright file="private-dns-cname/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Private DNS CNAME'
+metadata description = 'Adds/updates a CNAME record in an existing private DNS zone'
+metadata owner = 'endjin'
+
 @description('Name of existing private DNS zone that the CNAME record will be associated with.')
 param zoneName string
 
@@ -28,3 +36,4 @@ resource cname_record 'Microsoft.Network/privateDnsZones/CNAME@2020-06-01' = {
     ttl: recordTtl
   }
 }
+

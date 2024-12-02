@@ -2,7 +2,7 @@
 
 Adds or updates an App Configuration key-value backed by an Azure Key Vault secret.
 
-## Description
+## Details
 
 Adds or updates an App Configuration key-value with a reference to an Azure Key Vault secret and sets the relevant content-type (`application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8`).
 
@@ -23,10 +23,10 @@ This module allows for either using existing Key Vault secrets or for automatica
 
 ## Outputs
 
-| Name                 | Type   | Description                                                                          |
-| :------------------- | :----: | :----------------------------------------------------------------------------------- |
-| secretUriWithVersion | string | The secret URI (with version) of the secret backing the App Configuration key-value. |
-| appConfigKey         | string | The key for the App Configuration key-value.                                         |
+| Name                   | Type     | Description                                                                          |
+| :--------------------- | :------: | :----------------------------------------------------------------------------------- |
+| `secretUriWithVersion` | `string` | The secret URI (with version) of the secret backing the App Configuration key-value. |
+| `appConfigKey`         | `string` | The key for the App Configuration key-value.                                         |
 
 ## Examples
 

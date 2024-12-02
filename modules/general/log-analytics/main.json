@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "9781072933712379631"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "8935128643210216782"
+    },
+    "name": "Adds or updates log analytics workspace",
+    "description": "Adds or updates log analytics workspace",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -102,24 +105,24 @@
   "outputs": {
     "workspaceResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'))]",
       "metadata": {
         "description": "An object representing the log analytics workspace"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'), reference(resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), '2020-10-01', 'full'))]"
     },
     "name": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
       "metadata": {
         "description": "The workspace resource name"
-      }
+      },
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
     },
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')))]",
       "metadata": {
         "description": "The workspace resource ID"
-      }
+      },
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')), resourceId('Microsoft.OperationalInsights/workspaces', parameters('name')))]"
     }
   }
 }

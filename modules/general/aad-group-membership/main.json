@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "4922998764923427010"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "16848759330438942123"
+    },
+    "name": "aad-group-membership",
+    "description": "Configures the membership of an Azure AD group",
+    "owner": "endjin"
   },
   "parameters": {
     "location": {

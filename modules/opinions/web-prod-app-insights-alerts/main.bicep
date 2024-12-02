@@ -1,3 +1,11 @@
+// <copyright file="web-prod-app-insights-alerts/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'web-prod-app-insights-alerts'
+metadata description = 'An opinionated set of application insights alerts for monitoring the health of a web app running in production.'
+metadata owner = 'endjin'
+
 @description('The Azure location for the App Insights Alert resources.')
 param alertLocation string
 
@@ -47,3 +55,4 @@ resource alert 'microsoft.insights/scheduledqueryrules@2021-02-01-preview' = [fo
     }
   }
 }]
+

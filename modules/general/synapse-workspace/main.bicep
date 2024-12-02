@@ -1,3 +1,11 @@
+// <copyright file="synapse-workspace/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Synapse workspace'
+metadata description = 'Adds/updates a Synapse workspace.'
+metadata owner = 'endjin'
+
 @description('The name of the Synapse workspace.')
 param workspaceName string
 
@@ -305,3 +313,4 @@ output name string = workspace.name
 // Returns the full workspace resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the workspace resource')
 output workspaceResource object = workspace
+

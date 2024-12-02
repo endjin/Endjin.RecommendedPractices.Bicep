@@ -1,3 +1,7 @@
+metadata name = 'aad-group-membership'
+metadata description = 'Configures the membership of an Azure AD group'
+metadata owner = 'endjin'
+
 // <copyright file="aad-group-membership.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
@@ -46,3 +50,4 @@ resource aad_group_membership 'Microsoft.Resources/deploymentScripts@2020-10-01'
     }
   }
 }
+

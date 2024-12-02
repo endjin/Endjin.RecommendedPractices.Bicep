@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "5792046387144222354"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "6541973977213924697"
+    },
+    "name": "Private DNS CNAME",
+    "description": "Adds/updates a CNAME record in an existing private DNS zone",
+    "owner": "endjin"
   },
   "parameters": {
     "zoneName": {

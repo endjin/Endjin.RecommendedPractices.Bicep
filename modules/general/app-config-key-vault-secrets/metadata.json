@@ -1,6 +1,0 @@
-{
-  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
-  "name": "App Configuration Key Vault Secrets",
-  "summary": "Adds or updates multiple App Configuration key-values backed by Azure Key Vault secrets.",
-  "owner": "endjin"
-}
