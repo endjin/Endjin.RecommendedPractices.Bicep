@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "12057103437820456431"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "9408016924291965910"
+    },
+    "name": "App Configuration",
+    "description": "Azure App Configuration",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -117,7 +120,7 @@
     {
       "condition": "[parameters('saveConnectionStringsToKeyVault')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "[format('appConfigConnStrSecretDeploy{0}', parameters('name'))]",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -141,9 +144,12 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "16729986519206477407"
-            }
+              "version": "0.31.92.45157",
+              "templateHash": "7647943469143824631"
+            },
+            "name": "Adds or updates a Key Vault secret",
+            "description": "Adds or updates a Key Vault secret",
+            "owner": "endjin"
           },
           "parameters": {
             "secretName": {
@@ -195,10 +201,10 @@
           "outputs": {
             "secretUriWithVersion": {
               "type": "string",
-              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
               "metadata": {
                 "description": "The key vault URI linking to the new/updated secret"
-              }
+              },
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
             }
           }
         }
@@ -210,7 +216,7 @@
     {
       "condition": "[parameters('saveConnectionStringsToKeyVault')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "[format('appConfigRoConnStrSecretDeploy{0}', parameters('name'))]",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -234,9 +240,12 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "16729986519206477407"
-            }
+              "version": "0.31.92.45157",
+              "templateHash": "7647943469143824631"
+            },
+            "name": "Adds or updates a Key Vault secret",
+            "description": "Adds or updates a Key Vault secret",
+            "owner": "endjin"
           },
           "parameters": {
             "secretName": {
@@ -288,10 +297,10 @@
           "outputs": {
             "secretUriWithVersion": {
               "type": "string",
-              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
               "metadata": {
                 "description": "The key vault URI linking to the new/updated secret"
-              }
+              },
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
             }
           }
         }
@@ -304,24 +313,24 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')))]",
       "metadata": {
         "description": "The resource ID of the app configuration store"
-      }
+      },
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')))]"
     },
     "name": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
       "metadata": {
         "description": "The name of the app configuration store"
-      }
+      },
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
     },
     "appConfigStoreResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01', 'full'), reference(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01', 'full'))]",
       "metadata": {
         "description": "An object representing the app configuration store resource"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01', 'full'), reference(resourceId('Microsoft.AppConfiguration/configurationStores', parameters('name')), '2020-06-01', 'full'))]"
     }
   }
 }

@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "2498863255039247622"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "3361275771535899186"
+    },
+    "name": "App Service Plan",
+    "description": "Deploys an App Service Plan",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -134,24 +137,24 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), resourceId('Microsoft.Web/serverfarms', parameters('name')))]",
       "metadata": {
         "description": "The resource ID of the app service plan"
-      }
+      },
+      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), resourceId('Microsoft.Web/serverfarms', parameters('name')))]"
     },
     "name": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
       "metadata": {
         "description": "The name of the app service plan"
-      }
+      },
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
     },
     "appServicePlanResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'))]",
       "metadata": {
         "description": "An object representing the app configuration store resource"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingPlanResourceSubscriptionId'), parameters('existingPlanResourceGroupName')), 'Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.Web/serverfarms', parameters('name')), '2022-03-01', 'full'))]"
     }
   }
 }

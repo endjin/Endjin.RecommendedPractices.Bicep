@@ -2,7 +2,7 @@
 
 Deploys a resource group or gets a reference to an existing one.
 
-## Description
+## Details
 
 Deploys a resource group or gets a reference to an existing one. This is useful for deferred evaluation of target resource group details.
 
@@ -17,11 +17,11 @@ Deploys a resource group or gets a reference to an existing one. This is useful 
 
 ## Outputs
 
-| Name                  | Type   | Description                                        |
-| :-------------------- | :----: | :------------------------------------------------- |
-| id                    | string | The resource ID of the resource group              |
-| name                  | string | The name of the resource group                     |
-| resourceGroupResource | object | An object representing the resource group resource |
+| Name                    | Type     | Description                                        |
+| :---------------------- | :------: | :------------------------------------------------- |
+| `id`                    | `string` | The resource ID of the resource group              |
+| `name`                  | `string` | The name of the resource group                     |
+| `resourceGroupResource` | `object` | An object representing the resource group resource |
 
 ## Examples
 

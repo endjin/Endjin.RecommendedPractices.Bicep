@@ -1,7 +1,10 @@
-
-// <copyright file="key-vault-with-secrets-access-via-groups.bicep" company="Endjin Limited">
+// <copyright file="key-vault-with-secrets-access-via-groups/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'Key Vault with group-based access policy'
+metadata description = 'Deploys a Key Vault with a secrets access policy managed via group membership'
+metadata owner = 'endjin'
 
 @description('The name of the key vault')
 param name string
@@ -139,3 +142,4 @@ output name string = key_vault.outputs.name
 // Returns the full Key Vault resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the key vault resource')
 output keyVaultResource object =  key_vault.outputs.keyVaultResource
+

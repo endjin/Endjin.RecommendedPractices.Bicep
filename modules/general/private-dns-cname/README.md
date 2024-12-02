@@ -2,7 +2,7 @@
 
 Adds/updates a CNAME record in an existing private DNS zone
 
-## Description
+## Details
 
 Creates a new [CNAME record](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records#cname-records) in the provided existing private DNS zone.
 

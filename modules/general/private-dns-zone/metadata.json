@@ -1,6 +1,0 @@
-{
-  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
-  "name": "Private DNS Zone",
-  "summary": "Adds/updates a private DNS zone and virtual network link for existing VNet",
-  "owner": "endjin"
-}

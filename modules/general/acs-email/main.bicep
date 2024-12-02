@@ -1,3 +1,11 @@
+// <copyright file="acs-email/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'acs-email-managed-domain'
+metadata description = 'Azure Communication Email Service with managed Azure domain'
+metadata owner = 'endjin'
+
 @description('The name of the Azure Communication Service resource.')
 param communicationServiceName string
 
@@ -98,3 +106,4 @@ output domain string = email_service::azure_managed_domain.properties.mailFromSe
 
 @description('The send-from email address for the Azure managed domain.')
 output sendFromEmailAddress string = '${email_service::azure_managed_domain::sender_username_azure_managed_domain.properties.username}@${email_service::azure_managed_domain.properties.mailFromSenderDomain}'
+

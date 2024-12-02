@@ -2,7 +2,7 @@
 
 Azure Container Registry
 
-## Description
+## Details
 
 Deploys or updates an [Azure Container Registry](https://azure.microsoft.com/en-us/products/container-registry/) resource.
 
@@ -21,12 +21,12 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name        | Type   | Description                                            |
-| :---------- | :----: | :----------------------------------------------------- |
-| id          | string | The resource ID of the container registry              |
-| name        | string | The name of the container registry                     |
-| loginServer | string | The admin username of the container registry           |
-| acrResource | object | An object representing the container registry resource |
+| Name          | Type     | Description                                            |
+| :------------ | :------: | :----------------------------------------------------- |
+| `id`          | `string` | The resource ID of the container registry              |
+| `name`        | `string` | The name of the container registry                     |
+| `loginServer` | `string` | The admin username of the container registry           |
+| `acrResource` | `object` | An object representing the container registry resource |
 
 ## Examples
 

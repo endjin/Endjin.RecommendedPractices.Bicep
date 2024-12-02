@@ -2,7 +2,7 @@
 
 Deploys a storage account or returns a reference to an existing one.
 
-## Description
+## Details
 
 Deploys a storage account or returns a reference to an existing one - typically only used where scoping constraints prevent direct use of the raw resource.
 
@@ -15,6 +15,7 @@ Deploys a storage account or returns a reference to an existing one - typically 
 | `sku`                                | `string` | No       | The SKU of the storage account                                                                                                                                                                                                    |
 | `kind`                               | `string` | No       | The kind of the storage account                                                                                                                                                                                                   |
 | `tlsVersion`                         | `string` | No       | The minimum TLS version required by the storage account                                                                                                                                                                           |
+| `allowBlobPublicAccess`              | `bool`   | No       | When true, configuring publicly-accessible blob containers will be allowed                                                                                                                                                        |
 | `allowSharedKeyAccess`               | `bool`   | No       | When false, access to the storage account is only possible via Azure AD authentication                                                                                                                                            |
 | `httpsOnly`                          | `bool`   | No       | When true, disables access to the storage account via unencrypted HTTP connections                                                                                                                                                |
 | `accessTier`                         | `string` | No       | The access tier of the storage account                                                                                                                                                                                            |
@@ -34,11 +35,11 @@ Deploys a storage account or returns a reference to an existing one - typically 
 
 ## Outputs
 
-| Name                   | Type   | Description                                         |
-| :--------------------- | :----: | :-------------------------------------------------- |
-| id                     | string | The resource ID of the storage account              |
-| name                   | string | The name of the storage account                     |
-| storageAccountResource | object | An object representing the storage account resource |
+| Name                     | Type     | Description                                         |
+| :----------------------- | :------: | :-------------------------------------------------- |
+| `id`                     | `string` | The resource ID of the storage account              |
+| `name`                   | `string` | The name of the storage account                     |
+| `storageAccountResource` | `object` | An object representing the storage account resource |
 
 ## Examples
 

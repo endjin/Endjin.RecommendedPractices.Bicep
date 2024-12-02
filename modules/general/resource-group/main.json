@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "8083561161507545924"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "10093576357642371536"
+    },
+    "name": "Resource Group",
+    "description": "Deploys a resource group or gets a reference to an existing one.",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -49,24 +52,24 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')))]",
       "metadata": {
         "description": "The resource ID of the resource group"
-      }
+      },
+      "value": "[if(parameters('useExisting'), subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')))]"
     },
     "name": {
       "type": "string",
-      "value": "[parameters('name')]",
       "metadata": {
         "description": "The name of the resource group"
-      }
+      },
+      "value": "[parameters('name')]"
     },
     "resourceGroupResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2021-04-01', 'full'), reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2021-04-01', 'full'))]",
       "metadata": {
         "description": "An object representing the resource group resource"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2021-04-01', 'full'), reference(subscriptionResourceId('Microsoft.Resources/resourceGroups', parameters('name')), '2021-04-01', 'full'))]"
     }
   }
 }

@@ -2,7 +2,7 @@
 
 Adds/Updates Synapse Spark Pools in an existing Synapse workspace.
 
-## Description
+## Details
 
 Deploys [Apache Spark Pools](https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-concepts) into an existing Synapse workspace. The properties for the pools are documented here: https://docs.microsoft.com/en-us/azure/templates/microsoft.synapse/2021-03-01/workspaces/bigdatapools?tabs=json
 
@@ -19,9 +19,9 @@ Deploys [Apache Spark Pools](https://learn.microsoft.com/en-us/azure/synapse-ana
 
 ## Outputs
 
-| Name                 | Type   | Description                                                                                                        |
-| :------------------- | :----: | :----------------------------------------------------------------------------------------------------------------- |
-| defaultSparkPoolName | string | The name of the default Spark Pool. Note: the first configured Spark Pool will be considered the notional default. |
+| Name                   | Type     | Description                                                                                                        |
+| :--------------------- | :------: | :----------------------------------------------------------------------------------------------------------------- |
+| `defaultSparkPoolName` | `string` | The name of the default Spark Pool. Note: the first configured Spark Pool will be considered the notional default. |
 
 ## Examples
 

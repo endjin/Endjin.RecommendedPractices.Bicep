@@ -1,6 +1,10 @@
-// <copyright file="app-insights.bicep" company="Endjin Limited">
+// <copyright file="app-insights/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'Application Insights'
+metadata description = 'Azure Application Insights'
+metadata owner = 'endjin'
 
 @description('The name of the app insights workspace')
 param name string
@@ -78,3 +82,4 @@ output name string =  useExisting ? existing_app_insights.name : app_insights.na
 // Returns the full AppInsights Workspace resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the app insights workspace resource')
 output appInsightsWorkspaceResource object = useExisting ? existing_app_insights : app_insights
+

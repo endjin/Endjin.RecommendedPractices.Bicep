@@ -1,3 +1,11 @@
+// <copyright file="aad-serviceprincipal/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'AAD Service Principal'
+metadata description = 'Creates an AAD service principal'
+metadata owner = 'endjin'
+
 @description('The display name of the AzureAD service principal')
 param displayName string
 
@@ -66,3 +74,4 @@ output app_id string = aad_service_principal.properties.outputs.appId
 
 @description('The object/principal ID of the AzureAD service principal')
 output object_id string = aad_service_principal.properties.outputs.objectId
+

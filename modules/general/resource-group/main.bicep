@@ -1,6 +1,10 @@
-// <copyright file="resource-group.bicep" company="Endjin Limited">
+// <copyright file="resource-group/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'Resource Group'
+metadata description = 'Deploys a resource group or gets a reference to an existing one.'
+metadata owner = 'endjin'
 
 @description('The name of the resource group')
 param name string
@@ -37,3 +41,4 @@ output name string = name
 // Returns the full Resource Group resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the resource group resource')
 output resourceGroupResource object = useExisting ? existing_rg : rg
+

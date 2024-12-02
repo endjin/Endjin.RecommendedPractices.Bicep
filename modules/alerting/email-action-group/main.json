@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "6785330462409197829"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "7620593411438927969"
+    },
+    "name": "Email Action Group",
+    "description": "Azure Action Group for sending email notifications",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -74,24 +77,24 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Insights/actionGroups', parameters('name'))]",
       "metadata": {
         "description": "The resource ID of the action group"
-      }
+      },
+      "value": "[resourceId('Microsoft.Insights/actionGroups', parameters('name'))]"
     },
     "name": {
       "type": "string",
-      "value": "[parameters('name')]",
       "metadata": {
         "description": "The name of the action group"
-      }
+      },
+      "value": "[parameters('name')]"
     },
     "resource": {
       "type": "object",
-      "value": "[reference(resourceId('Microsoft.Insights/actionGroups', parameters('name')), '2022-06-01', 'full')]",
       "metadata": {
         "description": "An object representing the action group resource"
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Insights/actionGroups', parameters('name')), '2022-06-01', 'full')]"
     }
   }
 }

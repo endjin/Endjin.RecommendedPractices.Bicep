@@ -2,7 +2,7 @@
 
 Deploys an dynamic Alert based on a single Azure Monitor or AppInsights metric
 
-## Description
+## Details
 
 Provides an opinionated wrapper around the `Microsoft.Insights/metricAlerts` resource to simplify the configuration of Azure Monitor Dynamic alerts.
 

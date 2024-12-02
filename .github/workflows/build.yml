@@ -1,69 +1,63 @@
 name: build
 on:
-  pull_request:
-    types: [
-      opened,
-      synchronize,
-      reopened
-    ]
   push:
+    branches:
+    - main
+    tags:
+    - '*'
+  pull_request:
     branches:
     - main
   workflow_dispatch:
     inputs:
-      force_publish:
-        default: 'false'
-        required: true
-        description: When true, modules will be published regardless of the normal branch constraints
+      forcePublish:
+        description: When true the Publish stage will always be run, otherwise it only runs for tagged versions.
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  checks: write  # enable test result annotations
+  contents: write  # enable creating releases
+  issues: read
+  packages: write  # enable publishing packages
+  pull-requests: write  # enable test result annotations
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     name: Run Build
+    runs-on: ubuntu-latest
     outputs:
-      semver: ${{ steps.run_build.outputs.SemVer }}
-      major: ${{ steps.run_build.outputs.Major }}
-      majorMinor: ${{ steps.run_build.outputs.Major }}.${{ steps.run_build.outputs.Minor }}
-      preReleaseTag: ${{ steps.run_build.outputs.PreReleaseTag }}
+      semver: ${{ steps.run_build.outputs.semver }}
+      major: ${{ steps.run_build.outputs.major }}
+      majorMinor: ${{ steps.run_build.outputs.majorMinor }}
+      preReleaseTag: ${{ steps.run_build.outputs.preReleaseTag }}
+
     steps:
-    # Setup steps
-    - uses: actions/setup-dotnet@v1
-      if: ${{ github.actor != 'nektos/act' }}
-      name: Install .NET Core SDK 7.0.x
+    - uses: endjin/Endjin.RecommendedPractices.GitHubActions/actions/prepare-env-vars-and-secrets@main
+      id: prepareEnvVarsAndSecrets
       with:
-        dotnet-version: '7.0.x'
+        environmentVariablesYaml: |
+          BUILDVAR_ContainerRegistryFqdn: "endjin.azurecr.io"
+          BUILDVAR_ContainerImageVersionOverride: ""
+          BUILDVAR_Configuration: "Release"
+        secretsYaml: |
+          {
+          }
 
-    # Build steps
-    - uses: actions/checkout@v2
+    - uses: endjin/Endjin.RecommendedPractices.GitHubActions/actions/run-build-process@main
+      id: run_build
       with:
-        fetch-depth: 0
-    
-    - id: azlogin
-      name: Azure Login
-      if: ${{ (github.ref == 'refs/heads/main') || (github.event.inputs.force_publish == 'true') }}
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.ENDJIN_PROD_ACR_PUBLISH_CREDENTIALS }}
-    
-    - id: run_build
-      name: Run Build
-      run: |
-        Write-Host "Building ref: $($env:GITHUB_REF)"
-        Write-Host "PublicRelease: $($env:PublicRelease)"
-
-        # when building 'main' the base branch needs to be the previous commit
-        if ($env:GITHUB_REF -eq "refs/heads/main") {
-          Write-Host "Overriding 'BaseBranch' build variable for this build of 'main'"
-          $env:BUILDVAR_BaseBranch = "HEAD~1"
-        }
-
-        # set whether we are publishing modules or just validating them
-        $entrypointTask = $env:PublicRelease -eq "true" -or $env:FORCE_PUBLISH -eq "true" ? "FullBuildAndPublish" : "FullBuild"
-        & ./build.ps1 -Task $entrypointTask
-      shell: pwsh
-      env:
-        BUILDVAR_BicepRegistryFqdn: endjin.azurecr.io
-        FORCE_PUBLISH: ${{ github.event.inputs.force_publish }}
-        # only builds of 'main' produce stable version numbers
-        PublicRelease: ${{ (github.ref == 'refs/heads/main') }}
-
+        netSdkVersion: '8.x'
+        # workflow_dispatch inputs are always strings, the type property is just for the UI
+        forcePublish: ${{ github.event.inputs.forcePublish == 'true' }}
+        sbomOutputStorageAccountName: ${{ vars.SBOM_OUTPUT_STORAGE_ACCOUNT_NAME }}
+        sbomOutputStorageContainerName: ${{ vars.SBOM_OUTPUT_STORAGE_CONTAINER_NAME }}
+        buildEnv: ${{ steps.prepareEnvVarsAndSecrets.outputs.environmentVariablesYamlBase64 }}
+        buildSecrets: ${{ steps.prepareEnvVarsAndSecrets.outputs.secretsYamlBase64 }}
+        buildAzureCredentials: ${{ secrets.ENDJIN_PROD_ACR_PUBLISH_CREDENTIALS }}
+        token: ${{ secrets.GITHUB_TOKEN }}

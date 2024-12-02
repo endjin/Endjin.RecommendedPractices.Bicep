@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "14564074948641140160"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "6394421122437122720"
+    },
+    "name": "Storage Account Local User",
+    "description": "Creates a local user for use with SFTP on a storage account.",
+    "owner": "endjin"
   },
   "parameters": {
     "storageAccountName": {

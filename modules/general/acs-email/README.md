@@ -2,7 +2,7 @@
 
 Azure Communication Email Service with managed Azure domain
 
-## Description
+## Details
 
 This module provisions a top-level Azure Communication Service (ACS) resource and an Email Communication resource with a managed Azure domain, linking the domain to the ACS resource. A send-from email address is also configured for the domain, which defaults to `DoNotReply@<domain>`.
 
@@ -19,10 +19,10 @@ This module provisions a top-level Azure Communication Service (ACS) resource an
 
 ## Outputs
 
-| Name                 | Type   | Description                                               |
-| :------------------- | :----: | :-------------------------------------------------------- |
-| domain               | string | The Azure managed domain.                                 |
-| sendFromEmailAddress | string | The send-from email address for the Azure managed domain. |
+| Name                   | Type     | Description                                               |
+| :--------------------- | :------: | :-------------------------------------------------------- |
+| `domain`               | `string` | The Azure managed domain.                                 |
+| `sendFromEmailAddress` | `string` | The send-from email address for the Azure managed domain. |
 
 ## Examples
 

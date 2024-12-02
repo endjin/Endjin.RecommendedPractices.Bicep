@@ -2,9 +2,9 @@
 
 Deploys an alert based on a Log Analytics query
 
-## Description
+## Details
 
-Provides a simplified wrapper around the `Microsoft.Insights/scheduledQueryRules` resource used to configure alerts based on [Log Analytics queries](https://learn.microsoft.com/en-us/training/paths/analyze-monitoring-data-with-kql).
+{{Add detailed information about the module}}
 
 ## Parameters
 
@@ -31,9 +31,9 @@ Provides a simplified wrapper around the `Microsoft.Insights/scheduledQueryRules
 
 ## Outputs
 
-| Name | Type   | Description                  |
-| :--- | :----: | :--------------------------- |
-| id   | string | The resource ID of the alert |
+| Name | Type     | Description                  |
+| :--- | :------: | :--------------------------- |
+| `id` | `string` | The resource ID of the alert |
 
 ## Examples
 

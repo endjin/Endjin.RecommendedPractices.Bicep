@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "14656863211449605096"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "13949265178863720503"
+    },
+    "name": "Application Insights",
+    "description": "Azure Application Insights",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -105,24 +108,24 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), resourceId('Microsoft.Insights/components', parameters('name')), resourceId('Microsoft.Insights/components', parameters('name')))]",
       "metadata": {
         "description": "The resource ID of the app insights workspace"
-      }
+      },
+      "value": "[if(parameters('useExisting'), resourceId('Microsoft.Insights/components', parameters('name')), resourceId('Microsoft.Insights/components', parameters('name')))]"
     },
     "name": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
       "metadata": {
         "description": "The name of the app insights workspace"
-      }
+      },
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
     },
     "appInsightsWorkspaceResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02-preview', 'full'))]",
       "metadata": {
         "description": "An object representing the app insights workspace resource"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02', 'full'), reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02-preview', 'full'))]"
     }
   }
 }

@@ -1,6 +1,10 @@
-// <copyright file="container_app_environment.bicep" company="Endjin Limited">
+// <copyright file="container_app_environment/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'Container App Environment'
+metadata description = 'Deploys a Container App hosting environment'
+metadata owner = 'endjin'
 
 @description('The name of the container app hosting environment')
 param name string
@@ -139,3 +143,4 @@ output acrId string = createContainerRegistry ? acr.outputs.id : ''
 output acrUsername string = createContainerRegistry ? acr.outputs.name : ''
 @description('The login server for the container registry')
 output acrLoginServer string = createContainerRegistry ? acr.outputs.loginServer : ''
+

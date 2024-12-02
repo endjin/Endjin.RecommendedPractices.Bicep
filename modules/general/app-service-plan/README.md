@@ -2,7 +2,7 @@
 
 Deploys an App Service Plan
 
-## Description
+## Details
 
 Deploys or updates an [App Service plan](https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans) resource.
 
@@ -29,11 +29,11 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name                   | Type   | Description                                                 |
-| :--------------------- | :----: | :---------------------------------------------------------- |
-| id                     | string | The resource ID of the app service plan                     |
-| name                   | string | The name of the app service plan                            |
-| appServicePlanResource | object | An object representing the app configuration store resource |
+| Name                     | Type     | Description                                                 |
+| :----------------------- | :------: | :---------------------------------------------------------- |
+| `id`                     | `string` | The resource ID of the app service plan                     |
+| `name`                   | `string` | The name of the app service plan                            |
+| `appServicePlanResource` | `object` | An object representing the app configuration store resource |
 
 ## Examples
 

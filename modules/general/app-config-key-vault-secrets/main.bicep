@@ -1,3 +1,11 @@
+// <copyright file="app-config-key-vault/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'App Configuration Key Vault Secrets'
+metadata description = 'Adds or updates multiple App Configuration key-values backed by Azure Key Vault secrets.'
+metadata owner = 'endjin'
+
 @description('The name of the App Configuration Store.')
 param appConfigStoreName string
 
@@ -35,3 +43,4 @@ output secretUris array = [for (kv, index) in keyValueSecrets: {
   appConfigKey: key_value_secrets[index].outputs.appConfigKey
   secretUriWithVersion: key_value_secrets[index].outputs.secretUriWithVersion
 }]
+

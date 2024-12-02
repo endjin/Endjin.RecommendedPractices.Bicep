@@ -1,6 +1,10 @@
-// <copyright file="acr.bicep" company="Endjin Limited">
+// <copyright file="acr/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'container-registry'
+metadata description = 'Azure Container Registry'
+metadata owner = 'endjin'
 
 @description('The name of the container registry')
 param name string
@@ -56,3 +60,4 @@ output loginServer string = useExisting ? existing_acr.properties.loginServer : 
 // Returns the full ACR resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the container registry resource')
 output acrResource object = useExisting ? existing_acr : acr
+

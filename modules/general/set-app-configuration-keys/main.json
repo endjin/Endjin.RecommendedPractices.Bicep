@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "10813160333897422330"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "2056795749289463231"
+    },
+    "name": "Adds or updates a list of App Configuration keys",
+    "description": "Adds or updates a list of App Configuration keys",
+    "owner": "endjin"
   },
   "parameters": {
     "appConfigStoreName": {

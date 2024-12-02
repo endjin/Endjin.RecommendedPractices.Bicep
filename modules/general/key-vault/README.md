@@ -2,7 +2,7 @@
 
 Deploys a key vault with optional diagnostics written to blob storage.
 
-## Description
+## Details
 
 Deploys or updates a [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) resource, supporting the following configuration options:
 
@@ -41,11 +41,11 @@ Once the Key Vault is created, secrets can be added via the [`key-vault-secret`]
 
 ## Outputs
 
-| Name             | Type   | Description                                   |
-| :--------------- | :----: | :-------------------------------------------- |
-| id               | string | The resource ID of the key vault              |
-| name             | string | The name of the key vault                     |
-| keyVaultResource | object | An object representing the key vault resource |
+| Name               | Type     | Description                                   |
+| :----------------- | :------: | :-------------------------------------------- |
+| `id`               | `string` | The resource ID of the key vault              |
+| `name`             | `string` | The name of the key vault                     |
+| `keyVaultResource` | `object` | An object representing the key vault resource |
 
 ## Examples
 

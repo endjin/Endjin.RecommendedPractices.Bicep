@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "9555343672426662132"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "17954315896780719481"
+    },
+    "name": "acs-email-managed-domain",
+    "description": "Azure Communication Email Service with managed Azure domain",
+    "owner": "endjin"
   },
   "parameters": {
     "communicationServiceName": {
@@ -149,17 +152,17 @@
   "outputs": {
     "domain": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain]",
       "metadata": {
         "description": "The Azure managed domain."
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain]"
     },
     "sendFromEmailAddress": {
       "type": "string",
-      "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]",
       "metadata": {
         "description": "The send-from email address for the Azure managed domain."
-      }
+      },
+      "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]"
     }
   }
 }

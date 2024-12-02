@@ -2,7 +2,7 @@
 
 Adds or updates a list of App Configuration keys
 
-## Description
+## Details
 
 Adds a list configuration keys to an existing App Configuration resource.
 

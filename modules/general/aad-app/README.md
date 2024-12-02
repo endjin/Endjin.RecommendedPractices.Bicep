@@ -2,7 +2,7 @@
 
 Creates an AAD app registration
 
-## Description
+## Details
 
 Deploys a [deployment script resource](https://learn.microsoft.com/en-us/azure/templates/microsoft.resources/deploymentscripts?pivots=deployment-language-bicep) that runs a PowerShell script that creates an [AAD application](https://learn.microsoft.com/en-us/azure/active-directory/develop/app-objects-and-service-principals#application-object).
 
@@ -27,11 +27,11 @@ For more details about the structure of the object used with the `appRoles` para
 
 ## Outputs
 
-| Name          | Type   | Description                                 |
-| :------------ | :----: | :------------------------------------------ |
-| applicationId | string | The ID of the AzureAD application           |
-| objectId      | string | The object ID of the AzureAD application    |
-| displayName   | string | The display name of the AzureAD application |
+| Name            | Type     | Description                                 |
+| :-------------- | :------: | :------------------------------------------ |
+| `applicationId` | `string` | The ID of the AzureAD application           |
+| `objectId`      | `string` | The object ID of the AzureAD application    |
+| `displayName`   | `string` | The display name of the AzureAD application |
 
 ## Examples
 

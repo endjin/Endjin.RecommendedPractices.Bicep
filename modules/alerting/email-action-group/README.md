@@ -2,7 +2,7 @@
 
 Azure Action Group for sending email notifications
 
-## Description
+## Details
 
 Deploys an Azure Action Group that can be used to send alerts to one or more e-mail addresses.
 
@@ -17,11 +17,11 @@ Deploys an Azure Action Group that can be used to send alerts to one or more e-m
 
 ## Outputs
 
-| Name     | Type   | Description                                      |
-| :------- | :----: | :----------------------------------------------- |
-| id       | string | The resource ID of the action group              |
-| name     | string | The name of the action group                     |
-| resource | object | An object representing the action group resource |
+| Name       | Type     | Description                                      |
+| :--------- | :------: | :----------------------------------------------- |
+| `id`       | `string` | The resource ID of the action group              |
+| `name`     | `string` | The name of the action group                     |
+| `resource` | `object` | An object representing the action group resource |
 
 ## Examples
 

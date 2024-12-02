@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.15.31.15270",
-      "templateHash": "9884676421728708139"
+      "templateHash": "4104672195098691414"
     }
   },
   "parameters": {
@@ -40,6 +40,13 @@
       "type": "bool",
       "metadata": {
         "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
+      }
+    },
+    "networkAcls": {
+      "type": "object",
+      "defaultValue": {},
+      "metadata": {
+        "description": "The optional network rules securing access to the key vault (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.keyvault/vaults#networkruleset)"
       }
     }
   },
@@ -88,6 +95,9 @@
           },
           "enablePublicAccess": {
             "value": "[parameters('enablePublicAccess')]"
+          },
+          "networkAcls": {
+            "value": "[parameters('networkAcls')]"
           }
         },
         "template": {
@@ -97,7 +107,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.15.31.15270",
-              "templateHash": "4862270876339960965"
+              "templateHash": "14836738127858708423"
             }
           },
           "parameters": {
@@ -133,6 +143,13 @@
               "defaultValue": "TLS1_2",
               "metadata": {
                 "description": "The minimum TLS version required by the storage account"
+              }
+            },
+            "allowBlobPublicAccess": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, configuring publicly-accessible blob containers will be allowed"
               }
             },
             "allowSharedKeyAccess": {
@@ -267,7 +284,8 @@
                 "networkAcls": "[parameters('networkAcls')]",
                 "isSftpEnabled": "[parameters('isSftpEnabled')]",
                 "allowSharedKeyAccess": "[parameters('allowSharedKeyAccess')]",
-                "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]"
+                "publicNetworkAccess": "[if(parameters('enablePublicAccess'), 'Enabled', 'Disabled')]",
+                "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]"
               },
               "tags": "[parameters('resource_tags')]"
             },

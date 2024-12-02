@@ -1,3 +1,11 @@
+// <copyright file="storage-account-rbac/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Storage Account RBAC'
+metadata description = 'Applies an RBAC role to a storage account'
+metadata owner = 'endjin'
+
 @description('The name of the storage account to apply the role assignement.')
 param storageAccountName string
 
@@ -56,3 +64,4 @@ resource role_assignment 'Microsoft.Authorization/roleAssignments@2020-04-01-pre
 
 @description('The resource ID of the role assignement.')
 output roleAssignmentId string = role_assignment.id
+

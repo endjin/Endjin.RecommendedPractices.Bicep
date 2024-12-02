@@ -1,3 +1,11 @@
+// <copyright file="log-alert/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Azure Log Alert'
+metadata description = 'Deploys an alert based on a Log Analytics query'
+metadata owner = 'endjin'
+
 @description('The Alert resource name.')
 param name string
 

@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "16351627810577274303"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "6865775647871612795"
+    },
+    "name": "Azure Log Alert",
+    "description": "Deploys an alert based on a Log Analytics query",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -95,27 +98,27 @@
     },
     "queryTimeAggregation": {
       "type": "string",
-      "metadata": {
-        "description": "Aggregation type."
-      },
       "allowedValues": [
         "Average",
         "Count",
         "Maximum",
         "Minimum",
         "Total"
-      ]
+      ],
+      "metadata": {
+        "description": "Aggregation type."
+      }
     },
     "queryThresholdOperator": {
       "type": "string",
-      "metadata": {
-        "description": "The criteria operator."
-      },
       "allowedValues": [
         "GreatorOrLessThan",
         "GreaterThan",
         "LessThan"
-      ]
+      ],
+      "metadata": {
+        "description": "The criteria operator."
+      }
     },
     "location": {
       "type": "string",
@@ -154,12 +157,12 @@
       "properties": {
         "displayName": "[parameters('displayName')]",
         "description": "[parameters('alertDescription')]",
-        "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.severity.value]",
+        "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.severity.value]",
         "enabled": "[parameters('enabled')]",
-        "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.evaluationFrequency.value]",
+        "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.evaluationFrequency.value]",
         "scopes": "[parameters('targetScopes')]",
         "targetResourceTypes": "[parameters('targetResourceTypes')]",
-        "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2020-10-01').outputs.evaluationWindowSize.value]",
+        "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.evaluationWindowSize.value]",
         "criteria": {
           "allOf": [
             {
@@ -189,7 +192,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "[format('alertUtils_{0}', parameters('severity'))]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -213,8 +216,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "9994439745399304463"
+              "version": "0.31.92.45157",
+              "templateHash": "5821703039425751297"
             }
           },
           "parameters": {
@@ -258,24 +261,24 @@
           "outputs": {
             "severity": {
               "type": "int",
-              "value": "[variables('severityLookup')[parameters('severity')]]",
               "metadata": {
                 "description": "The numeric representation of the specified severity level"
-              }
+              },
+              "value": "[variables('severityLookup')[parameters('severity')]]"
             },
             "evaluationFrequency": {
               "type": "string",
-              "value": "[format('PT{0}M', parameters('evaluationFrequencyMinutes'))]",
               "metadata": {
                 "description": "The 'evaluationFrequency' in ISO 8601 duration format"
-              }
+              },
+              "value": "[format('PT{0}M', parameters('evaluationFrequencyMinutes'))]"
             },
             "evaluationWindowSize": {
               "type": "string",
-              "value": "[format('PT{0}M', parameters('evaluationWindowSizeMinutes'))]",
               "metadata": {
                 "description": "The 'evaluationWindowSize' in ISO 8601 duration format"
-              }
+              },
+              "value": "[format('PT{0}M', parameters('evaluationWindowSizeMinutes'))]"
             }
           }
         }
@@ -285,10 +288,10 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[resourceId('Microsoft.Insights/scheduledQueryRules', parameters('name'))]",
       "metadata": {
         "description": "The resource ID of the alert"
-      }
+      },
+      "value": "[resourceId('Microsoft.Insights/scheduledQueryRules', parameters('name'))]"
     }
   }
 }

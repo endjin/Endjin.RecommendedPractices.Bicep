@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "7888155170737710553"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "289195813729730289"
+    },
+    "name": "web-prod-app-insights-alerts",
+    "description": "An opinionated set of application insights alerts for monitoring the health of a web app running in production.",
+    "owner": "endjin"
   },
   "parameters": {
     "alertLocation": {

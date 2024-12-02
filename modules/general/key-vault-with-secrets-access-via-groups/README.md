@@ -2,7 +2,7 @@
 
 Deploys a Key Vault with a secrets access policy managed via group membership
 
-## Description
+## Details
 
 Deploys or updates a [Key Vault](https://azure.microsoft.com/en-us/products/key-vault/) resource with a secrets access policy managed via group membership. This does **not** use Key Vault's Azure RBAC feature, instead it generates a suitable Key Vault Access Policy that grants the relevant permissions to the specified Azure Active Directory groups.
 
@@ -43,11 +43,11 @@ Once the Key Vault is created, secrets can be added via the [`key-vault-secret`]
 
 ## Outputs
 
-| Name             | Type   | Description                                   |
-| :--------------- | :----: | :-------------------------------------------- |
-| id               | string | The objectId of the key vault                 |
-| name             | string | The name of the key vault                     |
-| keyVaultResource | object | An object representing the key vault resource |
+| Name               | Type     | Description                                   |
+| :----------------- | :------: | :-------------------------------------------- |
+| `id`               | `string` | The objectId of the key vault                 |
+| `name`             | `string` | The name of the key vault                     |
+| `keyVaultResource` | `object` | An object representing the key vault resource |
 
 ## Examples
 
