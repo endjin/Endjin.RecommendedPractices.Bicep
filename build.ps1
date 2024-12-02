@@ -32,6 +32,9 @@ param (
     [string] $SourcesDir = $PWD,
 
     [Parameter()]
+    [string] $Configuration = "Debug",
+
+    [Parameter()]
     [ValidateSet("minimal","normal","detailed")]
     [string] $LogLevel = "minimal",
 
