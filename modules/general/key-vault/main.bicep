@@ -107,6 +107,7 @@ module diagnostics 'diagnostics.bicep' = if (enableDiagnostics) {
     diagnosticsStorageAccountName: diagnosticsStorageAccountName
     useExistingStorageAccount: useExistingStorageAccount
     enablePublicAccess: enablePublicAccess
+    networkAcls: networkAcls
   }
 }
 
