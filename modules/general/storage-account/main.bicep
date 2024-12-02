@@ -1,3 +1,7 @@
+metadata name = 'Storage Account'
+metadata description = 'Deploys a storage account or returns a reference to an existing one.'
+metadata owner = 'endjin'
+
 // <copyright file="storage-account.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
@@ -130,3 +134,4 @@ output name string = useExisting ? existing_storage_account.name : storage_accou
 // Returns the full Storage Account resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the storage account resource')
 output storageAccountResource object = useExisting ? existing_storage_account : storage_account
+
