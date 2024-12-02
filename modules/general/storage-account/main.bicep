@@ -17,6 +17,9 @@ param kind string = 'StorageV2'
 @description('The minimum TLS version required by the storage account')
 param tlsVersion string = 'TLS1_2'
 
+@description('When true, configuring publicly-accessible blob containers will be allowed')
+param allowBlobPublicAccess bool = false
+
 @description('When false, access to the storage account is only possible via Azure AD authentication')
 param allowSharedKeyAccess bool = true
 
@@ -89,6 +92,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' = if (!u
     isSftpEnabled: isSftpEnabled
     allowSharedKeyAccess: allowSharedKeyAccess
     publicNetworkAccess: enablePublicAccess ? 'Enabled' : 'Disabled'
+    allowBlobPublicAccess: allowBlobPublicAccess
   }
   tags: resource_tags
 }
