@@ -1,6 +1,0 @@
-{
-  "$schema": "https://aka.ms/bicep-registry-module-metadata-file-schema-v2#",
-  "name": "RBAC built-in roles",
-  "summary": "Provides a dictionary of role name to role definition ID for built-in RBAC roles.",
-  "owner": "endjin"
-}

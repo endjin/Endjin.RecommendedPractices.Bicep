@@ -2,7 +2,7 @@
 
 Creates a local user for use with SFTP on a storage account.
 
-## Description
+## Details
 
 Creates a local user with permissions over the specified blob container. If the blob container does not exist, it will be created as part of deployment.
 

@@ -2,7 +2,7 @@
 
 Adds or updates log analytics workspace
 
-## Description
+## Details
 
 Deploys or updates a [Log Analytics workspace](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-workspace-overview).
 
@@ -24,11 +24,11 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name              | Type   | Description                                        |
-| :---------------- | :----: | :------------------------------------------------- |
-| workspaceResource | object | An object representing the log analytics workspace |
-| name              | string | The workspace resource name                        |
-| id                | string | The workspace resource ID                          |
+| Name                | Type     | Description                                        |
+| :------------------ | :------: | :------------------------------------------------- |
+| `workspaceResource` | `object` | An object representing the log analytics workspace |
+| `name`              | `string` | The workspace resource name                        |
+| `id`                | `string` | The workspace resource ID                          |
 
 ## Examples
 

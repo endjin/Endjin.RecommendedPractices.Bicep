@@ -1,3 +1,7 @@
+metadata name = 'Storage Account'
+metadata description = 'Deploys a storage account or returns a reference to an existing one.'
+metadata owner = 'endjin'
+
 // <copyright file="storage-account.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
@@ -16,6 +20,9 @@ param kind string = 'StorageV2'
 
 @description('The minimum TLS version required by the storage account')
 param tlsVersion string = 'TLS1_2'
+
+@description('When true, configuring publicly-accessible blob containers will be allowed')
+param allowBlobPublicAccess bool = false
 
 @description('When false, access to the storage account is only possible via Azure AD authentication')
 param allowSharedKeyAccess bool = true
@@ -89,6 +96,7 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' = if (!u
     isSftpEnabled: isSftpEnabled
     allowSharedKeyAccess: allowSharedKeyAccess
     publicNetworkAccess: enablePublicAccess ? 'Enabled' : 'Disabled'
+    allowBlobPublicAccess: allowBlobPublicAccess
   }
   tags: resource_tags
 }
@@ -126,3 +134,4 @@ output name string = useExisting ? existing_storage_account.name : storage_accou
 // Returns the full Storage Account resource object (workaround whilst resource types cannot be returned directly)
 @description('An object representing the storage account resource')
 output storageAccountResource object = useExisting ? existing_storage_account : storage_account
+

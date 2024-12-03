@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "10973609607598572983"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "11253288703859962719"
+    },
+    "name": "AAD App Registration",
+    "description": "Creates an AAD app registration",
+    "owner": "endjin"
   },
   "parameters": {
     "location": {
@@ -131,24 +134,24 @@
   "outputs": {
     "applicationId": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.applicationId]",
       "metadata": {
         "description": "The ID of the AzureAD application"
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.applicationId]"
     },
     "objectId": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.objectId]",
       "metadata": {
         "description": "The object ID of the AzureAD application"
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deploymentScripts', variables('name')), '2020-10-01').outputs.objectId]"
     },
     "displayName": {
       "type": "string",
-      "value": "[parameters('displayName')]",
       "metadata": {
         "description": "The display name of the AzureAD application"
-      }
+      },
+      "value": "[parameters('displayName')]"
     }
   }
 }

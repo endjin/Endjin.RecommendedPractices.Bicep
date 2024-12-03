@@ -2,7 +2,7 @@
 
 Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault
 
-## Description
+## Details
 
 Deploys or updates an [Application Insights](https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview) resource backed by an existing Log Analytics workspace for data ingestion. The instrumentation key for the resource is then stored in the specified Key Vault with the name `AppInsightsInstrumentationKey`.
 
@@ -30,13 +30,13 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name                                  | Type   | Description                                                                    |
-| :------------------------------------ | :----: | :----------------------------------------------------------------------------- |
-| id                                    | string | The resource ID of the app insights workspace                                  |
-| name                                  | string | The name of the app insights workspace                                         |
-| appInsightsWorkspaceResource          | object | An object representing the app insights workspace resource                     |
-| appInsightsKeySecretName              | string | The name of the key vault secret where the instrumentation key will be stored. |
-| appInsightsConnectionStringSecretName | string | The name of the key vault secret where the connection string will be stored.   |
+| Name                                    | Type     | Description                                                                    |
+| :-------------------------------------- | :------: | :----------------------------------------------------------------------------- |
+| `id`                                    | `string` | The resource ID of the app insights workspace                                  |
+| `name`                                  | `string` | The name of the app insights workspace                                         |
+| `appInsightsWorkspaceResource`          | `object` | An object representing the app insights workspace resource                     |
+| `appInsightsKeySecretName`              | `string` | The name of the key vault secret where the instrumentation key will be stored. |
+| `appInsightsConnectionStringSecretName` | `string` | The name of the key vault secret where the connection string will be stored.   |
 
 ## Examples
 

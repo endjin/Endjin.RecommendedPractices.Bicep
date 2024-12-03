@@ -1,3 +1,11 @@
+// <copyright file="private-dns-zone/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Private DNS Zone'
+metadata description = 'Adds/updates a private DNS zone and virtual network link for existing VNet'
+metadata owner = 'endjin'
+
 @description('The name for the Private DNS Zone. Must be a valid domain name. For Azure services, use the recommended zone names (ref: https://learn.microsoft.com/en-gb/azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration)')
 param zoneName string
 
@@ -31,3 +39,4 @@ resource privatedns_link 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@
     }
   }
 }
+

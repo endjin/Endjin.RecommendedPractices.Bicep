@@ -1,3 +1,11 @@
+// <copyright file="synapse-sparkpools/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Synapse Spark Pools'
+metadata description = 'Adds/Updates Synapse Spark Pools in an existing Synapse workspace.'
+metadata owner = 'endjin'
+
 @description('The Synapse workspace that the spark pools are linked to')
 param workspaceName string
 
@@ -50,3 +58,4 @@ resource spark_pool_diagnostic_settings 'microsoft.insights/diagnosticSettings@2
 
 @description('The name of the default Spark Pool. Note: the first configured Spark Pool will be considered the notional default.')
 output defaultSparkPoolName string = spark_pool[0].name
+

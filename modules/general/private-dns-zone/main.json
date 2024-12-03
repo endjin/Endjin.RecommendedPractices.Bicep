@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "5309974143975151849"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "13578104230571220676"
+    },
+    "name": "Private DNS Zone",
+    "description": "Adds/updates a private DNS zone and virtual network link for existing VNet",
+    "owner": "endjin"
   },
   "parameters": {
     "zoneName": {

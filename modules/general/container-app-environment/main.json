@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "8551152373944770223"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "14918582922544630390"
+    },
+    "name": "Container App Environment",
+    "description": "Deploys a Container App hosting environment",
+    "owner": "endjin"
   },
   "parameters": {
     "name": {
@@ -168,7 +171,7 @@
     {
       "condition": "[parameters('createContainerRegistry')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "appEnvAcrDeploy",
       "properties": {
         "expressionEvaluationOptions": {
@@ -198,9 +201,12 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "8260785473514042061"
-            }
+              "version": "0.31.92.45157",
+              "templateHash": "2393511464810345001"
+            },
+            "name": "container-registry",
+            "description": "Azure Container Registry",
+            "owner": "endjin"
           },
           "parameters": {
             "name": {
@@ -267,31 +273,31 @@
           "outputs": {
             "id": {
               "type": "string",
-              "value": "[if(parameters('useExisting'), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')))]",
               "metadata": {
                 "description": "The resource ID of the container registry"
-              }
+              },
+              "value": "[if(parameters('useExisting'), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), resourceId('Microsoft.ContainerRegistry/registries', parameters('name')))]"
             },
             "name": {
               "type": "string",
-              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
               "metadata": {
                 "description": "The name of the container registry"
-              }
+              },
+              "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
             },
             "loginServer": {
               "type": "string",
-              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer, reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer)]",
               "metadata": {
                 "description": "The admin username of the container registry"
-              }
+              },
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer, reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01').loginServer)]"
             },
             "acrResource": {
               "type": "object",
-              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'))]",
               "metadata": {
                 "description": "An object representing the container registry resource"
-              }
+              },
+              "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'), reference(resourceId('Microsoft.ContainerRegistry/registries', parameters('name')), '2021-09-01', 'full'))]"
             }
           }
         }
@@ -301,52 +307,52 @@
   "outputs": {
     "id": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), resourceId('Microsoft.App/managedEnvironments', parameters('name')))]",
       "metadata": {
         "description": "The resource ID of the container app environment"
-      }
+      },
+      "value": "[if(parameters('useExisting'), extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), resourceId('Microsoft.App/managedEnvironments', parameters('name')))]"
     },
     "name": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]",
       "metadata": {
         "description": "The name of the container app environment"
-      }
+      },
+      "value": "[if(parameters('useExisting'), parameters('name'), parameters('name'))]"
     },
     "appEnvironmentResource": {
       "type": "object",
-      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'))]",
       "metadata": {
         "description": "An object representing the container app environment resource"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'))]"
     },
     "appinsights_instrumentation_key": {
       "type": "string",
-      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppInsightsSubscriptionId'), parameters('existingAppInsightsResourceGroupName')), 'Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey, reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey)]",
       "metadata": {
         "description": "The app insights workspace instrumentation key"
-      }
+      },
+      "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppInsightsSubscriptionId'), parameters('existingAppInsightsResourceGroupName')), 'Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey, reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2020-02-02').InstrumentationKey)]"
     },
     "acrId": {
       "type": "string",
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2020-10-01').outputs.id.value, '')]",
       "metadata": {
         "description": "The resource ID of the container registry"
-      }
+      },
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2022-09-01').outputs.id.value, '')]"
     },
     "acrUsername": {
       "type": "string",
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2020-10-01').outputs.name.value, '')]",
       "metadata": {
         "description": "The admin username for the container registry"
-      }
+      },
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2022-09-01').outputs.name.value, '')]"
     },
     "acrLoginServer": {
       "type": "string",
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2020-10-01').outputs.loginServer.value, '')]",
       "metadata": {
         "description": "The login server for the container registry"
-      }
+      },
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2022-09-01').outputs.loginServer.value, '')]"
     }
   }
 }

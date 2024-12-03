@@ -2,6 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
+metadata name = 'Key Vault with optional diagnostics settings'
+metadata description = 'Deploys a key vault with optional diagnostics written to blob storage.'
+metadata owner = 'endjin'
+
 @description('The name of the key vault')
 param name string
 
@@ -107,6 +111,7 @@ module diagnostics 'diagnostics.bicep' = if (enableDiagnostics) {
     diagnosticsStorageAccountName: diagnosticsStorageAccountName
     useExistingStorageAccount: useExistingStorageAccount
     enablePublicAccess: enablePublicAccess
+    networkAcls: networkAcls
   }
 }
 

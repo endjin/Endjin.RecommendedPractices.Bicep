@@ -2,7 +2,7 @@
 
 Adds or updates multiple App Configuration key-values backed by Azure Key Vault secrets.
 
-## Description
+## Details
 
 This module is an extension of [App Configuration Key Vault Secret](../app-config-key-vault-secret/README.md) which allows you to set multiple App Configuration key-values with references to Azure Key Vault secrets.
 
@@ -17,9 +17,9 @@ This module is an extension of [App Configuration Key Vault Secret](../app-confi
 
 ## Outputs
 
-| Name       | Type  | Description                                                                                       |
-| :--------- | :---: | :------------------------------------------------------------------------------------------------ |
-| secretUris | array | An array containing each secret URI (with version) for all App Config key-values created/updated. |
+| Name         | Type    | Description                                                                                       |
+| :----------- | :-----: | :------------------------------------------------------------------------------------------------ |
+| `secretUris` | `array` | An array containing each secret URI (with version) for all App Config key-values created/updated. |
 
 ## Examples
 

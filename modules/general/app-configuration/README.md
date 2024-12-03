@@ -2,7 +2,7 @@
 
 Azure App Configuration
 
-## Description
+## Details
 
 Deploys or updates an [App Configuration](https://azure.microsoft.com/en-gb/products/app-configuration/) resource, optionally storing the primary connection strings in Azure Key Vault.
 
@@ -33,11 +33,11 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 
 ## Outputs
 
-| Name                   | Type   | Description                                                 |
-| :--------------------- | :----: | :---------------------------------------------------------- |
-| id                     | string | The resource ID of the app configuration store              |
-| name                   | string | The name of the app configuration store                     |
-| appConfigStoreResource | object | An object representing the app configuration store resource |
+| Name                     | Type     | Description                                                 |
+| :----------------------- | :------: | :---------------------------------------------------------- |
+| `id`                     | `string` | The resource ID of the app configuration store              |
+| `name`                   | `string` | The name of the app configuration store                     |
+| `appConfigStoreResource` | `object` | An object representing the app configuration store resource |
 
 ## Examples
 

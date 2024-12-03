@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "15154846728983726092"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "17800458384624375138"
+    },
+    "name": "App Configuration Key Vault Secrets",
+    "description": "Adds or updates multiple App Configuration key-values backed by Azure Key Vault secrets.",
+    "owner": "endjin"
   },
   "parameters": {
     "appConfigStoreName": {
@@ -42,7 +45,7 @@
         "count": "[length(parameters('keyValueSecrets'))]"
       },
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "[format('key_value_secret_{0}', replace(parameters('keyValueSecrets')[copyIndex()].secretName, ':', '--'))]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -75,9 +78,12 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "13450123829271682175"
-            }
+              "version": "0.31.92.45157",
+              "templateHash": "15735769069096314169"
+            },
+            "name": "App Configuration Key Vault Secret",
+            "description": "Adds or updates an App Configuration key-value backed by an Azure Key Vault secret.",
+            "owner": "endjin"
           },
           "parameters": {
             "appConfigKey": {
@@ -131,7 +137,7 @@
               "name": "[format('{0}/{1}', parameters('appConfigStoreName'), variables('sanitisedAppConfigKey'))]",
               "properties": {
                 "contentType": "application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8",
-                "value": "[string(createObject('uri', reference(resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized')), '2020-10-01').outputs.secretUriWithVersion.value))]"
+                "value": "[string(createObject('uri', reference(resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized')), '2022-09-01').outputs.secretUriWithVersion.value))]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized'))]"
@@ -139,7 +145,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-10-01",
+              "apiVersion": "2022-09-01",
               "name": "[variables('secretNameSanitized')]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -164,9 +170,12 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.15.31.15270",
-                      "templateHash": "16729986519206477407"
-                    }
+                      "version": "0.31.92.45157",
+                      "templateHash": "7647943469143824631"
+                    },
+                    "name": "Adds or updates a Key Vault secret",
+                    "description": "Adds or updates a Key Vault secret",
+                    "owner": "endjin"
                   },
                   "parameters": {
                     "secretName": {
@@ -218,10 +227,10 @@
                   "outputs": {
                     "secretUriWithVersion": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
                       "metadata": {
                         "description": "The key vault URI linking to the new/updated secret"
-                      }
+                      },
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
                     }
                   }
                 }
@@ -231,17 +240,17 @@
           "outputs": {
             "secretUriWithVersion": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized')), '2020-10-01').outputs.secretUriWithVersion.value]",
               "metadata": {
                 "description": "The secret URI (with version) of the secret backing the App Configuration key-value."
-              }
+              },
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('secretNameSanitized')), '2022-09-01').outputs.secretUriWithVersion.value]"
             },
             "appConfigKey": {
               "type": "string",
-              "value": "[variables('sanitisedAppConfigKey')]",
               "metadata": {
                 "description": "The key for the App Configuration key-value."
-              }
+              },
+              "value": "[variables('sanitisedAppConfigKey')]"
             }
           }
         }
@@ -251,15 +260,15 @@
   "outputs": {
     "secretUris": {
       "type": "array",
+      "metadata": {
+        "description": "An array containing each secret URI (with version) for all App Config key-values created/updated."
+      },
       "copy": {
         "count": "[length(parameters('keyValueSecrets'))]",
         "input": {
-          "appConfigKey": "[reference(resourceId('Microsoft.Resources/deployments', format('key_value_secret_{0}', replace(parameters('keyValueSecrets')[copyIndex()].secretName, ':', '--'))), '2020-10-01').outputs.appConfigKey.value]",
-          "secretUriWithVersion": "[reference(resourceId('Microsoft.Resources/deployments', format('key_value_secret_{0}', replace(parameters('keyValueSecrets')[copyIndex()].secretName, ':', '--'))), '2020-10-01').outputs.secretUriWithVersion.value]"
+          "appConfigKey": "[reference(resourceId('Microsoft.Resources/deployments', format('key_value_secret_{0}', replace(parameters('keyValueSecrets')[copyIndex()].secretName, ':', '--'))), '2022-09-01').outputs.appConfigKey.value]",
+          "secretUriWithVersion": "[reference(resourceId('Microsoft.Resources/deployments', format('key_value_secret_{0}', replace(parameters('keyValueSecrets')[copyIndex()].secretName, ':', '--'))), '2022-09-01').outputs.secretUriWithVersion.value]"
         }
-      },
-      "metadata": {
-        "description": "An array containing each secret URI (with version) for all App Config key-values created/updated."
       }
     }
   }

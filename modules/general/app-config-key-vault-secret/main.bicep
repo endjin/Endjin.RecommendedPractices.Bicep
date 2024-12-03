@@ -1,3 +1,7 @@
+metadata name = 'App Configuration Key Vault Secret'
+metadata description = 'Adds or updates an App Configuration key-value backed by an Azure Key Vault secret.'
+metadata owner = 'endjin'
+
 @description('Optional value for the key in App Configuration. If left blank, the key will be set to the (sanitized) secret name.')
 param appConfigKey string = ''
 
@@ -51,3 +55,4 @@ resource key_value 'Microsoft.AppConfiguration/configurationStores/keyValues@202
 output secretUriWithVersion string = secret.outputs.secretUriWithVersion
 @description('The key for the App Configuration key-value.')
 output appConfigKey string = sanitisedAppConfigKey
+

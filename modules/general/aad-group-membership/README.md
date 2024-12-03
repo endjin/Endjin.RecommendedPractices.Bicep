@@ -2,7 +2,7 @@
 
 Configures the membership of an Azure AD group
 
-## Description
+## Details
 
 This module creates a `deploymentScript` resource which runs the [`Assert-AzureAdGroupMembership` cmdlet](https://github.com/corvus-dotnet/Corvus.Deployment/blob/main/module/functions/azure/aad/Assert-AzureAdGroupMembership.ps1) from the [`Corvus.Deployment` module](https://github.com/corvus-dotnet/Corvus.Deployment).
 

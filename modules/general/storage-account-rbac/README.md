@@ -2,7 +2,7 @@
 
 Applies an RBAC role to a storage account
 
-## Description
+## Details
 
 Applies an RBAC role to an existing storage account. Currently supports the following roles:
 
@@ -25,9 +25,9 @@ Applies an RBAC role to an existing storage account. Currently supports the foll
 
 ## Outputs
 
-| Name             | Type   | Description                              |
-| :--------------- | :----: | :--------------------------------------- |
-| roleAssignmentId | string | The resource ID of the role assignement. |
+| Name               | Type     | Description                              |
+| :----------------- | :------: | :--------------------------------------- |
+| `roleAssignmentId` | `string` | The resource ID of the role assignement. |
 
 ## Examples
 

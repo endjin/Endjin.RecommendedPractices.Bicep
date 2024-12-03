@@ -1,3 +1,11 @@
+// <copyright file="aad-app/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'AAD App Registration'
+metadata description = 'Creates an AAD app registration'
+metadata owner = 'endjin'
+
 @description('The location in which the deployment script will be ran')
 param location string
 

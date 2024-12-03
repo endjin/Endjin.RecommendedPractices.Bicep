@@ -1,3 +1,11 @@
+// <copyright file="storage-account-local-user/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Storage Account Local User'
+metadata description = 'Creates a local user for use with SFTP on a storage account.'
+metadata owner = 'endjin'
+
 @description('The name of existing storage account in which to create the local user.')
 param storageAccountName string
 
@@ -48,3 +56,4 @@ resource user 'Microsoft.Storage/storageAccounts/localUsers@2022-05-01' = {
     hasSharedKey: false
   }
 }
+

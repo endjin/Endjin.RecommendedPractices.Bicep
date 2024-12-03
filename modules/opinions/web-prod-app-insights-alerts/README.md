@@ -2,7 +2,7 @@
 
 An opinionated set of application insights alerts for monitoring the health of a web app running in production.
 
-## Description
+## Details
 
 This module defines the set of Application Insights alerts that we consider good practice for monitoring the health of a web app running in production.
 

@@ -32,6 +32,9 @@ param (
     [string] $SourcesDir = $PWD,
 
     [Parameter()]
+    [string] $Configuration = "Debug",
+
+    [Parameter()]
     [ValidateSet("minimal","normal","detailed")]
     [string] $LogLevel = "minimal",
 
@@ -49,7 +52,7 @@ $here = Split-Path -Parent $PSCommandPath
 
 #region InvokeBuild setup
 if (!(Get-Module -ListAvailable InvokeBuild)) {
-    Install-Module InvokeBuild -RequiredVersion 5.10.3 -Scope CurrentUser -Force -Repository PSGallery
+    Install-Module InvokeBuild -RequiredVersion 5.11.3 -Scope CurrentUser -Force -Repository PSGallery
 }
 Import-Module InvokeBuild
 # This handles calling the build engine when this file is run like a normal PowerShell script
@@ -99,7 +102,7 @@ $SkipPublish = $false
 #
 # Build process configuration
 #
-$RequiredBicepCliVersion = "0.15.31"               # ensures the build uses a consistent version of the Bicep tooling
+$RequiredBicepCliVersion = "0.31.92"               # ensures the build uses a consistent version of the Bicep tooling
 $BicepModulesDir = Join-Path $SourcesDir "modules" # sets location of folder containing the Bicep modules
 $BaseBranch = "origin/main"                        # sets the branch used to compare which Bicep modules have changed for local builds
 $BicepRegistryFqdn = "endjintestacr.azurecr.io"    # the ACR used when publishing modules from local builds

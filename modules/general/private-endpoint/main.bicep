@@ -1,3 +1,11 @@
+// <copyright file="private-endpoint/main.bicep" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+
+metadata name = 'Private Endpoint'
+metadata description = 'Deploys a private endpoint for the specified resource'
+metadata owner = 'endjin'
+
 @description('The name of the private endpoint')
 param name string
 
@@ -134,3 +142,4 @@ output privateDnsZoneId string = enablePrivateDns ? private_endpoint_privatedns_
 // Returns the full resource objects (workaround whilst resource types cannot be returned directly)
 @description('An object representing the private endpoint resource')
 output privateEndpointResource object = private_endpoint
+

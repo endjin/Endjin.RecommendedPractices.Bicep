@@ -2,7 +2,7 @@
 
 Deploys an alert based on an Azure Monitor or AppInsights metric
 
-## Description
+## Details
 
 Provides a simplified wrapper around the `Microsoft.Insights/metricAlerts` resource used to configure alerts based on Azure Monitor metrics exposed by a given resource, or using metrics available via an Application Insights workspace.
 
@@ -24,9 +24,9 @@ Provides a simplified wrapper around the `Microsoft.Insights/metricAlerts` resou
 
 ## Outputs
 
-| Name | Type   | Description                  |
-| :--- | :----: | :--------------------------- |
-| id   | string | The resource ID of the alert |
+| Name | Type     | Description                  |
+| :--- | :------: | :--------------------------- |
+| `id` | `string` | The resource ID of the alert |
 
 ## Examples
 

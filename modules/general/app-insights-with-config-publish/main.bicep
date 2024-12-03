@@ -1,6 +1,10 @@
-// <copyright file="app-insights-with-config-publish.bicep" company="Endjin Limited">
+// <copyright file="app-insights-with-config-publish/main.bicep" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+
+metadata name = 'Application Insights with published configuration'
+metadata description = 'Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault'
+metadata owner = 'endjin'
 
 @description('The name of the app insights workspace')
 param name string
@@ -114,3 +118,4 @@ output appInsightsWorkspaceResource object = app_insights.outputs.appInsightsWor
 output appInsightsKeySecretName string = applicationInsightsKeySecretName
 @description('The name of the key vault secret where the connection string will be stored.')
 output appInsightsConnectionStringSecretName string = applicationInsightsConnectionStringSecretName
+

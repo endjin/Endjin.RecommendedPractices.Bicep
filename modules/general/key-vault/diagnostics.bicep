@@ -15,6 +15,10 @@ param diagnosticsRetentionDays int = 30
 @description('When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
 param enablePublicAccess bool
 
+@description('The optional network rules securing access to the key vault (ref: https://learn.microsoft.com/en-us/azure/templates/microsoft.keyvault/vaults#networkruleset)')
+param networkAcls object = {}
+
+
 resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = {
   name: keyVaultName
 }
@@ -32,6 +36,7 @@ module diagnostics_storage '../storage-account/main.bicep' = if (!useExistingSto
     name: _diagnosticsStorageAccountName
     location: location
     enablePublicAccess: enablePublicAccess
+    networkAcls: networkAcls
   }
 }
 

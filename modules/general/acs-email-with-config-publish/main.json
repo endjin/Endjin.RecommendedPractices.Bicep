@@ -4,9 +4,12 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.15.31.15270",
-      "templateHash": "11742709169919955004"
-    }
+      "version": "0.31.92.45157",
+      "templateHash": "6856080117955085839"
+    },
+    "name": "acs-email-managed-domain-with-published-config",
+    "description": "Azure Communication Email Service with managed Azure domain, with published configuration",
+    "owner": "endjin"
   },
   "parameters": {
     "communicationServiceName": {
@@ -90,7 +93,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "AcsEmailDeploy",
       "properties": {
         "expressionEvaluationOptions": {
@@ -123,9 +126,12 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "9555343672426662132"
-            }
+              "version": "0.31.92.45157",
+              "templateHash": "17954315896780719481"
+            },
+            "name": "acs-email-managed-domain",
+            "description": "Azure Communication Email Service with managed Azure domain",
+            "owner": "endjin"
           },
           "parameters": {
             "communicationServiceName": {
@@ -268,17 +274,17 @@
           "outputs": {
             "domain": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain]",
               "metadata": {
                 "description": "The Azure managed domain."
-              }
+              },
+              "value": "[reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain]"
             },
             "sendFromEmailAddress": {
               "type": "string",
-              "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]",
               "metadata": {
                 "description": "The send-from email address for the Azure managed domain."
-              }
+              },
+              "value": "[format('{0}@{1}', reference(resourceId('Microsoft.Communication/emailServices/domains/senderUsernames', parameters('emailServiceName'), 'AzureManagedDomain', parameters('senderUsername')), '2023-04-01-preview').username, reference(resourceId('Microsoft.Communication/emailServices/domains', parameters('emailServiceName'), 'AzureManagedDomain'), '2023-04-01-preview').mailFromSenderDomain)]"
             }
           }
         }
@@ -286,7 +292,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-10-01",
+      "apiVersion": "2022-09-01",
       "name": "acsEmailSetSecretsDeploy",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -303,10 +309,10 @@
             "value": "[parameters('communicationServiceName')]"
           },
           "domain": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.domain.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.domain.value]"
           },
           "sendFromEmailAddress": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.sendFromEmailAddress.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.sendFromEmailAddress.value]"
           },
           "communicationServiceResourceGroupName": {
             "value": "[resourceGroup().name]"
@@ -321,8 +327,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.15.31.15270",
-              "templateHash": "11406840337350169941"
+              "version": "0.31.92.45157",
+              "templateHash": "11942593376721878443"
             }
           },
           "parameters": {
@@ -348,7 +354,7 @@
           "resources": [
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-10-01",
+              "apiVersion": "2022-09-01",
               "name": "communicationServiceKeySecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -375,9 +381,12 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.15.31.15270",
-                      "templateHash": "16729986519206477407"
-                    }
+                      "version": "0.31.92.45157",
+                      "templateHash": "7647943469143824631"
+                    },
+                    "name": "Adds or updates a Key Vault secret",
+                    "description": "Adds or updates a Key Vault secret",
+                    "owner": "endjin"
                   },
                   "parameters": {
                     "secretName": {
@@ -429,10 +438,10 @@
                   "outputs": {
                     "secretUriWithVersion": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
                       "metadata": {
                         "description": "The key vault URI linking to the new/updated secret"
-                      }
+                      },
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
                     }
                   }
                 }
@@ -440,7 +449,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-10-01",
+              "apiVersion": "2022-09-01",
               "name": "communicationServiceConnectionStringSecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -467,9 +476,12 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.15.31.15270",
-                      "templateHash": "16729986519206477407"
-                    }
+                      "version": "0.31.92.45157",
+                      "templateHash": "7647943469143824631"
+                    },
+                    "name": "Adds or updates a Key Vault secret",
+                    "description": "Adds or updates a Key Vault secret",
+                    "owner": "endjin"
                   },
                   "parameters": {
                     "secretName": {
@@ -521,10 +533,10 @@
                   "outputs": {
                     "secretUriWithVersion": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
                       "metadata": {
                         "description": "The key vault URI linking to the new/updated secret"
-                      }
+                      },
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
                     }
                   }
                 }
@@ -532,7 +544,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-10-01",
+              "apiVersion": "2022-09-01",
               "name": "emailServiceDomainSecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -559,9 +571,12 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.15.31.15270",
-                      "templateHash": "16729986519206477407"
-                    }
+                      "version": "0.31.92.45157",
+                      "templateHash": "7647943469143824631"
+                    },
+                    "name": "Adds or updates a Key Vault secret",
+                    "description": "Adds or updates a Key Vault secret",
+                    "owner": "endjin"
                   },
                   "parameters": {
                     "secretName": {
@@ -613,10 +628,10 @@
                   "outputs": {
                     "secretUriWithVersion": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
                       "metadata": {
                         "description": "The key vault URI linking to the new/updated secret"
-                      }
+                      },
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
                     }
                   }
                 }
@@ -624,7 +639,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-10-01",
+              "apiVersion": "2022-09-01",
               "name": "emailServiceSendFromEmailAddressSecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -651,9 +666,12 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.15.31.15270",
-                      "templateHash": "16729986519206477407"
-                    }
+                      "version": "0.31.92.45157",
+                      "templateHash": "7647943469143824631"
+                    },
+                    "name": "Adds or updates a Key Vault secret",
+                    "description": "Adds or updates a Key Vault secret",
+                    "owner": "endjin"
                   },
                   "parameters": {
                     "secretName": {
@@ -705,10 +723,10 @@
                   "outputs": {
                     "secretUriWithVersion": {
                       "type": "string",
-                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]",
                       "metadata": {
                         "description": "The key vault URI linking to the new/updated secret"
-                      }
+                      },
+                      "value": "[if(parameters('useExisting'), reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion, reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('secretName')), '2021-06-01-preview').secretUriWithVersion)]"
                     }
                   }
                 }
@@ -725,17 +743,17 @@
   "outputs": {
     "domain": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.domain.value]",
       "metadata": {
         "description": "The Azure managed domain."
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.domain.value]"
     },
     "sendFromEmailAddress": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2020-10-01').outputs.sendFromEmailAddress.value]",
       "metadata": {
         "description": "The send-from email address for the Azure managed domain."
-      }
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.sendFromEmailAddress.value]"
     }
   }
 }

@@ -2,7 +2,7 @@
 
 Adds/updates a private DNS zone and virtual network link for existing VNet
 
-## Description
+## Details
 
 Creates a [private Azure DNS zone](https://learn.microsoft.com/en-us/azure/dns/private-dns-privatednszone) and links the zone to an existing virtual network.
 
