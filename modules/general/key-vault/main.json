@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.92.45157",
-      "templateHash": "5791584349669364398"
+      "templateHash": "16424683962558105987"
     },
     "name": "Key Vault with optional diagnostics settings",
     "description": "Deploys a key vault with optional diagnostics written to blob storage.",
@@ -172,7 +172,7 @@
         "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
         "enableSoftDelete": "[parameters('enableSoftDelete')]",
         "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]",
-        "enablePurgeProtection": "[parameters('enablePurgeProtection')]",
+        "enablePurgeProtection": "[if(parameters('enablePurgeProtection'), true(), null())]",
         "networkAcls": "[parameters('networkAcls')]"
       },
       "tags": "[parameters('resourceTags')]"
