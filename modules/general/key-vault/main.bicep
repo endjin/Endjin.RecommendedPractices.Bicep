@@ -96,7 +96,9 @@ resource key_vault 'Microsoft.KeyVault/vaults@2021-06-01-preview' = if (!useExis
     enableRbacAuthorization: enableRbacAuthorization
     enableSoftDelete: enableSoftDelete
     softDeleteRetentionInDays: softDeleteRetentionInDays
-    enablePurgeProtection: enablePurgeProtection
+    // This property does not currently except 'false' as a value, so we need to use null to avoid setting it
+    // ref: https://github.com/Azure/azure-rest-api-specs/issues/18106
+    enablePurgeProtection: enablePurgeProtection ? true : null
     networkAcls: networkAcls
   }
   tags: resourceTags
