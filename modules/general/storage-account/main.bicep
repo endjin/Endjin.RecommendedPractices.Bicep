@@ -36,6 +36,12 @@ param accessTier string = 'Hot'
 @description('When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)')
 param enablePublicAccess bool = true
 
+@description('When true, soft delete will be enabled for blobs and blob containers')
+param enableSoftDelete bool = false
+
+@description('The number of days soft deleted blobs and containers will be retained')
+param softDeleteRetentionDays int = 7
+
 @description('When true, enables Hierarchical Namespace feature, i.e. enabling Azure Data Lake Storage Gen2 capabilities')
 param isHnsEnabled bool = false
 
@@ -97,8 +103,24 @@ resource storage_account 'Microsoft.Storage/storageAccounts@2022-05-01' = if (!u
     allowSharedKeyAccess: allowSharedKeyAccess
     publicNetworkAccess: enablePublicAccess ? 'Enabled' : 'Disabled'
     allowBlobPublicAccess: allowBlobPublicAccess
+    
   }
   tags: resource_tags
+}
+
+resource blob 'Microsoft.Storage/storageAccounts/blobServices@2022-05-01' = {
+  name: 'default'
+  parent: storage_account
+  properties: {
+    containerDeleteRetentionPolicy: {
+      days: softDeleteRetentionDays
+      enabled: enableSoftDelete
+    }
+    deleteRetentionPolicy: {
+      days: softDeleteRetentionDays
+      enabled: enableSoftDelete
+    }
+  }
 }
 
 // Accessing the 'listKeys()' function requires a reference to an actual resource
