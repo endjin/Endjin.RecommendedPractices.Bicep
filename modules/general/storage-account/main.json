@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.92.45157",
-      "templateHash": "12705645307130677572"
+      "templateHash": "1876058702456139943"
     },
     "name": "Storage Account",
     "description": "Deploys a storage account or returns a reference to an existing one.",
@@ -79,6 +79,20 @@
       "defaultValue": true,
       "metadata": {
         "description": "When false, the storage account will not accept traffic from public internet. (i.e. all traffic except private endpoint traffic and that that originates from trusted services will be blocked, regardless of any firewall rules)"
+      }
+    },
+    "enableSoftDelete": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "When true, soft delete will be enabled for blobs and blob containers"
+      }
+    },
+    "softDeleteRetentionDays": {
+      "type": "int",
+      "defaultValue": 7,
+      "metadata": {
+        "description": "The number of days soft deleted blobs and containers will be retained"
       }
     },
     "isHnsEnabled": {
@@ -189,6 +203,24 @@
         "allowBlobPublicAccess": "[parameters('allowBlobPublicAccess')]"
       },
       "tags": "[parameters('resource_tags')]"
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2022-05-01",
+      "name": "[format('{0}/{1}', parameters('name'), 'default')]",
+      "properties": {
+        "containerDeleteRetentionPolicy": {
+          "days": "[parameters('softDeleteRetentionDays')]",
+          "enabled": "[parameters('enableSoftDelete')]"
+        },
+        "deleteRetentionPolicy": {
+          "days": "[parameters('softDeleteRetentionDays')]",
+          "enabled": "[parameters('enableSoftDelete')]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('name'))]"
+      ]
     },
     {
       "condition": "[parameters('saveAccessKeyToKeyVault')]",
