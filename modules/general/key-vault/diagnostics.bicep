@@ -37,6 +37,7 @@ module diagnostics_storage '../storage-account/main.bicep' = if (!useExistingSto
     location: location
     enablePublicAccess: enablePublicAccess
     networkAcls: networkAcls
+    enableSoftDelete: true
   }
 }
 
