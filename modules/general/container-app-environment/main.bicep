@@ -45,6 +45,9 @@ param containerRegistrySku string = 'Standard'
 @description('When true, admin access via the ACR key is enabled; When false, access is via RBAC')
 param enableContainerRegistryAdminUser bool = true
 
+@description('When true, the Aspire Dashboard will be enabled')
+param enableAspireDashboard bool = false
+
 @description('The resource tags applied to resources')
 param resourceTags object = {}
 
@@ -102,12 +105,12 @@ resource app_insights 'Microsoft.Insights/components@2020-02-02' = if (!useExist
 }
 
 
-resource existing_container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01' existing = if (useExisting) {
+resource existing_container_app_environment 'Microsoft.App/managedEnvironments@2024-10-02-preview' existing = if (useExisting) {
   name: name
   scope: resourceGroup(existingAppEnvironmentSubscriptionId, existingAppEnvironmentResourceGroupName)
 }
 
-resource container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01' =  if (!useExisting) {
+resource container_app_environment 'Microsoft.App/managedEnvironments@2024-10-02-preview' =  if (!useExisting) {
   name: name
   location: location
   properties: {
@@ -122,7 +125,16 @@ resource container_app_environment 'Microsoft.App/managedEnvironments@2022-03-01
     daprAIConnectionString: app_insights.properties.ConnectionString
   }
   tags: resourceTags
+
+  // Optionally enable the ACA-integrated Aspire Dashboard instance
+  resource aspireDashboard 'dotNetComponents' = if (enableAspireDashboard) {
+    name: 'aspire-dashboard'
+    properties: {
+      componentType: 'AspireDashboard'
+    }
+  }
 }
+
 
 // ContainerApp hosting environment outputs
 @description('The resource ID of the container app environment')
