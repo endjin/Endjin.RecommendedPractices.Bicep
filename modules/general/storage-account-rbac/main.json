@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.92.45157",
-      "templateHash": "12897949240321175984"
+      "templateHash": "7590069807382796368"
     },
     "name": "Storage Account RBAC",
     "description": "Applies an RBAC role to a storage account",
@@ -93,7 +93,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.31.92.45157",
-              "templateHash": "7888916808693830533"
+              "templateHash": "8304729219677654103"
             },
             "name": "RBAC built-in roles",
             "description": "Provides a dictionary of role name to role definition ID for built-in RBAC roles.",
@@ -563,6 +563,7 @@
               "Load Test Reader": "3ae3fb29-0000-4ccd-bf80-542e7b26e081",
               "LocalNGFirewallAdministrator role": "a8835c7d-b5cb-47fa-b6f0-65ea10ce07a2",
               "LocalRulestacksAdministrator role": "bfc3b73d-c6ff-45eb-9a5f-40298295bf20",
+              "Locks Contributor": "28bf596f-4eb7-45ce-b5bc-6cf482fec137",
               "Log Analytics Contributor": "92aaf0da-9dab-42b6-94a3-d43ce8d16293",
               "Log Analytics Reader": "73c42c96-874c-492b-b04d-ab87d138a893",
               "Logic App Contributor": "87a39d53-fc1b-424a-814c-f7e04687dc9e",
@@ -612,6 +613,7 @@
               "Operator Nexus Key Vault Writer Service Role (Preview)": "44f0a1a8-6fea-4b35-980a-8ff50c487c97",
               "Operator Nexus Owner (Preview)": "77be276d-fb44-4f3b-beb5-9bf03c4cd2d3",
               "Oracle Subscriptions Manager Built-in Role": "4caf51ec-f9f5-413f-8a94-b9f5fddba66b",
+              "Oracle.Database Autonomous Database Administrator": "59c05558-2358-462d-ba19-afbd7118936d",
               "Oracle.Database Exadata Infrastructure Administrator Built-in Role": "4cfdd23b-aece-4fd1-b614-ad3a06c53453",
               "Oracle.Database Owner Built-in Role": "4562aac9-b209-4bd7-a144-6d7f3bb516f4",
               "Oracle.Database Reader Built-in Role": "d623d097-b882-4e1e-a26f-ac60e31065a1",
