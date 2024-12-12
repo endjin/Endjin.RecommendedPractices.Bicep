@@ -25,6 +25,7 @@ If the resource is expected to already exist, the `useExisting` flag should be u
 | `containerRegistryName`                   | `string` | No       | The name of the container registry                                                                                                                                  |
 | `containerRegistrySku`                    | `string` | No       | The SKU for the container registry                                                                                                                                  |
 | `enableContainerRegistryAdminUser`        | `bool`   | No       | When true, admin access via the ACR key is enabled; When false, access is via RBAC                                                                                  |
+| `enableAspireDashboard`                   | `bool`   | No       | When true, the Aspire Dashboard will be enabled                                                                                                                     |
 | `resourceTags`                            | `object` | No       | The resource tags applied to resources                                                                                                                              |
 
 ## Outputs

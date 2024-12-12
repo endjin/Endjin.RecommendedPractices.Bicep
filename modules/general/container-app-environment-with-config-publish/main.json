@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.31.92.45157",
-      "templateHash": "7835888919264207822"
+      "templateHash": "5302084060787463470"
     },
     "name": "Container App Environment with published configuration",
     "description": "Deploys a ContainerApp hosting environment and publishes related configuration to App Configuration and Key Vault",
@@ -132,7 +132,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.31.92.45157",
-              "templateHash": "14918582922544630390"
+              "templateHash": "18165440267655285974"
             },
             "name": "Container App Environment",
             "description": "Deploys a Container App hosting environment",
@@ -226,6 +226,13 @@
                 "description": "When true, admin access via the ACR key is enabled; When false, access is via RBAC"
               }
             },
+            "enableAspireDashboard": {
+              "type": "bool",
+              "defaultValue": false,
+              "metadata": {
+                "description": "When true, the Aspire Dashboard will be enabled"
+              }
+            },
             "resourceTags": {
               "type": "object",
               "defaultValue": {},
@@ -235,6 +242,18 @@
             }
           },
           "resources": [
+            {
+              "condition": "[and(not(parameters('useExisting')), parameters('enableAspireDashboard'))]",
+              "type": "Microsoft.App/managedEnvironments/dotNetComponents",
+              "apiVersion": "2024-10-02-preview",
+              "name": "[format('{0}/{1}', parameters('name'), 'aspire-dashboard')]",
+              "properties": {
+                "componentType": "AspireDashboard"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.App/managedEnvironments', parameters('name'))]"
+              ]
+            },
             {
               "condition": "[not(parameters('useExisting'))]",
               "type": "Microsoft.OperationalInsights/workspaces",
@@ -275,7 +294,7 @@
             {
               "condition": "[not(parameters('useExisting'))]",
               "type": "Microsoft.App/managedEnvironments",
-              "apiVersion": "2022-03-01",
+              "apiVersion": "2024-10-02-preview",
               "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "properties": {
@@ -451,7 +470,7 @@
               "metadata": {
                 "description": "An object representing the container app environment resource"
               },
-              "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'), reference(resourceId('Microsoft.App/managedEnvironments', parameters('name')), '2022-03-01', 'full'))]"
+              "value": "[if(parameters('useExisting'), reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', parameters('existingAppEnvironmentSubscriptionId'), parameters('existingAppEnvironmentResourceGroupName')), 'Microsoft.App/managedEnvironments', parameters('name')), '2024-10-02-preview', 'full'), reference(resourceId('Microsoft.App/managedEnvironments', parameters('name')), '2024-10-02-preview', 'full'))]"
             },
             "appinsights_instrumentation_key": {
               "type": "string",
