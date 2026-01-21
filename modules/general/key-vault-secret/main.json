@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "7647943469143824631"
+      "version": "0.39.26.7824",
+      "templateHash": "13656827365247342765"
     },
     "name": "Adds or updates a Key Vault secret",
     "description": "Adds or updates a Key Vault secret",

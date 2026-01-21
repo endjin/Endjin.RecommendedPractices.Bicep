@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "1876058702456139943"
+      "version": "0.39.26.7824",
+      "templateHash": "14210975537199085912"
     },
     "name": "Storage Account",
     "description": "Deploys a storage account or returns a reference to an existing one.",
@@ -225,7 +225,7 @@
     {
       "condition": "[parameters('saveAccessKeyToKeyVault')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('storageAccessKeySecretDeploy{0}', parameters('name'))]",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -249,8 +249,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",
@@ -321,7 +321,7 @@
     {
       "condition": "[parameters('saveConnectionStringToKeyVault')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('storageConnectionStringSecretDeploy{0}', parameters('name'))]",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -347,8 +347,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",

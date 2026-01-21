@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "11253288703859962719"
+      "version": "0.39.26.7824",
+      "templateHash": "7396530303829487242"
     },
     "name": "AAD App Registration",
     "description": "Creates an AAD app registration",

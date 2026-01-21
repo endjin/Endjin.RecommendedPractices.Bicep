@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "6541973977213924697"
+      "version": "0.39.26.7824",
+      "templateHash": "2491388634163034213"
     },
     "name": "Private DNS CNAME",
     "description": "Adds/updates a CNAME record in an existing private DNS zone",

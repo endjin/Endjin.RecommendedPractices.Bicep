@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "10093576357642371536"
+      "version": "0.39.26.7824",
+      "templateHash": "3225651629874992035"
     },
     "name": "Resource Group",
     "description": "Deploys a resource group or gets a reference to an existing one.",

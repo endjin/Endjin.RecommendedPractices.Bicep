@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "6985495735733438553"
+      "version": "0.39.26.7824",
+      "templateHash": "4434516064112214198"
     },
     "name": "Application Insights with published configuration",
     "description": "Deploys an AppInsights workspace and publishes the instrumentation key to a Key Vault",
@@ -128,7 +128,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "appInsightsWithConfigPublish",
       "properties": {
         "expressionEvaluationOptions": {
@@ -170,8 +170,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "13949265178863720503"
+              "version": "0.39.26.7824",
+              "templateHash": "8526965794887118492"
             },
             "name": "Application Insights",
             "description": "Azure Application Insights",
@@ -299,7 +299,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "appInsightsKeySecret",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -316,7 +316,7 @@
             "value": "[parameters('applicationInsightsKeySecretName')]"
           },
           "contentValue": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2022-09-01').outputs.appInsightsWorkspaceResource.value.properties.InstrumentationKey]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2025-04-01').outputs.appInsightsWorkspaceResource.value.properties.InstrumentationKey]"
           },
           "contentType": {
             "value": "text/plain"
@@ -328,8 +328,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",
@@ -399,7 +399,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "appInsightsConnectionStringSecret",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -416,7 +416,7 @@
             "value": "[parameters('applicationInsightsConnectionStringSecretName')]"
           },
           "contentValue": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2022-09-01').outputs.appInsightsWorkspaceResource.value.properties.ConnectionString]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2025-04-01').outputs.appInsightsWorkspaceResource.value.properties.ConnectionString]"
           },
           "contentType": {
             "value": "text/plain"
@@ -428,8 +428,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",
@@ -504,21 +504,21 @@
       "metadata": {
         "description": "The resource ID of the app insights workspace"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2022-09-01').outputs.id.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2025-04-01').outputs.id.value]"
     },
     "name": {
       "type": "string",
       "metadata": {
         "description": "The name of the app insights workspace"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2022-09-01').outputs.name.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2025-04-01').outputs.name.value]"
     },
     "appInsightsWorkspaceResource": {
       "type": "object",
       "metadata": {
         "description": "An object representing the app insights workspace resource"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2022-09-01').outputs.appInsightsWorkspaceResource.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'appInsightsWithConfigPublish'), '2025-04-01').outputs.appInsightsWorkspaceResource.value]"
     },
     "appInsightsKeySecretName": {
       "type": "string",

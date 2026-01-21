@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "1415389991384881883"
+      "version": "0.39.26.7824",
+      "templateHash": "2310757400156059170"
     },
     "name": "Key Vault with group-based access policy",
     "description": "Deploys a Key Vault with a secrets access policy managed via group membership",
@@ -173,7 +173,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('keyVault-{0}', parameters('name'))]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -248,8 +248,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "1400536418047244775"
+              "version": "0.39.26.7824",
+              "templateHash": "2207110173256665311"
             },
             "name": "Key Vault with optional diagnostics settings",
             "description": "Deploys a key vault with optional diagnostics written to blob storage.",
@@ -424,7 +424,7 @@
             {
               "condition": "[parameters('enableDiagnostics')]",
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "[format('kvDiagnosticsDeploy-{0}', parameters('name'))]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -460,8 +460,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "8889094037946057177"
+                      "version": "0.39.26.7824",
+                      "templateHash": "4750474476554741484"
                     }
                   },
                   "parameters": {
@@ -516,7 +516,7 @@
                       "scope": "[format('Microsoft.KeyVault/vaults/{0}', parameters('keyVaultName'))]",
                       "name": "service",
                       "properties": {
-                        "storageAccountId": "[if(parameters('useExistingStorageAccount'), resourceId('Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), reference(resourceId('Microsoft.Resources/deployments', 'kvDiagnosticsDeploy'), '2022-09-01').outputs.id.value)]",
+                        "storageAccountId": "[if(parameters('useExistingStorageAccount'), resourceId('Microsoft.Storage/storageAccounts', parameters('diagnosticsStorageAccountName')), reference(resourceId('Microsoft.Resources/deployments', 'kvDiagnosticsDeploy'), '2025-04-01').outputs.id.value)]",
                         "logs": [
                           {
                             "category": "AuditEvent",
@@ -535,7 +535,7 @@
                     {
                       "condition": "[not(parameters('useExistingStorageAccount'))]",
                       "type": "Microsoft.Resources/deployments",
-                      "apiVersion": "2022-09-01",
+                      "apiVersion": "2025-04-01",
                       "name": "kvDiagnosticsDeploy",
                       "properties": {
                         "expressionEvaluationOptions": {
@@ -565,8 +565,8 @@
                           "metadata": {
                             "_generator": {
                               "name": "bicep",
-                              "version": "0.31.92.45157",
-                              "templateHash": "1876058702456139943"
+                              "version": "0.39.26.7824",
+                              "templateHash": "14210975537199085912"
                             },
                             "name": "Storage Account",
                             "description": "Deploys a storage account or returns a reference to an existing one.",
@@ -786,7 +786,7 @@
                             {
                               "condition": "[parameters('saveAccessKeyToKeyVault')]",
                               "type": "Microsoft.Resources/deployments",
-                              "apiVersion": "2022-09-01",
+                              "apiVersion": "2025-04-01",
                               "name": "[format('storageAccessKeySecretDeploy{0}', parameters('name'))]",
                               "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
                               "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -810,8 +810,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.31.92.45157",
-                                      "templateHash": "7647943469143824631"
+                                      "version": "0.39.26.7824",
+                                      "templateHash": "13656827365247342765"
                                     },
                                     "name": "Adds or updates a Key Vault secret",
                                     "description": "Adds or updates a Key Vault secret",
@@ -882,7 +882,7 @@
                             {
                               "condition": "[parameters('saveConnectionStringToKeyVault')]",
                               "type": "Microsoft.Resources/deployments",
-                              "apiVersion": "2022-09-01",
+                              "apiVersion": "2025-04-01",
                               "name": "[format('storageConnectionStringSecretDeploy{0}', parameters('name'))]",
                               "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
                               "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -908,8 +908,8 @@
                                   "metadata": {
                                     "_generator": {
                                       "name": "bicep",
-                                      "version": "0.31.92.45157",
-                                      "templateHash": "7647943469143824631"
+                                      "version": "0.39.26.7824",
+                                      "templateHash": "13656827365247342765"
                                     },
                                     "name": "Adds or updates a Key Vault secret",
                                     "description": "Adds or updates a Key Vault secret",
@@ -1042,21 +1042,21 @@
       "metadata": {
         "description": "The objectId of the key vault"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2022-09-01').outputs.id.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2025-04-01').outputs.id.value]"
     },
     "name": {
       "type": "string",
       "metadata": {
         "description": "The name of the key vault"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2022-09-01').outputs.name.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2025-04-01').outputs.name.value]"
     },
     "keyVaultResource": {
       "type": "object",
       "metadata": {
         "description": "An object representing the key vault resource"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2022-09-01').outputs.keyVaultResource.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('keyVault-{0}', parameters('name'))), '2025-04-01').outputs.keyVaultResource.value]"
     }
   }
 }

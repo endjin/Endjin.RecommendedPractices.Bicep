@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "6856080117955085839"
+      "version": "0.39.26.7824",
+      "templateHash": "2649599432178092718"
     },
     "name": "acs-email-managed-domain-with-published-config",
     "description": "Azure Communication Email Service with managed Azure domain, with published configuration",
@@ -93,7 +93,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "AcsEmailDeploy",
       "properties": {
         "expressionEvaluationOptions": {
@@ -126,8 +126,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "17954315896780719481"
+              "version": "0.39.26.7824",
+              "templateHash": "737743929124408849"
             },
             "name": "acs-email-managed-domain",
             "description": "Azure Communication Email Service with managed Azure domain",
@@ -292,7 +292,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "acsEmailSetSecretsDeploy",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -309,10 +309,10 @@
             "value": "[parameters('communicationServiceName')]"
           },
           "domain": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.domain.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2025-04-01').outputs.domain.value]"
           },
           "sendFromEmailAddress": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.sendFromEmailAddress.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2025-04-01').outputs.sendFromEmailAddress.value]"
           },
           "communicationServiceResourceGroupName": {
             "value": "[resourceGroup().name]"
@@ -327,8 +327,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "11942593376721878443"
+              "version": "0.39.26.7824",
+              "templateHash": "2592546393656142444"
             }
           },
           "parameters": {
@@ -354,7 +354,7 @@
           "resources": [
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "communicationServiceKeySecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -381,8 +381,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "7647943469143824631"
+                      "version": "0.39.26.7824",
+                      "templateHash": "13656827365247342765"
                     },
                     "name": "Adds or updates a Key Vault secret",
                     "description": "Adds or updates a Key Vault secret",
@@ -449,7 +449,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "communicationServiceConnectionStringSecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -476,8 +476,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "7647943469143824631"
+                      "version": "0.39.26.7824",
+                      "templateHash": "13656827365247342765"
                     },
                     "name": "Adds or updates a Key Vault secret",
                     "description": "Adds or updates a Key Vault secret",
@@ -544,7 +544,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "emailServiceDomainSecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -571,8 +571,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "7647943469143824631"
+                      "version": "0.39.26.7824",
+                      "templateHash": "13656827365247342765"
                     },
                     "name": "Adds or updates a Key Vault secret",
                     "description": "Adds or updates a Key Vault secret",
@@ -639,7 +639,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "emailServiceSendFromEmailAddressSecretDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -666,8 +666,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "7647943469143824631"
+                      "version": "0.39.26.7824",
+                      "templateHash": "13656827365247342765"
                     },
                     "name": "Adds or updates a Key Vault secret",
                     "description": "Adds or updates a Key Vault secret",
@@ -746,14 +746,14 @@
       "metadata": {
         "description": "The Azure managed domain."
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.domain.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2025-04-01').outputs.domain.value]"
     },
     "sendFromEmailAddress": {
       "type": "string",
       "metadata": {
         "description": "The send-from email address for the Azure managed domain."
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2022-09-01').outputs.sendFromEmailAddress.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'AcsEmailDeploy'), '2025-04-01').outputs.sendFromEmailAddress.value]"
     }
   }
 }

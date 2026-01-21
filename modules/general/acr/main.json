@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "2393511464810345001"
+      "version": "0.39.26.7824",
+      "templateHash": "6212064775153864234"
     },
     "name": "container-registry",
     "description": "Azure Container Registry",

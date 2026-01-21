@@ -102,7 +102,7 @@ $SkipPublish = $false
 #
 # Build process configuration
 #
-$RequiredBicepCliVersion = "0.31.92"               # ensures the build uses a consistent version of the Bicep tooling
+$MinimumBicepCliVersion = "0.39.26"                # ensures the build uses a consistent version of the Bicep tooling
 $BicepModulesDir = Join-Path $SourcesDir "modules" # sets location of folder containing the Bicep modules
 $BaseBranch = "origin/main"                        # sets the branch used to compare which Bicep modules have changed for local builds
 $BicepRegistryFqdn = "endjintestacr.azurecr.io"    # the ACR used when publishing modules from local builds

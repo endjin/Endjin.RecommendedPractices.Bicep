@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "16848759330438942123"
+      "version": "0.39.26.7824",
+      "templateHash": "10403807599282725729"
     },
     "name": "aad-group-membership",
     "description": "Configures the membership of an Azure AD group",

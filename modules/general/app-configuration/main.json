@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "9408016924291965910"
+      "version": "0.39.26.7824",
+      "templateHash": "3211363553274404750"
     },
     "name": "App Configuration",
     "description": "Azure App Configuration",
@@ -36,7 +36,9 @@
       "defaultValue": "Standard",
       "allowedValues": [
         "Free",
-        "Standard"
+        "Developer",
+        "Standard",
+        "Premium"
       ],
       "metadata": {
         "description": "SKU for the app configuration store"
@@ -120,7 +122,7 @@
     {
       "condition": "[parameters('saveConnectionStringsToKeyVault')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('appConfigConnStrSecretDeploy{0}', parameters('name'))]",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -144,8 +146,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",
@@ -216,7 +218,7 @@
     {
       "condition": "[parameters('saveConnectionStringsToKeyVault')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('appConfigRoConnStrSecretDeploy{0}', parameters('name'))]",
       "subscriptionId": "[parameters('keyVaultSubscriptionId')]",
       "resourceGroup": "[parameters('keyVaultResourceGroupName')]",
@@ -240,8 +242,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",
