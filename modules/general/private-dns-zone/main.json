@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "13578104230571220676"
+      "version": "0.39.26.7824",
+      "templateHash": "8394433102234177023"
     },
     "name": "Private DNS Zone",
     "description": "Adds/updates a private DNS zone and virtual network link for existing VNet",

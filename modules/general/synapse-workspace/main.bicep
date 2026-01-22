@@ -24,6 +24,9 @@ param sqlAdministratorPrincipalName string
 @description('The principal/object ID of an existing service principal to set as the SQL Administrator for the workspace.')
 param sqlAdministratorPrincipalId string
 
+@description('If true, the \'azureADOnlyAuthentication\' option will be enabled, enforcing Entra authentication to Synapse SQL endpoints.')
+param disableSqlAuth bool = false
+
 @description('If true, enable diagnostics on the workspace (`logAnalyticsWorkspaceId` must also be set).')
 param enableDiagnostics bool
 
@@ -178,6 +181,14 @@ module workspace_firewall_rules './synapse-firewall-rule.bicep' = if (enablePubl
   params: {
     firewallRules: firewallRules
     workspaceName: workspace.name
+  }
+}
+
+resource workspace_sql_entra_only_auth 'Microsoft.Synapse/workspaces/azureADOnlyAuthentications@2021-06-01' = {
+  name: workspaceName
+  parent: workspace
+  properties: {
+    azureADOnlyAuthentication: disableSqlAuth
   }
 }
 

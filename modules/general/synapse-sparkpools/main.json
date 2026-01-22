@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "9173171930846567631"
+      "version": "0.39.26.7824",
+      "templateHash": "7577069564020202557"
     },
     "name": "Synapse Spark Pools",
     "description": "Adds/Updates Synapse Spark Pools in an existing Synapse workspace.",

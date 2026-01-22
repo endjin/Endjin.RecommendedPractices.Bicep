@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "2417483019979139567"
+      "version": "0.39.26.7824",
+      "templateHash": "10481073231943133420"
     },
     "name": "Private Endpoint",
     "description": "Deploys a private endpoint for the specified resource",

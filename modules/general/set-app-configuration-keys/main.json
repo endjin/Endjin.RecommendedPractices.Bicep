@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "2056795749289463231"
+      "version": "0.39.26.7824",
+      "templateHash": "430666870746509585"
     },
     "name": "Adds or updates a list of App Configuration keys",
     "description": "Adds or updates a list of App Configuration keys",

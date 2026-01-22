@@ -18,7 +18,9 @@ param enablePublicNetworkAccess bool = true
 @description('SKU for the app configuration store')
 @allowed([
   'Free'
+  'Developer'
   'Standard'
+  'Premium'
 ])
 param sku string = 'Standard'
 

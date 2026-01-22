@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "17954315896780719481"
+      "version": "0.39.26.7824",
+      "templateHash": "737743929124408849"
     },
     "name": "acs-email-managed-domain",
     "description": "Azure Communication Email Service with managed Azure domain",

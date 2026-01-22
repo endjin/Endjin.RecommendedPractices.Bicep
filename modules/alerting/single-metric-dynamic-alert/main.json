@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "13645589444613341850"
+      "version": "0.39.26.7824",
+      "templateHash": "14031680787887483206"
     },
     "name": "Single Metric Dynamic Alert",
     "description": "Deploys an dynamic Alert based on a single Azure Monitor or AppInsights metric",
@@ -134,7 +134,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "[format('deployMetricAlert-{0}', parameters('name'))]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -193,8 +193,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "735523483712782807"
+              "version": "0.39.26.7824",
+              "templateHash": "8596441814822610412"
             },
             "name": "Azure Metric Alert",
             "description": "Deploys an alert based on an Azure Monitor or AppInsights metric",
@@ -296,10 +296,10 @@
                 },
                 "description": "[parameters('alertDescription')]",
                 "enabled": "[parameters('enabled')]",
-                "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.evaluationFrequency.value]",
+                "evaluationFrequency": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2025-04-01').outputs.evaluationFrequency.value]",
                 "scopes": "[parameters('targetScopes')]",
-                "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.severity.value]",
-                "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2022-09-01').outputs.evaluationWindowSize.value]",
+                "severity": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2025-04-01').outputs.severity.value]",
+                "windowSize": "[reference(resourceId('Microsoft.Resources/deployments', format('alertUtils_{0}', parameters('severity'))), '2025-04-01').outputs.evaluationWindowSize.value]",
                 "actions": [
                   {
                     "actionGroupId": "[parameters('actionGroupId')]"
@@ -313,7 +313,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "[format('alertUtils_{0}', parameters('severity'))]",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -337,8 +337,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "5821703039425751297"
+                      "version": "0.39.26.7824",
+                      "templateHash": "14906832355834453651"
                     }
                   },
                   "parameters": {

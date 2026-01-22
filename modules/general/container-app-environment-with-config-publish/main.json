@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "5302084060787463470"
+      "version": "0.39.26.7824",
+      "templateHash": "2884769830147680738"
     },
     "name": "Container App Environment with published configuration",
     "description": "Deploys a ContainerApp hosting environment and publishes related configuration to App Configuration and Key Vault",
@@ -89,7 +89,7 @@
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "containerAppEnv",
       "properties": {
         "expressionEvaluationOptions": {
@@ -131,8 +131,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "18165440267655285974"
+              "version": "0.39.26.7824",
+              "templateHash": "12568919333739260174"
             },
             "name": "Container App Environment",
             "description": "Deploys a Container App hosting environment",
@@ -317,7 +317,7 @@
             {
               "condition": "[parameters('createContainerRegistry')]",
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
+              "apiVersion": "2025-04-01",
               "name": "appEnvAcrDeploy",
               "properties": {
                 "expressionEvaluationOptions": {
@@ -347,8 +347,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.31.92.45157",
-                      "templateHash": "2393511464810345001"
+                      "version": "0.39.26.7824",
+                      "templateHash": "6212064775153864234"
                     },
                     "name": "container-registry",
                     "description": "Azure Container Registry",
@@ -484,21 +484,21 @@
               "metadata": {
                 "description": "The resource ID of the container registry"
               },
-              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2022-09-01').outputs.id.value, '')]"
+              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2025-04-01').outputs.id.value, '')]"
             },
             "acrUsername": {
               "type": "string",
               "metadata": {
                 "description": "The admin username for the container registry"
               },
-              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2022-09-01').outputs.name.value, '')]"
+              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2025-04-01').outputs.name.value, '')]"
             },
             "acrLoginServer": {
               "type": "string",
               "metadata": {
                 "description": "The login server for the container registry"
               },
-              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2022-09-01').outputs.loginServer.value, '')]"
+              "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'appEnvAcrDeploy'), '2025-04-01').outputs.loginServer.value, '')]"
             }
           }
         }
@@ -506,7 +506,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "kubeenvAppConfigKeyDeploy",
       "subscriptionId": "[parameters('appConfigurationStoreSubscription')]",
       "resourceGroup": "[parameters('appConfigurationStoreResourceGroupName')]",
@@ -526,7 +526,7 @@
             "value": [
               {
                 "name": "ContainerAppEnvironmentResourceId",
-                "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.id.value]"
+                "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.id.value]"
               }
             ]
           }
@@ -537,8 +537,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "2056795749289463231"
+              "version": "0.39.26.7824",
+              "templateHash": "430666870746509585"
             },
             "name": "Adds or updates a list of App Configuration keys",
             "description": "Adds or updates a list of App Configuration keys",
@@ -587,7 +587,7 @@
     },
     {
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
+      "apiVersion": "2025-04-01",
       "name": "aiKeySecretDeploy",
       "properties": {
         "expressionEvaluationOptions": {
@@ -602,7 +602,7 @@
             "value": "AppInsightsInstrumentationKey"
           },
           "contentValue": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.appinsights_instrumentation_key.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.appinsights_instrumentation_key.value]"
           },
           "contentType": {
             "value": "text/plain"
@@ -614,8 +614,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.31.92.45157",
-              "templateHash": "7647943469143824631"
+              "version": "0.39.26.7824",
+              "templateHash": "13656827365247342765"
             },
             "name": "Adds or updates a Key Vault secret",
             "description": "Adds or updates a Key Vault secret",
@@ -690,7 +690,7 @@
       "metadata": {
         "description": "The resource ID of the container app environment"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.id.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.id.value]"
     },
     "name": {
       "type": "string",
@@ -704,28 +704,28 @@
       "metadata": {
         "description": "An object representing the container app environment resource"
       },
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.appEnvironmentResource.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.appEnvironmentResource.value]"
     },
     "acrId": {
       "type": "string",
       "metadata": {
         "description": "The resource ID of the container registry"
       },
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.acrId.value, '')]"
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.acrId.value, '')]"
     },
     "acrUsername": {
       "type": "string",
       "metadata": {
         "description": "The admin username for the container registry"
       },
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.acrUsername.value, '')]"
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.acrUsername.value, '')]"
     },
     "acrLoginServer": {
       "type": "string",
       "metadata": {
         "description": "The login server for the container registry"
       },
-      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2022-09-01').outputs.acrLoginServer.value, '')]"
+      "value": "[if(parameters('createContainerRegistry'), reference(resourceId('Microsoft.Resources/deployments', 'containerAppEnv'), '2025-04-01').outputs.acrLoginServer.value, '')]"
     }
   }
 }

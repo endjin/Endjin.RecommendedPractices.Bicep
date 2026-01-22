@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "8935128643210216782"
+      "version": "0.39.26.7824",
+      "templateHash": "16185483922310509266"
     },
     "name": "Adds or updates log analytics workspace",
     "description": "Adds or updates log analytics workspace",

@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "13949265178863720503"
+      "version": "0.39.26.7824",
+      "templateHash": "8526965794887118492"
     },
     "name": "Application Insights",
     "description": "Azure Application Insights",

@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.31.92.45157",
-      "templateHash": "7620593411438927969"
+      "version": "0.39.26.7824",
+      "templateHash": "14092124066972956492"
     },
     "name": "Email Action Group",
     "description": "Azure Action Group for sending email notifications",
